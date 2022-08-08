@@ -1,0 +1,33 @@
+
+    DECLARE coln_brand varchar(1) := trim(NEW.first_letter_brand);
+    DECLARE coln_generic varchar(1) := trim(NEW.first_letter_generic);
+    BEGIN 
+        IF 
+            NEW.brand_description IS NOT NULL AND trim(NEW.brand_description) != '' 
+            AND NEW.brand_description NOT IN (select brand_description FROM order_brand_alphabetic ) AND (NEW.first_letter_brand ~*'[A-Z]' IS true)
+              
+            then execute format
+              ('INSERT INTO order_brand_alphabetic(brand_description,%1I) VALUES(%2L,TRUE)',LOWER(coln_brand),NEW.brand_description);
+        ELSE
+              IF NEW.brand_description IS NOT NULL AND trim(NEW.brand_description) != '' 
+            AND NEW.brand_description NOT IN (select brand_description FROM order_brand_alphabetic )
+            then
+              INSERT INTO order_brand_alphabetic(brand_description,other) VALUES(NEW.brand_description,TRUE); END IF;   
+          
+        END IF;
+        
+        
+        IF 
+            NEW.generic_name IS NOT NULL AND trim(NEW.generic_name) != '' AND NEW.generic_name NOT IN (select generic_name FROM order_generic_alphabetic )
+              AND (NEW.first_letter_generic ~*'[A-Z]' IS true) THEN EXECUTE format
+            ('INSERT INTO order_generic_alphabetic(generic_name,%1I) VALUES(%2L,TRUE)',LOWER(coln_generic),NEW.generic_name);
+        ELSE
+            IF NEW.generic_name IS NOT NULL AND trim(NEW.generic_name) != '' 
+            AND NEW.generic_name NOT IN (select generic_name FROM order_generic_alphabetic )
+            then
+              INSERT INTO order_generic_alphabetic(generic_name,other) VALUES(NEW.generic_name,TRUE); END IF;  
+        
+        END IF;
+        RETURN NEW ;
+    END;
+    
