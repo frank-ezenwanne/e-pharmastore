@@ -1,0 +1,144 @@
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
+
+
+class Product(models.Model):
+    product_code = models.CharField(max_length = 50,null=True)
+    brand_name = models.CharField(max_length = 150,null=True)
+    generic_name = models.CharField(max_length = 150,null=True)
+    brand_description = models.CharField(max_length = 150,null=True)
+    department = models.CharField(max_length = 15,null=True)
+    dosage_form = models.CharField(max_length = 20,null=True)
+    presentation = models.CharField(max_length = 30,null=True)
+    category = models.CharField(max_length = 100,null=True)
+    price = models.FloatField(null=True)
+    quantity_left = models.IntegerField(null=True)
+    company = models.CharField(max_length=50,null=True)
+    full_pack_quantity = models.CharField(null=True,max_length=10)
+    unit_quantity = models.CharField(null=True,max_length=10)
+    first_letter_brand = models.CharField(null=True,max_length=1)
+    first_letter_generic = models.CharField(null=True,max_length=1)
+
+
+    def __str__(self):
+        return self.brand_description
+
+
+class Brand_Alphabetic(models.Model):
+    brand_description = models.CharField(max_length=100,primary_key=True)
+    other = models.BooleanField(default=False, null=True)
+    a = models.BooleanField(default=False,null=True)
+    b = models.BooleanField(default=False,null=True)
+    c = models.BooleanField(default=False,null=True)
+    d = models.BooleanField(default=False,null=True)
+    e = models.BooleanField(default=False,null=True)
+    f = models.BooleanField(default=False,null=True)
+    g = models.BooleanField(default=False,null=True)
+    h = models.BooleanField(default=False,null=True)
+    i = models.BooleanField(default=False,null=True)
+    j = models.BooleanField(default=False,null=True)
+    k = models.BooleanField(default=False,null=True)
+    l = models.BooleanField(default=False,null=True)
+    m = models.BooleanField(default=False,null=True)
+    n = models.BooleanField(default=False,null=True)
+    o = models.BooleanField(default=False,null=True)
+    p = models.BooleanField(default=False,null=True)
+    q = models.BooleanField(default=False,null=True)
+    r = models.BooleanField(default=False,null=True)
+    s = models.BooleanField(default=False,null=True)
+    t = models.BooleanField(default=False,null=True)
+    u = models.BooleanField(default=False,null=True)
+    v = models.BooleanField(default=False,null=True)
+    w = models.BooleanField(default=False,null=True)
+    x = models.BooleanField(default=False,null=True)
+    y = models.BooleanField(default=False,null=True)
+    z = models.BooleanField(default=False,null=True)
+
+    def __str__(self):
+        return self.brand.brand_description
+
+class Generic_Alphabetic(models.Model):
+    generic_name = models.CharField(max_length=100,primary_key=True)
+    other = models.BooleanField(default=False, null=True)
+    a = models.BooleanField(default=False,null=True)
+    b = models.BooleanField(default=False,null=True)
+    c = models.BooleanField(default=False,null=True)
+    d = models.BooleanField(default=False,null=True)
+    e = models.BooleanField(default=False,null=True)
+    f = models.BooleanField(default=False,null=True)
+    g = models.BooleanField(default=False,null=True)
+    h = models.BooleanField(default=False,null=True)
+    i = models.BooleanField(default=False,null=True)
+    j = models.BooleanField(default=False,null=True)
+    k = models.BooleanField(default=False,null=True)
+    l = models.BooleanField(default=False,null=True)
+    m = models.BooleanField(default=False,null=True)
+    n = models.BooleanField(default=False,null=True)
+    o = models.BooleanField(default=False,null=True)
+    p = models.BooleanField(default=False,null=True)
+    q = models.BooleanField(default=False,null=True)
+    r = models.BooleanField(default=False,null=True)
+    s = models.BooleanField(default=False,null=True)
+    t = models.BooleanField(default=False,null=True)
+    u = models.BooleanField(default=False,null=True)
+    v = models.BooleanField(default=False,null=True)
+    w = models.BooleanField(default=False,null=True)
+    x = models.BooleanField(default=False,null=True)
+    y = models.BooleanField(default=False,null=True)
+    z = models.BooleanField(default=False,null=True)
+
+    def __str__(self):
+        return self.brand.brand_description
+
+
+class OrderProduct(models.Model):
+    serial = models.IntegerField(null=True) #serial created by frontend
+    presentation = models.CharField(max_length = 30)
+    brand_name = models.CharField(max_length = 50)
+    generic_name = models.CharField(max_length = 50)
+    product = models.ForeignKey(Product,on_delete=models.DO_NOTHING)
+    buyer = models.ForeignKey(User,on_delete=models.CASCADE)#SET TO DELETED USER LATER
+    quantity_ordered = models.IntegerField(default=1)
+    ordered = models.BooleanField(default=False)
+    order_id=models.ForeignKey('Order',on_delete=models.CASCADE) #cart id
+    total_cost = models.FloatField(null=True)
+    
+    def __str__(self):
+        return self.product.brand_description
+
+    def save(self, *args, **kwargs):
+        generic_name = self.generic_name
+        brand_name = self.brand_name
+        presentation = self.presentation
+        quantity_ordered = self.quantity_ordered
+        total_cost = self.total_cost
+
+        if self.order_product_id:#if there is an  orderproduct id in the request, check if it maps to an existing orderproduct id
+            if OrderProduct.objects.get(self.order_product_id):
+                order_product = OrderProduct.objects.get(self.order_product_id)
+
+                order_product.generic_name = generic_name
+                order_product.brand_name = brand_name
+                order_product.presentation = presentation
+                order_product.quantity_ordered = quantity_ordered
+                order_product.total_cost = total_cost
+                order_product.save()
+        else:
+            OrderProduct.objects.create(generic_name=generic_name,brand_name=brand_name,presentation = presentation,quantity_ordered=quantity_ordered,price = price)
+
+class Order(models.Model):
+    buyer = models.ForeignKey(User,on_delete=models.CASCADE)#SET TO DELETED USER LATER
+    buyer_name = models.CharField(max_length=50,null=True,blank=True)
+    buyer_email = models.EmailField(null=True)
+    phone_number = models.IntegerField(null=True,blank=True)
+    order_products = models.ManyToManyField("OrderProduct",related_name = "order_items_field",blank=True)
+    open_date = models.DateTimeField(default=timezone.now)
+    ordered_date = models.DateTimeField(null=True,blank=True)
+    ordered = models.BooleanField(default = False)
+
+
+    def __str__(self):
+        return self.buyer.username
+
+
