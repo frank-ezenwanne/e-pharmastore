@@ -33,7 +33,7 @@ class ProductDetailSerializer(serializers.Serializer):
     presentation = serializers.CharField()
     price = serializers.IntegerField()
     full_pack_quantity = serializers.IntegerField()
-    unit_quantity = serializers.IntegerField()
+    unit_quantity = serializers.CharField()
 
 class GenericSerializer(serializers.ModelSerializer):
     class Meta:

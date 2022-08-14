@@ -7,7 +7,7 @@
 
 html{
 	height:100%;
-	font-size:20px	
+	font-size:16px	
 	
 	}
 
@@ -15,18 +15,39 @@ body{
 	background-color: black;
 }
 
-.table-section{
-	display:flex;
 
+#table-grid{
+	display:grid;
+	grid-template-columns:repeat(6,1fr);
+	position:relative;
+	width:100%
 }
 
 .list-section{
 display: inline;
 left:0;
 position:absolute;
-background-color:white;
+background-color:rgb(240,240,240);
 max-height:20rem;
 overflow-y:scroll;
+min-width:25rem
+
+}
+
+#form-container{
+	width:60vw;
+	margin-left:4vw;
+	
+	margin-top:1.5rem;
+	padding-right:54rem;
+	padding-left:1rem;
+	padding-bottom:2rem;
+
+	
+}
+
+.form-class1{
+	width:60vw
 }
 
 .drugitem{
@@ -50,6 +71,22 @@ width:100%
 
 .clickable{
 	cursor: pointer;
+}
+
+.total-cost{
+	right:2rem;
+	color:green;
+	position: absolute;
+	border:0.1rem solid green;
+	background-color: black;
+	padding:0.1rem 0.4rem 
+}
+
+
+
+#table-headings{
+	display: flex;
+	justify-content:space-around
 }
 
 nav{
@@ -86,6 +123,46 @@ nav{
 .nav-bar-gamersblog{
 display:flex;
 }
+
+.product-div{
+	width:18rem
+}
+
+.quantity-div{
+	width:6rem
+}
+
+
+.right-grid{
+	width:5rem
+}
+
+.left-grid{
+	width:9rem
+}
+
+.generic-div{
+	width:8rem
+}
+
+.unit-div{
+	width:8rem
+}
+
+.cost-div{
+	width:6rem
+}
+
+.total-div{
+	width:6rem
+}
+
+.grid-headings{
+	color:green
+}
+
+
+
 
 nav  a{
 	font-size:100%;
