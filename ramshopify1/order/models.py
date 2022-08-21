@@ -1,6 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.utils import timezone
+
 
 
 class Product(models.Model):
@@ -12,13 +13,14 @@ class Product(models.Model):
     dosage_form = models.CharField(max_length = 20,null=True)
     presentation = models.CharField(max_length = 30,null=True)
     category = models.CharField(max_length = 100,null=True)
-    price = models.FloatField(null=True)
+    raw_cost = models.FloatField(null=True)
     quantity_left = models.IntegerField(null=True)
     company = models.CharField(max_length=50,null=True)
     full_pack_quantity = models.CharField(null=True,max_length=10)
     unit_quantity = models.CharField(null=True,max_length=10)
     first_letter_brand = models.CharField(null=True,max_length=1)
     first_letter_generic = models.CharField(null=True,max_length=1)
+    disabled_status = models.BooleanField(default=False)
 
 
     def __str__(self):
@@ -95,43 +97,43 @@ class Generic_Alphabetic(models.Model):
 class OrderProduct(models.Model):
     serial = models.IntegerField(null=True) #serial created by frontend
     presentation = models.CharField(max_length = 30)
-    brand_name = models.CharField(max_length = 50)
-    generic_name = models.CharField(max_length = 50)
-    product = models.ForeignKey(Product,on_delete=models.DO_NOTHING)
-    buyer = models.ForeignKey(User,on_delete=models.CASCADE)#SET TO DELETED USER LATER
+    brand_description = models.CharField(max_length = 50)
+    generic_name = models.CharField(max_length = 50,null=True,blank=True)
+    product_id = models.ForeignKey(Product,on_delete=models.PROTECT)
+    buyer = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)#SET TO DELETED USER LATER
     quantity_ordered = models.IntegerField(default=1)
     ordered = models.BooleanField(default=False)
     order_id=models.ForeignKey('Order',on_delete=models.CASCADE) #cart id
-    total_cost = models.FloatField(null=True)
+    cost = models.FloatField(null=True)
+    unit_quantity = models.IntegerField(null=True) #Remove null later
+    full_pack_quantity = models.IntegerField(null=True)
+    created  = models.DateTimeField(default=timezone.now)
     
     def __str__(self):
-        return self.product.brand_description
+        return f'{self.product_id.brand_description} OrderProduct'
 
-    def save(self, *args, **kwargs):
-        generic_name = self.generic_name
-        brand_name = self.brand_name
-        presentation = self.presentation
-        quantity_ordered = self.quantity_ordered
-        total_cost = self.total_cost
+    # def save(self, *args, **kwargs):
+    #     generic_name = self.generic_name
+    #     brand_name = self.brand_name
+    #     presentation = self.presentation
+    #     quantity_ordered = self.quantity_ordered
+    #     total_cost = self.total_cost
 
-        if self.order_product_id:#if there is an  orderproduct id in the request, check if it maps to an existing orderproduct id
-            if OrderProduct.objects.get(self.order_product_id):
-                order_product = OrderProduct.objects.get(self.order_product_id)
+    #     if self.order_product_id:#if there is an  orderproduct id in the request, check if it maps to an existing orderproduct id
+    #         if OrderProduct.objects.get(self.order_product_id):
+    #             order_product = OrderProduct.objects.get(self.order_product_id)
 
-                order_product.generic_name = generic_name
-                order_product.brand_name = brand_name
-                order_product.presentation = presentation
-                order_product.quantity_ordered = quantity_ordered
-                order_product.total_cost = total_cost
-                order_product.save()
-        else:
-            OrderProduct.objects.create(generic_name=generic_name,brand_name=brand_name,presentation = presentation,quantity_ordered=quantity_ordered,price = price)
+    #             order_product.generic_name = generic_name
+    #             order_product.brand_name = brand_name
+    #             order_product.presentation = presentation
+    #             order_product.quantity_ordered = quantity_ordered
+    #             order_product.total_cost = total_cost
+    #             order_product.save()
+    #     else:
+    #         OrderProduct.objects.create(generic_name=generic_name,brand_name=brand_name,presentation = presentation,quantity_ordered=quantity_ordered,price = price)
 
 class Order(models.Model):
-    buyer = models.ForeignKey(User,on_delete=models.CASCADE)#SET TO DELETED USER LATER
-    buyer_name = models.CharField(max_length=50,null=True,blank=True)
-    buyer_email = models.EmailField(null=True)
-    phone_number = models.IntegerField(null=True,blank=True)
+    buyer = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)#SET TO DELETED USER LATER
     order_products = models.ManyToManyField("OrderProduct",related_name = "order_items_field",blank=True)
     open_date = models.DateTimeField(default=timezone.now)
     ordered_date = models.DateTimeField(null=True,blank=True)
@@ -139,6 +141,8 @@ class Order(models.Model):
 
 
     def __str__(self):
-        return self.buyer.username
+        return self.buyer.company_name
+
+
 
 

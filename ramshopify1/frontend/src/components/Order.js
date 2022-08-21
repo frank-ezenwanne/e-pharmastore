@@ -1,22 +1,22 @@
 import React, {Component,Fragment} from "react"
 import {connect} from 'react-redux'
-import {search_brand} from "../actions/search"
-import ReactDOM from 'react-dom';
+import {search_brand,get_last_order,send_orderproduct} from "../actions/search"
+import Select from "react-select"
 
 // USE COMPON DID UPDATE TO PUT ReactDOM.findDOMNode(this.textInput.current).focus() ..FIND OUT MEANING OF RENDER PURE FUNC ONLY
 
 class Order extends Component{
     constructor(props){
         super(props);
-        this.textInput = React.createRef();
         this.state = {
             id_list : [1],
-            1:{generic:"",
+            1:{ id:null,
+                generic:"",
                 brand:"",        
                 unit:"",
                 unit_temp:"",
                 quantity:"",
-                price:"",
+                raw_cost:"",
                 cost:"",
                 total:0,
                 full_pk_quant:"",
@@ -28,6 +28,35 @@ class Order extends Component{
             }
             }
     }
+
+componentDidMount(){
+    this.props.get_last_order()
+}
+
+componentDidUpdate(prevProps){
+    if(this.props.loi !== prevProps.loi){
+        const id_list = new Array()
+            
+        for (const id in this.props.loi){
+            console.log(id_list)
+            id_list.push(id)
+            
+        }
+        for (const dat in this.props.loi){
+            this.setState({
+                ...this.state,
+
+            })
+        }
+        
+        this.setState({...this.state, ...this.props.loi,id_list
+        
+        
+        })
+    }
+}
+
+
 product_style={
     width:"100%"
 }
@@ -65,11 +94,12 @@ onClickDrug = (e) =>{
     return this.setState({
         ...this.state,
         [c_name] : {...this.state[c_name],
+            id:product.id,
             brand:brand,
             generic:product.generic_name,
             unit_temp:product.presentation,
             unit:'',
-            price:product.price,
+            raw_cost:product.raw_cost,
             full_pk_quant:product.full_pack_quantity,
             unit_quantity:product.unit_quantity,
             cost:"",
@@ -88,10 +118,11 @@ brand_change=(e)=>{
     // console.log(val[0])
     this.setState({...this.state,
         [c_name]: {...this.state[c_name],brand:val,
+            id:null,
             generic:"",
             unit_temp:"",
             unit:'',
-            price:"",
+            raw_cost:"",
             full_pk_quant:"",
             unit_quantity:"",
             cost:"",
@@ -146,11 +177,10 @@ zen_change = (e) =>{
 
 unit_change = (e) =>{
     const val = e.target.value
-    console.log(222222)
     const name_attrib = e.target.name
     const c_name = e.target.className
     this.setState({
-        [c_name]: {...this.state[c_name],quantity:"",unit:val,cost:"",total:""}
+        [c_name]: {...this.state[c_name],quantity:"",unit:val,cost:"",total:0}
     })
     
 }
@@ -165,11 +195,12 @@ unit_change = (e) =>{
 //        this.setState({...this.state,
 //            id_list,
 //            [new_latest]:{
+                // id:null,
 //             brand:"",
 //             generic:"",
 //             unit_temp:"",
 //             unit:'',
-//             price:"",
+//             raw_cost:"",
 //             full_pk_quant:"",
 //             unit_quantity:"",
 //             cost:"",
@@ -182,6 +213,10 @@ unit_change = (e) =>{
 
 quantity_change = (e) =>{
     const c_name = e.target.className
+    if(this.state[c_name]["unit"] === "SELECT" || this.state[c_name]["unit"] === "" ){
+        alert("Please input a unit")
+        return
+    }
     let val = e.target.value
     if(this.state[c_name]["brand"]){
         let cost
@@ -193,26 +228,37 @@ quantity_change = (e) =>{
     
         const c_name = e.target.className
         if(this.state[c_name]["full_pk_quant"] === 1 || this.state[c_name]["unit"] === "FULL PACK"){
-            cost = this.state[c_name]["price"]
+            cost = this.state[c_name]["raw_cost"]
     
         }
         else{
             const unit_quantity = parseInt(this.state[c_name]["unit_quantity"])
             if (typeof(unit_quantity) === "number"){
-                console.log(90)
                 const quant_ratio = this.state[c_name]["full_pk_quant"]/unit_quantity
-                cost = this.state[c_name]["price"]/quant_ratio
-                console.log(cost)
+                cost = this.state[c_name]["raw_cost"]/quant_ratio
             }
             else{
-                console.log(876)
-                cost = this.state[c_name]["price"]/this.state[c_name]["full_pk_quant"]
+                cost = this.state[c_name]["raw_cost"]/this.state[c_name]["full_pk_quant"]
             }
         }
         const total = cost * parseInt(val)
         this.setState({
             [c_name]: {...this.state[c_name],quantity:val,cost:cost.toFixed(2),total:total.toFixed(2)}
         },()=>{
+            
+            // send order_product data to backend for save
+            const item = this.state[c_name] 
+          
+            this.props.send_orderproduct(item["id"],
+            item["generic"],
+            item["brand"],
+            item["unit"],
+            item["cost"],
+            item["quantity"],
+            item["full_pk_quant"],
+            item["unit_quantity"],c_name,this.props.last_orderid)  
+             
+            
             const id_list = this.state.id_list
             const current_no = parseInt(e.target.className)
             const last_tracked_id = id_list[id_list.length-1]
@@ -221,12 +267,13 @@ quantity_change = (e) =>{
                id_list.push(id_list[id_list.length-1]+1)
                this.setState({...this.state,
                    id_list,
-                   [new_latest]:{generic:"",
-                   brand:"",
+                   [new_latest]:{
+                   id:null,    
                    generic:"",
+                   brand:"",
                    unit_temp:"",
                    unit:'',
-                   price:"",
+                   raw_cost:"",
                    full_pk_quant:"",
                    unit_quantity:"",
                    cost:"",
@@ -235,6 +282,7 @@ quantity_change = (e) =>{
                 },
                })
             }
+
         })
     }
 }
@@ -262,6 +310,7 @@ quantity_change = (e) =>{
 map_stuff = (num) =>{  
     num = String(num)
     console.log(this.state[num].brand)
+    const defaultVal ={[this.state[num]["unit_temp"]] : this.state[num]["unit_temp"]}
     return (
        
     <Fragment key={num}>
@@ -287,7 +336,7 @@ map_stuff = (num) =>{
                         </div>
                     </div>)
                     }
-                }):console.log(5555)}
+                }):null}
           </div> 
         </div>
         
@@ -303,14 +352,15 @@ map_stuff = (num) =>{
             />
         </div> 
         
-
+       
         <div className="unit-div">
-            <select className={num} name="unit" value={this.state[num]["unit"] || ''} style = {this.unit_style} onChange = {this.unit_change}>
+            <select  className={num} name="unit" value={this.state[num]["unit"] || ''} style = {this.unit_style} onChange = {this.unit_change}>
+               <option value="SELECT">SELECT</option>
                 {this.state[num]["full_pk_quant"] === 1 ? 
                     <option value = {this.state[num]["unit_temp"]}>{this.state[num]["unit_temp"]}</option> :
                 this.state[num]["full_pk_quant"] > 1 ? 
                 <Fragment>
-                    <option  value = {this.state[num]["unit_temp"]}>
+                    <option value = {this.state[num]["unit_temp"]}>
                         {this.state[num]["unit_temp"] + " "} 
                         ({this.state[num]["unit_quantity"]})
                     </option> 
@@ -369,24 +419,27 @@ map_stuff = (num) =>{
 }
 
 render(){
+    console.log(this.props.loi)
     const products = this.props.products
     const {id_list,...vals} = this.state
     let total = 0
     for (let id of id_list){
         total = parseFloat(total) + parseFloat(vals[id]["total"])
-        total= total.toFixed(2)
     }
+    total= total.toFixed(2)
+
+ 
     return (
         <div className="card" id="form-container">
+            <div className="order_id">Order Id : {this.props.last_orderid? this.props.last_orderid:null}</div>
             <form className="form-class1">
                     <div id = "table-grid" >
-                        
-                            <div className="grid-headings">Product</div>
-                            <div className="grid-headings">Generic</div>
+                            <div className="grid-headings">pro</div>
+                            <div className="grid-headings">gen</div>
                             <div className="grid-headings">Unit</div>
-                            <div className="grid-headings">Quantity</div>
-                            <div className="grid-headings">Unit cost</div>
-                            <div className="grid-headings">Total</div>
+                            <div className="grid-headings">q</div>
+                            <div className="grid-headings">Unit c</div>
+                            <div className="grid-headings">Tot</div>
                         
                         {id_list.map(this.map_stuff)}
                     
@@ -402,6 +455,8 @@ render(){
 
 
 const mapStateToProps = (state) => ({
-    products : state.search.products
+    products : state.search.products,
+    last_orderid:state.search.last_orderid,
+    loi:state.search.loi
 })
-export default connect(mapStateToProps,{search_brand})(Order)
+export default connect(mapStateToProps,{search_brand,get_last_order,send_orderproduct})(Order)

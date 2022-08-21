@@ -6,7 +6,8 @@ class OrderProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderProduct
-        fields = ("generic_name","brand_name","presentation","quantity_ordered","total_cost")
+        # fields = ("generic_name","brand_name","presentation","quantity_ordered","total_cost")
+        exclude = ("buyer","ordered")
 
 
 
@@ -28,10 +29,11 @@ class BrandDescSerializer(serializers.Serializer):
 
 class ProductDetailSerializer(serializers.Serializer):
     # serial = serializers.IntegerField()
+    id = serializers.IntegerField()
     brand_description = serializers.CharField()
     generic_name = serializers.CharField()
     presentation = serializers.CharField()
-    price = serializers.IntegerField()
+    raw_cost = serializers.IntegerField()
     full_pack_quantity = serializers.IntegerField()
     unit_quantity = serializers.CharField()
 

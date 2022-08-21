@@ -8,7 +8,8 @@ from '../actions/types'
 
 const initialState = {
     token:localStorage.getItem("token"),
-    user:null,
+    email:null,
+    company_name:null,
     isAuthenticated:false,
     justregistered:false
 }
@@ -32,11 +33,13 @@ export default function(state=initialState,action){
             }
 
         case USER_LOADED:
+            console.log(action.payload)
             return {
                 ...state,
                 ...action.payload,
                 isAuthenticated:true,
                 justregistered:false
+
 
             }
 

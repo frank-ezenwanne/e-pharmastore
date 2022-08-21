@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import generics, permissions
 from knox.models import AuthToken
 from .serializers import LoginSerializer,RegisterSerializer,UserSerializer
+from django.core.mail import send_mail
 
 class UserAPI(generics.RetrieveAPIView):
   permission_classes = [
@@ -52,9 +53,12 @@ class RegisterAPI(APIView):
     serializer_class = RegisterSerializer
 
     def post(self,request,*args,**kwargs):
+        # send_mail("subject","change",'messenger@localhost.com',["efrank272@gmail.com"])
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        # user.set_token()
+        
         return Response({
                 "user":UserSerializer(user,context=self.get_serializer_context()).data,
                 "token": AuthToken.objects.create(user)[1]

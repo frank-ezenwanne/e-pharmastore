@@ -2,14 +2,14 @@ import axios from 'axios'
 import {LOGIN_SUCCESS,LOGOUT_SUCCESS,REGISTER_SUCCESS,USER_LOADED} from "./types"
 
 
-export const register=(username,password,email)=>(dispatch)=>{
+export const register=(company_name,password,email)=>(dispatch)=>{
     const config={
         headers:{
             "Content-Type":"application/json"
         }
     }
 
-    const body = JSON.stringify({username,password,email})
+    const body = JSON.stringify({company_name,password,email})
 
     axios
         .post("api/auth/register",body,config)
@@ -26,14 +26,14 @@ export const register=(username,password,email)=>(dispatch)=>{
         })
 }
 
-export const login = (username, password) => (dispatch) => {
+export const login = (email, password) => (dispatch) => {
     const config = {
         headers :{
             "Content-Type" :"application/json"
         }
     }
 
-    const body = JSON.stringify({username, password})
+    const body = JSON.stringify({email, password})
 
     axios
         .post("api/auth/login",body,config)
@@ -58,17 +58,19 @@ export const loaduser = () => (dispatch,getState) => {
         headers:{"Content-Type":"application/json"}
     }
     const token = getState().auth.token
+
     if(token) {
         config.headers["Authorization"] = `Token ${token}`
     }
 
     axios
-        .get("user",config)
+        .get("api/auth/user",config)
         .then((res)=>{
             dispatch({
                 type:USER_LOADED,
                 payload:res.data
             })
+            console.log(res.data)
         })
 
         .catch((err) =>{

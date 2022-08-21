@@ -46,6 +46,14 @@ min-width:25rem
 	
 }
 
+.order_id{
+	width:20rem
+}
+
+.order-create-button{
+	cursor: pointer;
+}
+
 .form-class1{
 	width:60vw
 }
@@ -87,6 +95,10 @@ width:100%
 #table-headings{
 	display: flex;
 	justify-content:space-around
+}
+
+.customer-page{
+	color:white
 }
 
 nav{
@@ -181,6 +193,7 @@ margin-left:2rem;
 display:flex;
 flex-direction:row;
 justify-content:space-around;
+color:white
 }
 
  nav a:hover{
@@ -188,7 +201,7 @@ justify-content:space-around;
 }
 
 .nav-bar-other-inner{
-	margin-left:1rem
+	margin-left:0rem
 }
 
 #content{

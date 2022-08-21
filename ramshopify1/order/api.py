@@ -4,13 +4,15 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.decorators import api_view
 from .serializers import OrderProductSerializer,BrandDescSerializer,ProductDetailSerializer,GetIdSerializer,ProductSerializer,GetOrderProductSerializer,GenericSerializer
-from .models import Brand_Alphabetic,Product,Generic_Alphabetic,Order,OrderProduct
-
+from .models import Brand_Alphabetic,Product,Generic_Alphabetic,Order,OrderProduct,Order
+from django.conf.global_settings import AUTH_USER_MODEL as CustomUser
+from django.utils import timezone
 
 class CreateOrder(APIView):
     permission_classes = [IsAuthenticated]
     def post(self,request,*args,**kwargs):
         order = Order.objects.create(buyer = request.user)
+        print(order.id)
         return Response({"order_id":order.id})
 
 
@@ -19,10 +21,33 @@ class OrderView(APIView):
     def post(self,request,*args,**kwargs):#post a new order product
         order_product = OrderProductSerializer(data=request.data)
         order_product.is_valid(raise_exception=True)
-        if Order.objects.get(id = int(order_product.order_id)):
-            #check cart id gotten from frontend
-            order_product.save()
-            return Response({"id":order_product.id,"serial":order_product.serial})
+        order = order_product.validated_data["order_id"]
+        order_id = order.id
+        user = request.user
+          #check cart id gotten from frontend
+        order = Order.objects.get(id = int(order_product.validated_data["order_id"].id))
+        if order:
+            if order.buyer == request.user:
+                instance=""
+                for stored_op in order.order_products.all():
+                    if stored_op.serial == order_product.validated_data["serial"]:
+                        instance = stored_op
+                        break
+                if instance != "":
+                    update_list = ( "product_id","generic_name","brand_description","presentation","cost","quantity_ordered",
+                    "full_pack_quantity","unit_quantity","serial")
+                    for field in update_list:
+                        setattr(instance,field,order_product.validated_data[field])
+                    instance.created = timezone.now()
+                    instance.save()
+                
+
+                else:
+                    instance=order_product.save(buyer = request.user)
+                    order.order_products.add(instance)
+                    order.save()
+                return Response({"order_productid":instance.id})
+            return Response({ "error" : "You don't own this order","saved":0},status = status.HTTP_404_NOT_FOUND)
  
         return Response({ "error" : "Order Cart not found","saved":0},status = status.HTTP_404_NOT_FOUND)
         
@@ -117,3 +142,32 @@ def generic_list(request): #returns list of generic names similar to input
     options = Generic_Alphabetic.objects.filter(generic_name = search_phrase)
     options = GenericSerializer(options,many=True)
     return Response({"generics":options.data})
+
+
+class GetLastOrder(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self,request,*args,**kwargs):
+        user = self.request.user
+        last_order = Order.objects.filter(buyer=request.user).order_by('open_date').last()
+        if not last_order:
+            last_order = Order.objects.create(buyer=request.user)
+            return Response({"last_orderid":last_order.id})
+        print(last_order.order_products.all())
+        last_order_items = {}
+        for loi in last_order.order_products.all():
+            
+            obj = {}
+            update_list = ("generic_name","brand_description","presentation","cost","quantity_ordered",
+                    "full_pack_quantity","unit_quantity","serial")
+            for field in update_list:
+                obj[field] = getattr(loi,field)
+            obj["product_id"] = loi.product_id.id
+            last_order_items[loi.serial] = obj
+        
+        sorted_loi={}
+        for key in sorted(last_order_items):
+            sorted_loi[key] = last_order_items[key]
+        print(sorted_loi)
+        return Response({"loi":sorted_loi,
+                        "last_orderid":last_order.id
+        })
