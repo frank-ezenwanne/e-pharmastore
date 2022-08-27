@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.decorators import api_view
-from .serializers import OrderProductSerializer,BrandDescSerializer,ProductDetailSerializer,GetIdSerializer,ProductSerializer,GetOrderProductSerializer,GenericSerializer
+from .serializers import OrderProductSerializer,BrandDescSerializer,ProductDetailSerializer,ProductDetailSerializerGen,GetIdSerializer,ProductSerializer,GetOrderProductSerializer,GenericSerializer
 from .models import Brand_Alphabetic,Product,Generic_Alphabetic,Order,OrderProduct,Order
 from django.conf.global_settings import AUTH_USER_MODEL as CustomUser
 from django.utils import timezone
@@ -34,8 +34,8 @@ class OrderView(APIView):
                         instance = stored_op
                         break
                 if instance != "":
-                    update_list = ( "product_id","generic_name","brand_description","presentation","cost","quantity_ordered",
-                    "full_pack_quantity","unit_quantity","serial")
+                    update_list = ( "product_id","generic_name","brand_description","selected_unit","cost","raw_cost","quantity_ordered",
+                    "full_pack_quantity","unit_quantity","serial",'total')
                     for field in update_list:
                         setattr(instance,field,order_product.validated_data[field])
                     instance.created = timezone.now()
@@ -125,14 +125,15 @@ def product_forbrand(request): # On insert of brand description, it returns list
         return Response({"error":'serial not found'})
     return Response({"products":{serial:options.data}})
 
-@api_view(['GET'])
+@api_view(['POST'])
 def product_forgeneric(request):# On insert of generic, it returns list of corr product records 
     generic_serializer = GenericSerializer(data=request.data)
     generic_serializer.is_valid(raise_exception=True)
     search_phrase = generic_serializer.validated_data["generic_name"]
     options = Product.objects.filter(generic_name = search_phrase)
-    options = GenericSerializer(options,many=True)
-    return Response({"products":options.data})
+    options = ProductDetailSerializerGen(options,many=True)
+    print(options.data)
+    return Response({"generic_products":options.data})
     
 @api_view(['GET'])
 def generic_list(request): #returns list of generic names similar to input
@@ -152,22 +153,20 @@ class GetLastOrder(APIView):
         if not last_order:
             last_order = Order.objects.create(buyer=request.user)
             return Response({"last_orderid":last_order.id})
-        print(last_order.order_products.all())
         last_order_items = {}
         for loi in last_order.order_products.all():
             
             obj = {}
-            update_list = ("generic_name","brand_description","presentation","cost","quantity_ordered",
-                    "full_pack_quantity","unit_quantity","serial")
+            update_list = ("generic_name","brand_description","selected_unit","cost","raw_cost","quantity_ordered",
+                    "full_pack_quantity","unit_quantity","serial","total")
             for field in update_list:
                 obj[field] = getattr(loi,field)
             obj["product_id"] = loi.product_id.id
+            obj["unit"] = loi.product_id.unit
             last_order_items[loi.serial] = obj
-        
         sorted_loi={}
         for key in sorted(last_order_items):
             sorted_loi[key] = last_order_items[key]
-        print(sorted_loi)
         return Response({"loi":sorted_loi,
                         "last_orderid":last_order.id
         })

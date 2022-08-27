@@ -12,9 +12,9 @@ module.exports={
             },
 
             {
-               test:/\.(jpg|jpeg|png|ttf)$/,
+               test:/\.(jpg|jpeg|png|svg|ttf)$/,
                use:{
-                   loader:"url-loader"
+                   loader:"file-loader"
                }
             }
    

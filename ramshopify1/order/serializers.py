@@ -32,15 +32,21 @@ class ProductDetailSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     brand_description = serializers.CharField()
     generic_name = serializers.CharField()
-    presentation = serializers.CharField()
+    unit = serializers.CharField()
     raw_cost = serializers.IntegerField()
     full_pack_quantity = serializers.IntegerField()
     unit_quantity = serializers.CharField()
 
-class GenericSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = ("generic_name",)
+class GenericSerializer(serializers.Serializer):
+    generic_name = serializers.CharField()
+
+class ProductDetailSerializerGen(serializers.Serializer):
+    id = serializers.IntegerField()
+    brand_description = serializers.CharField()
+    unit = serializers.CharField()
+    raw_cost = serializers.IntegerField()
+    full_pack_quantity = serializers.IntegerField()
+    unit_quantity = serializers.CharField()
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:

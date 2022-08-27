@@ -1,4 +1,4 @@
-import React, {Component,useState,useRef} from "react"
+import React, {useState,useRef} from "react"
 import {Link} from 'react-router-dom'
 import {connect} from "react-redux"
 import {logout} from "../actions/auth"

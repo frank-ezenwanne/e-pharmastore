@@ -11,7 +11,7 @@ class Product(models.Model):
     brand_description = models.CharField(max_length = 150,null=True)
     department = models.CharField(max_length = 15,null=True)
     dosage_form = models.CharField(max_length = 20,null=True)
-    presentation = models.CharField(max_length = 30,null=True)
+    unit = models.CharField(max_length = 30,null=True)
     category = models.CharField(max_length = 100,null=True)
     raw_cost = models.FloatField(null=True)
     quantity_left = models.IntegerField(null=True)
@@ -96,7 +96,7 @@ class Generic_Alphabetic(models.Model):
 
 class OrderProduct(models.Model):
     serial = models.IntegerField(null=True) #serial created by frontend
-    presentation = models.CharField(max_length = 30)
+    selected_unit = models.CharField(max_length = 30)
     brand_description = models.CharField(max_length = 50)
     generic_name = models.CharField(max_length = 50,null=True,blank=True)
     product_id = models.ForeignKey(Product,on_delete=models.PROTECT)
@@ -105,8 +105,10 @@ class OrderProduct(models.Model):
     ordered = models.BooleanField(default=False)
     order_id=models.ForeignKey('Order',on_delete=models.CASCADE) #cart id
     cost = models.FloatField(null=True)
-    unit_quantity = models.IntegerField(null=True) #Remove null later
+    unit_quantity = models.CharField(max_length=10,null=True) #Remove null later
     full_pack_quantity = models.IntegerField(null=True)
+    raw_cost = models.FloatField(null=True)
+    total = models.FloatField(null=True)
     created  = models.DateTimeField(default=timezone.now)
     
     def __str__(self):
@@ -138,6 +140,7 @@ class Order(models.Model):
     open_date = models.DateTimeField(default=timezone.now)
     ordered_date = models.DateTimeField(null=True,blank=True)
     ordered = models.BooleanField(default = False)
+    order_total = models.FloatField(null=True)
 
 
     def __str__(self):

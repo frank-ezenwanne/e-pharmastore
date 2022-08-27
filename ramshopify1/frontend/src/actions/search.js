@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {BRANDS_RETRIEVED} from './types'
 import {ORDER_CREATED,CHANGE_CREATED_FALSE,LAST_ORDER_FETCHED,
-    ORDER_PRODUCT_CREATED
+    ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDER_PRODUCT_NOT_CREATED,GENERIC_PRODUCTS_RETRIEVED
 } from '../actions/types'
 
 
@@ -34,10 +34,14 @@ export const create_order = () => (dispatch,getState) =>{
 
 export const send_orderproduct = (product_id,generic_name,
     brand_description,
-    presentation,cost,quantity_ordered,
-    full_pack_quantity,unit_quantity,
+    selected_unit,cost,raw_cost,quantity_ordered,
+    full_pack_quantity,unit_quantity,total,
     serial,order_id) => (dispatch,getState) =>
     {
+        dispatch({
+            type:ORDER_PRODUCT_CREATING,
+            payload:{[serial]:true}
+        })
         const config={
             headers:{
                 "Content-Type":"application/json"
@@ -50,27 +54,29 @@ export const send_orderproduct = (product_id,generic_name,
 
         const body = {product_id,generic_name,
             brand_description,
-            presentation,cost,quantity_ordered,
-            full_pack_quantity,unit_quantity,
+            selected_unit,cost,raw_cost,quantity_ordered,
+            full_pack_quantity,unit_quantity,total,
             serial,order_id}
 
         axios
         .post("api/post_orderproduct",body,config)
         .then((res)=>{
+       
             dispatch({
                 type:ORDER_PRODUCT_CREATED,
-                payload:res.data
-            })
-            
+                payload:{   data:res.data, serial: { [serial]:false }
+            }})  
         })
     
         .catch((err) =>{
             console.log(err.response)
+            dispatch({
+                type:ORDER_PRODUCT_NOT_CREATED,
+                payload:{[serial]:"error"}
+            })
         })
 
 }
-
-
 
 
 
@@ -114,7 +120,6 @@ export const change_created_status = () => (dispatch)=>{
 }
 
 
-
 export const search_brand = (brand_description,serial) => (dispatch) =>{
     const config={
         headers:{
@@ -123,7 +128,6 @@ export const search_brand = (brand_description,serial) => (dispatch) =>{
     }
 
     const body = JSON.stringify({brand_description,serial})
-    console.log(body)
 
     axios
     .post("api/get_brand_options",body,config)
@@ -142,4 +146,32 @@ export const search_brand = (brand_description,serial) => (dispatch) =>{
     )
 }
 
+
+export const getGenProducts = (generic_name) => (dispatch) =>{
+    const config={
+        headers:{
+            "Content-Type":"application/json"
+        }
+    }
+
+    const body = JSON.stringify({generic_name})
+
+    axios
+    .post("api/get_generic_products",body,config)
+    .then((res)=>{
+        console.log("retrieved")
+        dispatch({
+            type:GENERIC_PRODUCTS_RETRIEVED,
+            payload:res.data
+        })
+    })
+
+    .catch(
+        (err) => {
+            console.log(err.response)
+        }
+    )
+
+
+}
 
