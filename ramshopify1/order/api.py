@@ -1,9 +1,13 @@
+from re import A
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.decorators import api_view
-from .serializers import OrderProductSerializer,BrandDescSerializer,ProductDetailSerializer,ProductDetailSerializerGen,GetIdSerializer,ProductSerializer,GetOrderProductSerializer,GenericSerializer
+from .serializers import( OrderProductSerializer,BrandDescSerializer,
+OrderSerializer,ProductDetailSerializer,ProductDetailSerializerGen,
+GetIdSerializer,ProductSerializer,GetOrderProductSerializer,GenericSerializer)
+
 from .models import Brand_Alphabetic,Product,Generic_Alphabetic,Order,OrderProduct,Order
 from django.conf.global_settings import AUTH_USER_MODEL as CustomUser
 from django.utils import timezone
@@ -29,7 +33,7 @@ class OrderView(APIView):
         if order:
             if order.buyer == request.user:
                 instance=""
-                for stored_op in order.order_products.all():
+                for stored_op in order.order_products.all():#check if orderproduct exists in order
                     if stored_op.serial == order_product.validated_data["serial"]:
                         instance = stored_op
                         break
@@ -110,9 +114,7 @@ class OrderProductView(APIView):#finish up with database gen id
 @api_view(['POST'])
 def product_forbrand(request): # On insert of brand description, it returns list of product records 
     brand_serializer = BrandDescSerializer(data=request.data)
-    print(request.data)
     brand_serializer.is_valid(raise_exception=True)
-    print(request.data)
     search_phrase = brand_serializer.validated_data["brand_description"]
     # col = search_phrase[0]
     # col__icontains = col + "__icontains"
@@ -149,7 +151,7 @@ class GetLastOrder(APIView):
     permission_classes = [IsAuthenticated]
     def get(self,request,*args,**kwargs):
         user = self.request.user
-        last_order = Order.objects.filter(buyer=request.user).order_by('open_date').last()
+        last_order = Order.objects.filter(buyer=request.user).order_by('last_updated').last()
         if not last_order:
             last_order = Order.objects.create(buyer=request.user)
             return Response({"last_orderid":last_order.id})
@@ -170,3 +172,27 @@ class GetLastOrder(APIView):
         return Response({"loi":sorted_loi,
                         "last_orderid":last_order.id
         })
+
+
+
+class GetCustomerOrders(APIView):
+    permission_classes=[IsAuthenticated,]
+    def get(self,request,*args,**kwargs):
+        orders = Order.objects.filter(buyer=request.user).order_by('-open_date')
+        serialized = OrderSerializer(orders,many=True)
+        return Response({"customer_orders":serialized.data})
+
+class MakeLastOrder(APIView):
+    permission_classes=[IsAuthenticated,]
+    def post(self,request,*args,**kwargs):
+        serializer = GetIdSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        print(serializer.validated_data,900)
+        id = serializer.validated_data["id"]
+        order = Order.objects.get(id=id)
+        if order:
+            order.save()
+            return Response({"last_orderid":order.id})
+        return Response({"error":"This orderId does not exist"},status = status.HTTP_404_NOT_FOUND)
+
+

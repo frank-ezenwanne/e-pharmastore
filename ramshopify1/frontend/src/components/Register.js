@@ -30,12 +30,11 @@ class Register extends Component {
         const {email,company_name, password, password2 } = this.state
         if (password === password2) {
             const newUser = {
-                username,
                 password,
                 email,
                 company_name
             }
-            this.props.register(username, password, email)
+            this.props.register(company_name, password, email)
         }
     }
 

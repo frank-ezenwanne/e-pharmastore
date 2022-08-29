@@ -1,7 +1,9 @@
 import {BRANDS_RETRIEVED} from '../actions/types'
 import {ORDER_CREATED,CHANGE_CREATED_FALSE,
     LAST_ORDER_FETCHED,
-    ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDER_PRODUCT_NOT_CREATED,GENERIC_PRODUCTS_RETRIEVED
+    ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDERS_RETRIEVED,
+    ORDER_PRODUCT_NOT_CREATED,GENERIC_PRODUCTS_RETRIEVED,ORDER_MADE_LAST,
+    CLEAR_GENERIC_PRODUCTS
 } from '../actions/types'
 
 
@@ -14,11 +16,14 @@ const initialState = {
     loi:{},
     orderCreating:false,
     loading_serials:{},
-    generic_products: {}
+    generic_products: null,
+    customer_orders:null,
+    selected_order_made_last:false
 }
 
 export default function (state = initialState,action){
     switch(action.type){
+        
         case BRANDS_RETRIEVED:
             return {
                 ...state,
@@ -32,10 +37,25 @@ export default function (state = initialState,action){
                ...action.payload
             }
 
+        case ORDERS_RETRIEVED:
+          return{
+              ...state,
+              ...action.payload
+             
+          }  
+
+        case ORDER_MADE_LAST:
+            return{
+                ...state,
+                ...action.payload,
+                selected_order_made_last:true
+            }
+
         case CHANGE_CREATED_FALSE:
             return {
                 ...state,
-                just_created:false
+                just_created:false,
+                selected_order_made_last:false
             }
 
         case LAST_ORDER_FETCHED:
@@ -73,6 +93,11 @@ export default function (state = initialState,action){
                 ...action.payload
             }
 
+        case CLEAR_GENERIC_PRODUCTS:
+            return {
+                ...state,
+                generic_products:null
+            }
         
 
         default:

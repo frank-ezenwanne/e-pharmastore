@@ -1,7 +1,9 @@
 import axios from 'axios'
 import {BRANDS_RETRIEVED} from './types'
 import {ORDER_CREATED,CHANGE_CREATED_FALSE,LAST_ORDER_FETCHED,
-    ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDER_PRODUCT_NOT_CREATED,GENERIC_PRODUCTS_RETRIEVED
+    ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDER_PRODUCT_NOT_CREATED,
+    GENERIC_PRODUCTS_RETRIEVED,CLEAR_GENERIC_PRODUCTS,ORDERS_RETRIEVED,ORDER_MADE_LAST,
+  
 } from '../actions/types'
 
 
@@ -120,6 +122,8 @@ export const change_created_status = () => (dispatch)=>{
 }
 
 
+
+
 export const search_brand = (brand_description,serial) => (dispatch) =>{
     const config={
         headers:{
@@ -145,6 +149,75 @@ export const search_brand = (brand_description,serial) => (dispatch) =>{
         }
     )
 }
+
+export const get_customer_orders = () => (dispatch,getState) =>{
+    const config={
+        headers:{
+            "Content-Type":"application/json"
+        }
+    }
+
+    const token = getState().auth.token
+
+    if(token) {
+        config.headers["Authorization"] = `Token ${token}`
+    }
+
+
+    axios
+    .get("api/get_customer_orders",config)
+    .then((res)=>{
+        console.log("orders retrieved")
+        dispatch({
+            type:ORDERS_RETRIEVED,
+            payload:res.data
+        })
+    })
+
+    .catch(
+        (err) => {
+            console.log(err.response)
+        }
+    )
+}
+
+//get selected order
+export const get_selected_order = (id) => (dispatch,getState) =>{
+    const config={
+        headers:{
+            "Content-Type":"application/json"
+        }
+    }
+
+    const token = getState().auth.token
+
+    if(token) {
+        config.headers["Authorization"] = `Token ${token}`
+    }
+
+    const body = JSON.stringify({id})
+
+    axios
+    .post("api/get_selected_order",body,config)
+    .then((res)=>{
+        console.log("selected order made lt")
+        dispatch({
+            type:ORDER_MADE_LAST,
+            payload:res.data
+        })
+    })
+
+    .catch(
+        (err) => {
+            console.log(err.response)
+        }
+    )
+}
+
+
+
+
+
 
 
 export const getGenProducts = (generic_name) => (dispatch) =>{
@@ -173,5 +246,12 @@ export const getGenProducts = (generic_name) => (dispatch) =>{
     )
 
 
+}
+
+
+export const clear_gen_products = ()=>(dispatch)=>{
+    dispatch({
+        type:CLEAR_GENERIC_PRODUCTS,
+    })
 }
 

@@ -141,6 +141,7 @@ class Order(models.Model):
     ordered_date = models.DateTimeField(null=True,blank=True)
     ordered = models.BooleanField(default = False)
     order_total = models.FloatField(null=True)
+    last_updated = models.DateTimeField(auto_now=True)
 
 
     def __str__(self):

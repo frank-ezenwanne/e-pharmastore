@@ -17,6 +17,8 @@ class Login extends Component{
 
     }
 
+    
+
    
 
     onchange = (e) => {
@@ -33,10 +35,9 @@ class Login extends Component{
 
 
     render(){
-
-       if(this.props.isAuthenticated){
+            if(this.props.isAuthenticated){
            return <Navigate to = "/customerpage" />
-       }
+         }
        const {email, password } = this.state
        const justregdiv = (<div align="center" id="message">Your account has been 
        successfully created..You can now login</div>)

@@ -435,12 +435,12 @@ render(){
                 <div className="order_id">Order Id : {this.props.last_orderid? this.props.last_orderid:null}</div>
                 <form className="form-class1">
                         <div id = "table-grid-main" >
-                                <div className="grid-headings">pro</div>
-                                <div className="grid-headings">gen</div>
+                                <div className="grid-headings">Product</div>
+                                <div className="grid-headings">Generic</div>
                                 <div className="grid-headings">Unit</div>
-                                <div className="grid-headings">q</div>
-                                <div className="grid-headings">Unit c</div>
-                                <div className="grid-headings">Tot</div>
+                                <div className="grid-headings">Quantity</div>
+                                <div className="grid-headings">Unit cost</div>
+                                <div className="grid-headings">Total</div>
                             
                             {id_list.map(this.map_stuff)}
                         

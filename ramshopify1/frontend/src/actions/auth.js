@@ -21,7 +21,6 @@ export const register=(company_name,password,email)=>(dispatch)=>{
         })
 
         .catch((err) => {
-    
             console.log(err.response);
         })
 }

@@ -1,5 +1,7 @@
 import React ,{Fragment,useState,useEffect} from "react"
 import {connect} from 'react-redux'
+import {clear_gen_products} from '../../actions/search'
+
 
 function GenericModalTable(props) {
 
@@ -19,7 +21,7 @@ const [products,setProducts] = useState({ "1":{
 
 useEffect(
   ()=>{
-    console.log(props.generic_products)
+    
     let id_list = []
     let counter = 0
     let obj = {}
@@ -28,23 +30,25 @@ useEffect(
             id_list.push(props.generic_products[id].id)
             if(props.generic_products[id].full_pack_quantity === 1){
               props.generic_products[id].selected_unit = props.generic_products[id].unit
-              props.generic_products[id].cost = props.generic_products[id].cost
+              props.generic_products[id].cost = props.generic_products[id].raw_cost
             }
             else{
               if(props.generic_products[id].full_pack_quantity > 1){
                 props.generic_products[id].selected_unit = "FULL PACK"
-                props.generic_products[id].cost = props.generic_products[id].cost
+                props.generic_products[id].cost = props.generic_products[id].raw_cost
               }
             }
             obj[props.generic_products[id].id] = props.generic_products[id]
         }
-        console.log(obj)
         
         setProducts({
           ...products,
           ...obj,
           id_list
         })
+    }
+    return () => {
+      props.clear_gen_products()
     }
   },[props.generic_products]
 )
@@ -126,7 +130,7 @@ const unit_change = (e) =>{
               <select  className={num + ' '+  'form-control'} name="selected_unit" value={products[num]["selected_unit"] || ''} style = {unit_style} onChange = {unit_change}>
                  {/* <option value="SELECT">SELECT</option> */}
                   {products[num]["full_pack_quantity"] === 1 ? 
-                      <option value = {products[num]["selected_unit"]}>{products[num]["unit"]}</option> :
+                      <option value = {products[num]["unit"]}>{products[num]["unit"]}</option> :
                   products[num]["full_pack_quantity"] > 1 ? 
                   <Fragment>
 
@@ -135,7 +139,7 @@ const unit_change = (e) =>{
                       ({products[num]["full_pack_quantity"]})
                       </option>
                       
-                      <option value = {products[num]["selected_unit"]}>
+                      <option value = {products[num]["unit"]}>
                           {products[num]["unit"] + " "} 
                           ({products[num]["unit_quantity"]})
                       </option> 
@@ -164,9 +168,9 @@ const unit_change = (e) =>{
 
           <form className="form-class1">
                   <div id = "table-grid-generic" >
-                          <div className="grid-headings">pro</div>
+                          <div className="grid-headings">Product</div>
                           <div className="grid-headings">Unit</div>
-                          <div className="grid-headings">Unit c</div>
+                          <div className="grid-headings">Unit Cost</div>
                       {products.id_list.map(map_stuff)}
                   </div>
             
@@ -180,5 +184,5 @@ const mapStateToProps=(state)=>({
   generic_products : state.search.generic_products
 })
 
-export default connect(mapStateToProps)(GenericModalTable)
+export default connect(mapStateToProps,{clear_gen_products})(GenericModalTable)
   

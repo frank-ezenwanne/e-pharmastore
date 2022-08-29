@@ -11,10 +11,8 @@ class OrderProductSerializer(serializers.ModelSerializer):
 
 
 
-class GetIdSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Order
-        fields = ("id")
+class GetIdSerializer(serializers.Serializer):
+    id=serializers.IntegerField()
 
 
 class GetOrderProductSerializer(serializers.ModelSerializer):
@@ -52,3 +50,26 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ("brand_description","generic_name","unit",)
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    num_items = serializers.SerializerMethodField()
+    open_date = serializers.SerializerMethodField()
+    ordered_date = serializers.SerializerMethodField()
+
+    def get_num_items(self,obj):
+        return obj.order_products.count()
+
+    def get_open_date(self,obj):
+        return obj.open_date.isoformat()
+
+    def get_ordered_date(self,obj):
+        if obj.ordered_date:
+            return obj.ordered_date.isoformat()
+        return obj.ordered_date
+
+    class Meta:
+        model = Order
+        exclude = ('buyer','order_products')
+
+        

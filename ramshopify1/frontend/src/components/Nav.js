@@ -1,7 +1,8 @@
-import React, {useState,useRef} from "react"
+import React, {Fragment,useState,useRef} from "react"
 import {Link} from 'react-router-dom'
 import {connect} from "react-redux"
 import {logout} from "../actions/auth"
+import Building from '../../svg/building.svg'
 
 
 
@@ -41,7 +42,7 @@ function Nav(props){
      
 
     const guestlinks = (<span className= "nav-bar-others" ><Link to = "/login">Sign In</Link></span>)
-    const authlinks = <div className= "nav-bar-other-group"><span className= "nav-bar-other-inner" >Start</span>
+    const authlinks = <div className= "nav-bar-other-group"><img src={Building}/><span className= "nav-bar-other-inner">Welcome {props.company_name}</span>
 							<span onClick = {logout_func} className= "nav-bar-other-inner" >Logout</span></div>
 
     const lines = ["line1","line2","line3"]
@@ -60,16 +61,15 @@ function Nav(props){
 						<div id="nav-main-name">
 							<span className ="nav-bar-gamersblog">
 								<Link to = "/">
-									<span id= "navbar-name1">Find</span>
-									<span id= "navbar-name2">Here</span>
+									<span id= "navbar-name1">E-PHARMA</span>
+									<span id= "navbar-name2">STORE</span>
 								</Link>
 							</span>
 						</div>
 
 						<div id="nav-bar-others">
-							<span className= "nav-bar-others" >Latest</span>
-						{props.isAuthenticated ? authlinks:guestlinks}	
-						
+
+							{props.isAuthenticated ? authlinks:guestlinks}	
 						</div>
 
 					</div>
@@ -78,10 +78,22 @@ function Nav(props){
 				
 				
 				<div ref = {transbar_sidebar} className = "side-bar">
-					<span className = "side-bar-email">user</span>
-					<span className = "lower-side-bar">View Your Posts</span>
-					<span className = "lower-side-bar">Posts You Commented On</span>
-					<span className = "lower-side-bar">Logout</span>
+					{props.isAuthenticated?<Fragment>
+					<div className = "side-bar-combo">
+						<span className = "side-bar-email">{props.email}</span>
+						<span className = "lower-side-bar">My Page</span>
+						<span className = "lower-side-bar">View My Orders</span>
+						<span className = "lower-side-bar">Logout</span>
+					</div>
+					</Fragment>:
+					<Fragment>
+					<div className = "side-bar-combo">
+						<span className = "side-bar-email">Login</span>
+						<span className = "lower-side-bar">Register</span>
+					</div>
+					</Fragment>
+					 }
+					
 				</div>
 
 		
@@ -100,7 +112,8 @@ function Nav(props){
 
 const mapStateToProps = (state) => ({
 	isAuthenticated : state.auth.isAuthenticated,
-	auth:state.auth
+	email:state.auth.email,
+	company_name:state.auth.company_name
 })
 
 export default connect(mapStateToProps,{logout})(Nav)

@@ -8,6 +8,7 @@ from '../actions/types'
 
 const initialState = {
     token:localStorage.getItem("token"),
+    user:null,
     email:null,
     company_name:null,
     isAuthenticated:false,
@@ -29,7 +30,6 @@ export default function(state=initialState,action){
         case REGISTER_SUCCESS:
             return {...state,
                     justregistered:true,
-                    isAuthenticated:true,
             }
 
         case USER_LOADED:
