@@ -34,6 +34,7 @@ class ProductDetailSerializer(serializers.Serializer):
     raw_cost = serializers.IntegerField()
     full_pack_quantity = serializers.IntegerField()
     unit_quantity = serializers.CharField()
+    brand_description_slug = serializers.CharField()
 
 class GenericSerializer(serializers.Serializer):
     generic_name = serializers.CharField()

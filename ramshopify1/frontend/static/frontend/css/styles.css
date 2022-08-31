@@ -225,11 +225,16 @@ margin-right:-2rem;
 	position:absolute;
 	top:22%;
 	left:25%;
+	cursor:pointer;
 	
 }
 
 .order-info-item{
 	border-bottom: 0.01rem solid rgb(245,245,245);
+}
+
+.order-info-create-date{
+	font-size:80%;
 }
 
 .order-svg-container{
@@ -247,6 +252,16 @@ margin-right:-2rem;
 }
 
 
+.radio-search-div{
+	width:inherit;
+	display: flex;
+	margin-top:1rem;
+	margin-bottom:1rem
+}
+
+.radio-input{
+	margin-right:1rem
+}
 
 
 nav  a{
@@ -640,7 +655,7 @@ font-size:85%;
 	height:40%;
 	margin:auto;
 	width:35%;
-	border:0.3rem solid rgb(220,220,220);
+	border:0.3rem solid rgb(100,100,100);
 	padding:2rem;
 	padding-left:10%;
 	border-radius:0.5rem;
@@ -683,7 +698,7 @@ font-size:85%;
 
 .login-heading{
  margin-left:1.6rem;
- color:white;
+ color:black;
 text-shadow:0rem 0.2rem #2F4F4F;
 }
 

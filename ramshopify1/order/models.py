@@ -9,6 +9,7 @@ class Product(models.Model):
     brand_name = models.CharField(max_length = 150,null=True)
     generic_name = models.CharField(max_length = 150,null=True)
     brand_description = models.CharField(max_length = 150,null=True)
+    brand_description_slug = models.CharField(max_length = 150,null=True)
     department = models.CharField(max_length = 15,null=True)
     dosage_form = models.CharField(max_length = 20,null=True)
     unit = models.CharField(max_length = 30,null=True)

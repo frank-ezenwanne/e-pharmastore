@@ -12,8 +12,7 @@ import uuid
 class CustomUserManager(BaseUserManager):
 
     use_in_migrations = True
-    def create_user(self, email, company_name, password=None,**extra_fields):
-        extra_fields.setdefault('is_superuser', False)
+    def create_user(self, email, company_name, password=None,is_superuser=False,**extra_fields):
         if not email:
             raise ValueError('Users must have an email address')
 
@@ -42,6 +41,7 @@ class CustomUserManager(BaseUserManager):
             email,
             password=password,
             company_name=company_name,
+            **extra_fields
         )
      
         user.save(using=self._db)
@@ -57,7 +57,7 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
     token = models.UUIDField(null=True, blank=True)
     company_name = models.CharField(max_length=100,unique=True)
     is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
     address = models.CharField(max_length=255)
     country = models.CharField(max_length=150)
@@ -78,6 +78,15 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
         self.token = token
         self.save()
 
+    def has_perm(self, perm, obj=None):
+        "Does the user have a specific permission?"
+        # Simplest possible answer: Yes, always
+        return True
+
+    def has_module_perms(self, app_label):
+        "Does the user have permissions to view the app `app_label`?"
+        # Simplest possible answer: Yes, always
+        return True
 
     @property
     def is_staff(self):

@@ -119,13 +119,14 @@ def product_forbrand(request): # On insert of brand description, it returns list
     # col = search_phrase[0]
     # col__icontains = col + "__icontains"
     # options = Brand_Alphabetic.objects.filter(**{col__icontains:True})
-    options = Product.objects.filter(brand_description__istartswith =search_phrase)
+    options = Product.objects.filter(brand_description_slug__istartswith =search_phrase).order_by('brand_description_slug')
     options = ProductDetailSerializer(options,many=True)
     try:
         serial = int(request.data["serial"])
     except:
         return Response({"error":'serial not found'})
     return Response({"products":{serial:options.data}})
+
 
 @api_view(['POST'])
 def product_forgeneric(request):# On insert of generic, it returns list of corr product records 

@@ -2,7 +2,7 @@ import axios from 'axios'
 import {BRANDS_RETRIEVED} from './types'
 import {ORDER_CREATED,CHANGE_CREATED_FALSE,LAST_ORDER_FETCHED,
     ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDER_PRODUCT_NOT_CREATED,
-    GENERIC_PRODUCTS_RETRIEVED,CLEAR_GENERIC_PRODUCTS,ORDERS_RETRIEVED,ORDER_MADE_LAST,
+    GENERIC_PRODUCTS_RETRIEVED,CLEAR_GENERIC_PRODUCTS,ORDERS_RETRIEVED,ORDER_MADE_LAST,CLEAR_LAST_ORDER_AND_ID
   
 } from '../actions/types'
 
@@ -255,3 +255,8 @@ export const clear_gen_products = ()=>(dispatch)=>{
     })
 }
 
+export const clear_loiId = () =>(dispatch)=>{
+    dispatch({
+        type:CLEAR_LAST_ORDER_AND_ID
+    })
+}

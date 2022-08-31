@@ -36,15 +36,15 @@ class CustomerPage extends Component{
         const {email,customer_orders,...rest} = this.props
         return(
             <Fragment key={id}>
-                <div onClick = {()=>this.props.get_selected_order(order.id)} className="order-svg-container">
+                <div className="order-svg-container">
                     <img className='img-fluid order-svg-style' src= {Cart}/>
-                    <div className = "order-info">
-                        <div className="order-info-item">Created:<br/>
+                    <div onClick = {()=>this.props.get_selected_order(order.id)} className = "order-info">
+                        <div className="order-info-item order-info-create-date">Created:<br/>
                             <Moment format="LLL">
                                 {order.open_date}
                             </Moment>
                         </div>
-                        <div className="order-info-item">
+                        <div className="order-info-item ">
                             {order.ordered_date && <Moment format="LLL">
                                 order.ordered_date_date </Moment>}
                         </div>

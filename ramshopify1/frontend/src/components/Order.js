@@ -1,6 +1,6 @@
 import React, {Component,Fragment} from "react"
 import {connect} from 'react-redux'
-import {search_brand,get_last_order,send_orderproduct,getGenProducts} from "../actions/search"
+import {search_brand,get_last_order,send_orderproduct,getGenProducts,clear_loiId} from "../actions/search"
 import {TailSpin} from 'react-loader-spinner'
 import Tick from '../../svg/tick.svg'
 import Cross from '../../svg/cross.svg'
@@ -28,7 +28,8 @@ class Order extends Component{
                     total:0,
                     quantity_ordered:""
                 
-                },  
+                }, 
+                radio_search_option:'quick', 
             first_letter:"",
             remove_list : {
                 display:"block"
@@ -68,13 +69,19 @@ componentDidUpdate(prevProps){
                     unit_quantity:0,
                     cost:0,
                     total:0,
-                    quantity_ordered:""
+                    quantity_ordered:'',
+                    brand_description_slug:''
             }
                
             })
         }
 
     
+}
+
+
+componentWillUnmount(){
+    this.props.clear_loiId()
 }
 
 
@@ -137,6 +144,7 @@ brand_change=(e)=>{
     const c_name = e.target.classList[0]
     this.setState({...this.state,
         [c_name]: {...this.state[c_name],brand_description:val,
+            brand_description_slug:'',
             product_id:null,
             generic_name:"",
             unit:"",
@@ -151,17 +159,31 @@ brand_change=(e)=>{
         remove_list:{display:"block"}
         
         },()=>{
-    
-            if(this.state[c_name][name_attrib] ==="" || this.state[c_name][name_attrib][0] !== this.state.first_letter){
-            
-                this.setState({...this.state,first_letter : val[0]})
-                if(val[0]){
-                    this.props.search_brand(val[0],c_name)
-                } 
-    
-                
+
+            if(this.state.radio_search_option === 'deep'){
+                const entry_txt_length = this.state[c_name][name_attrib].replace(/[^a-zA-Z0-9+&%] \s/g,'')
+                if( entry_txt_length >= 4 ){
+                    
+                }
+             
             }
-    })
+
+            else {
+                if(this.state[c_name][name_attrib] ==="" || this.state[c_name][name_attrib][0] !== this.state.first_letter){
+            
+                    this.setState({...this.state,first_letter : val[0]})
+                    if(val[0]){
+                        this.props.search_brand(val[0],c_name)
+                } 
+                
+                 }
+            }
+
+
+
+    } //end of callback
+       
+)
 
 
 }
@@ -284,6 +306,10 @@ onModal = (e) =>{
     
 }
 
+onChangeRadioSearch = (e) =>{
+    this.setState({'radio_search_option':e.target.value})
+}
+
 map_stuff = (num) =>{  
     num = String(num)
     const item = this.state[num] 
@@ -303,8 +329,10 @@ map_stuff = (num) =>{
           <div style = {this.state.remove_list} className ="list-section" >
                 {this.props.products[num]? this.props.products[num].map( (product,id)=>{
                     const input_length = this.state[num].brand_description.length
-                    const brand_slice=product.brand_description.slice(0,input_length)
-                    if(brand_slice.toLowerCase() === this.state[num].brand_description.toLowerCase() ){
+                    const brand_slice=product.brand_description_slug.slice(0,input_length)
+                    const brand_slice_raw =product.brand_description.slice(0,input_length)
+                    const entry = this.state[num].brand_description.replace(/[^a-zA-Z0-9+&%] \s/g,'')
+                    if(brand_slice.toLowerCase() === entry.toLowerCase() || brand_slice_raw.toLowerCase() === this.state[num].brand_description.toLowerCase() ){
                         return(
                     <div className="drugitem-cover" key={id}>
                         <div className='drugitem stretch' >
@@ -432,7 +460,12 @@ render(){
     return (
         <Fragment>
             <div className="card" id="form-container-main">
+                
                 <div className="order_id">Order Id : {this.props.last_orderid? this.props.last_orderid:null}</div>
+                <div  className = 'radio-search-div'>
+                  <div className = 'radio-input'> Quick search<input onChange = {this.onChangeRadioSearch} checked ={this.state.radio_search_option === 'quick' } type ='radio' value='quick' name="radio_search_option"></input></div>
+                  <div className = 'radio-input'> Deep search<input onChange = {this.onChangeRadioSearch} checked ={this.state.radio_search_option === 'deep' } type ='radio' value='deep' name="radio_search_option"></input></div>
+                </div>
                 <form className="form-class1">
                         <div id = "table-grid-main" >
                                 <div className="grid-headings">Product</div>
@@ -470,4 +503,4 @@ const mapStateToProps = (state) => ({
     orderCreating:state.search.orderCreating,
     loading_serials:state.search.loading_serials
 })
-export default connect(mapStateToProps,{search_brand,get_last_order,send_orderproduct,getGenProducts})(Order)
+export default connect(mapStateToProps,{search_brand,get_last_order,send_orderproduct,clear_loiId,getGenProducts})(Order)
