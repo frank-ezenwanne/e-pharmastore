@@ -2,7 +2,8 @@ import axios from 'axios'
 import {BRANDS_RETRIEVED} from './types'
 import {ORDER_CREATED,CHANGE_CREATED_FALSE,LAST_ORDER_FETCHED,
     ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDER_PRODUCT_NOT_CREATED,
-    GENERIC_PRODUCTS_RETRIEVED,CLEAR_GENERIC_PRODUCTS,ORDERS_RETRIEVED,ORDER_MADE_LAST,CLEAR_LAST_ORDER_AND_ID
+    GENERIC_PRODUCTS_RETRIEVED,CLEAR_GENERIC_PRODUCTS,ORDERS_RETRIEVED,
+    ORDER_MADE_LAST,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC,ORDER_PRODUCTS_DELETED
   
 } from '../actions/types'
 
@@ -124,14 +125,14 @@ export const change_created_status = () => (dispatch)=>{
 
 
 
-export const search_brand = (brand_description,serial) => (dispatch) =>{
+export const search_brand = (brand_description,radio_option,serial) => (dispatch) =>{
     const config={
         headers:{
             "Content-Type":"application/json"
         }
     }
 
-    const body = JSON.stringify({brand_description,serial})
+    const body = JSON.stringify({brand_description,radio_option,serial})
 
     axios
     .post("api/get_brand_options",body,config)
@@ -248,10 +249,49 @@ export const getGenProducts = (generic_name) => (dispatch) =>{
 
 }
 
+export const delOrderProducts = (order_id,del_list) => (dispatch,getState) =>{
+    const config={
+        headers:{
+            "Content-Type":"application/json"
+        }
+    }
+    const token = getState().auth.token
+
+    if(token) {
+        config.headers["Authorization"] = `Token ${token}`
+    }
+
+    const body = JSON.stringify({order_id,del_list})
+    axios
+    .post("api/delete_orderproduct",body,config)
+    .then((res)=>{
+        console.log("deleted_items")
+        dispatch({
+            type:ORDER_PRODUCTS_DELETED,
+            payload:res.data
+        })
+    })
+
+    .catch(
+        (err) => {
+            console.log(err.response)
+        }
+    )
+
+
+}
+
+
 
 export const clear_gen_products = ()=>(dispatch)=>{
     dispatch({
         type:CLEAR_GENERIC_PRODUCTS,
+    })
+}
+
+export const clear_brand_desc = ()=>(dispatch) =>{
+    dispatch({
+        type:CLEAR_BRAND_DESC
     })
 }
 

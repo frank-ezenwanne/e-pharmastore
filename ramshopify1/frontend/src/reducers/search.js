@@ -3,22 +3,26 @@ import {ORDER_CREATED,CHANGE_CREATED_FALSE,
     LAST_ORDER_FETCHED,
     ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDERS_RETRIEVED,
     ORDER_PRODUCT_NOT_CREATED,GENERIC_PRODUCTS_RETRIEVED,ORDER_MADE_LAST,
-    CLEAR_GENERIC_PRODUCTS,CLEAR_LAST_ORDER_AND_ID
+    CLEAR_GENERIC_PRODUCTS,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC
 } from '../actions/types'
 
 
 const initialState = {
     products:"",
+    products_deep:'',
     generics:"",
     order_id:null,
     just_created:false,
     last_orderid:null,
+    order_productid:'',
+    current_serial:'',
     loi:{},
     orderCreating:false,
     loading_serials:{},
     generic_products: null,
     customer_orders:null,
-    selected_order_made_last:false
+    selected_order_made_last:false,
+    
 }
 
 export default function (state = initialState,action){
@@ -70,7 +74,8 @@ export default function (state = initialState,action){
                 ...state,
                 orderCreating:true,
                 loading_serials:{...state.loading_serials,...action.payload},
-                products:{}
+                products:'',
+                products_deep:''
             }
 
         case ORDER_PRODUCT_CREATED:
@@ -106,6 +111,13 @@ export default function (state = initialState,action){
                 order_id:null
             }
         
+        case CLEAR_BRAND_DESC:
+            return {
+                ...state,
+                products:'',
+                products_deep:'',
+
+            }
 
         default:
             return state

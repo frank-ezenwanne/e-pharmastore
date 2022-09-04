@@ -15,14 +15,14 @@ class GetIdSerializer(serializers.Serializer):
     id=serializers.IntegerField()
 
 
-class GetOrderProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrderProduct
-        fields = ("order_product_id","order_id")
+class GetOrderProductSerializer(serializers.Serializer):
+    order_id = serializers.IntegerField()
+    del_list = serializers.ListField(child=serializers.IntegerField(),allow_empty =False)
 
 
 class BrandDescSerializer(serializers.Serializer):
     brand_description = serializers.CharField()
+    radio_option = serializers.CharField()
     
 
 class ProductDetailSerializer(serializers.Serializer):

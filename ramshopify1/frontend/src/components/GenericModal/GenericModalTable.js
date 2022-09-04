@@ -73,37 +73,34 @@ const unit_change = (e) =>{
     if(val === "SELECT"){
       setProducts({...products,
         [c_name]: {...products[c_name],selected_unit:val,cost:null}
+      })
     }
-    )}
     else{
-        
         const name_attrib = e.target.name
         const c_name = e.target.classList[0]
         let cost =0
         if(products[c_name]["full_pack_quantity"] === 1 || val === "FULL PACK"){
           cost = products[c_name]["raw_cost"]
-          setProducts({...products,
-            [c_name]: {...products[c_name],selected_unit:val,cost:cost.toFixed(2)}
-        })
+         
       }
           
       
         else{
-          const unit_quantity = parseInt(products[c_name]["unit_quantity"])
-          if (typeof(unit_quantity) === "number"){
-              const quant_ratio = products[c_name]["full_pack_quantity"]/unit_quantity
-              cost = products[c_name]["raw_cost"]/quant_ratio
-          }
-          else{
-              cost = products[c_name]["raw_cost"]/products[c_name]["full_pack_quantity"]
-          }
+          const check_no = Number(products[c_name]["unit_quantity"])
+            let unit_quantity = products[c_name]["unit_quantity"]
+            if (check_no){   
+                const quant_ratio = products[c_name]["full_pack_quantity"]/unit_quantity
+                cost = products[c_name]["raw_cost"]/quant_ratio
+            }
+            else{
+                  cost = products[c_name]["raw_cost"]/products[c_name]["full_pack_quantity"]
+                }
+         }
           setProducts({...products,
             [c_name]: {...products[c_name],selected_unit:val,cost:cost.toFixed(2)}
-        })
-      }
-      }
- 
-   }
+           })
+    }
+ }
 
 
 

@@ -37,7 +37,8 @@ background-color:rgb(240,240,240);
 max-height:20rem;
 overflow-y:scroll;
 min-width:25rem;
-z-index:3
+z-index:3;
+
 }
 
 #form-container-main{
@@ -46,9 +47,9 @@ z-index:3
 	margin-right:4vw;
 	margin-top:1.5rem;
 	padding-right:57rem;
-	padding-left:1rem;
+	padding-left:2.5rem;
 	padding-bottom:15rem;
-	height:20rem;
+	height:25rem;
 	overflow-x:hidden;
 	overflow-y:scroll;
 		
@@ -69,13 +70,7 @@ z-index:3
 	cursor: pointer;
 }
 
-.form-class1{
-	width:50vw
-}
 
-.form-class1-generic{
-	width:60vw
-}
 
 .drugitem{
 	width:100%;
@@ -176,6 +171,19 @@ display:flex;
 	width:18rem
 }
 
+.brand-minus-section{
+	display:flex;
+	justify-content: space-between;
+}
+
+.checkbox-elem{
+display:block;
+margin-left:-1rem;
+zoom:1.5;
+accent-color:red;
+
+}
+
 .quantity-div{
 	width:6.5rem
 }
@@ -251,12 +259,44 @@ margin-right:-2rem;
 	grid-template-columns:repeat(4,1fr);
 }
 
+.form-class1{
+	width:50vw
+}
 
-.radio-search-div{
-	width:inherit;
+.form-class1-generic{
+	width:60vw
+}
+.delete-cancel{
+	margin-left:0.5rem;
+	width:9rem;
+	height:100%;
+	display:inline-block
+}
+
+.delete-options-div{
+	margin-left:7rem;
+	display:flex;
+	height:100%;
+	width:100%
+}
+
+.order_id{
+	width: inherit;
+}
+
+
+.radio-delete-div{
+	width:82vw;
 	display: flex;
 	margin-top:1rem;
-	margin-bottom:1rem
+	margin-bottom:1rem;
+
+}
+
+.radio-search-option-div{
+	width:100%;
+	display:flex;
+	
 }
 
 .radio-input{
@@ -659,6 +699,7 @@ font-size:85%;
 	padding:2rem;
 	padding-left:10%;
 	border-radius:0.5rem;
+	background-color: #2E4A57;
 
 }
 
@@ -698,7 +739,7 @@ font-size:85%;
 
 .login-heading{
  margin-left:1.6rem;
- color:black;
+ color:rgb(240,240,240);
 text-shadow:0rem 0.2rem #2F4F4F;
 }
 

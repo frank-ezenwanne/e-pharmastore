@@ -1,6 +1,6 @@
 from django.urls import path,include
 from .api import (product_forbrand,product_forgeneric,CreateOrder,GetLastOrder,OrderView,
-GetCustomerOrders,MakeLastOrder)
+GetCustomerOrders,MakeLastOrder,OrderProductView)
 
 urlpatterns = [
 
@@ -11,5 +11,6 @@ urlpatterns = [
     path('api/post_orderproduct',OrderView.as_view()),
     path('api/get_customer_orders',GetCustomerOrders.as_view()),
     path('api/get_selected_order',MakeLastOrder.as_view()),
+    path('api/delete_orderproduct',OrderProductView.as_view())
 
 ]

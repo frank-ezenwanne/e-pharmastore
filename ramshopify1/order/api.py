@@ -1,4 +1,3 @@
-from re import A
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -50,7 +49,7 @@ class OrderView(APIView):
                     instance=order_product.save(buyer = request.user)
                     order.order_products.add(instance)
                     order.save()
-                return Response({"order_productid":instance.id})
+                return Response({'current_serial':instance.serial,'order_productid':instance.id})
             return Response({ "error" : "You don't own this order","saved":0},status = status.HTTP_404_NOT_FOUND)
  
         return Response({ "error" : "Order Cart not found","saved":0},status = status.HTTP_404_NOT_FOUND)
@@ -84,15 +83,24 @@ class OrderView(APIView):
 
 
 class OrderProductView(APIView):#finish up with database gen id
-    def delete(self,request,*args,**kwargs):
-        delete_request = GetIdSerializer(data=request.data)
+    permission_classes = [IsAuthenticated]
+    def post(self,request,*args,**kwargs):
+        delete_request = GetOrderProductSerializer(data=request.data)
         delete_request.is_valid(raise_exception = True)
-        order_product_id = delete_request.order_product_id
-        if OrderProduct.objects.get(id = int(order_product_id)):
-            order_product = OrderProduct.objects.get(id = int(order_product_id))
-            order_product.delete()       
-            return Response({"status":"deleted successfully"})
-        return Response({"error":"OrderProduct not found"},status = status.HTTP_404_NOT_FOUND)
+        order_id = delete_request.validated_data['order_id']
+        order = Order.objects.get(id = order_id)
+        if not order or order.buyer != request.user:
+            return Response({'error':'Order not found'},status = status.HTTP_404_NOT_FOUND)
+        del_list = delete_request.validated_data['del_list']
+        for id in del_list:
+            order_product = OrderProduct.objects.get(id=id)
+            if order_product and order_product.buyer==request.user and order_product in order.order_products.all():
+                order.order_products.remove(order_product)
+                order_product.delete()
+            else:
+                return Response({'error':'Orderproduct not found'},status = status.HTTP_404_NOT_FOUND)     
+        return Response({"status":"deleted successfully"})
+    
 
     def put(self,request,*args,**kwargs):
         put_request = OrderProductSerializer(data=request.data)
@@ -116,16 +124,23 @@ def product_forbrand(request): # On insert of brand description, it returns list
     brand_serializer = BrandDescSerializer(data=request.data)
     brand_serializer.is_valid(raise_exception=True)
     search_phrase = brand_serializer.validated_data["brand_description"]
-    # col = search_phrase[0]
-    # col__icontains = col + "__icontains"
-    # options = Brand_Alphabetic.objects.filter(**{col__icontains:True})
-    options = Product.objects.filter(brand_description_slug__istartswith =search_phrase).order_by('brand_description_slug')
-    options = ProductDetailSerializer(options,many=True)
+    radio_type = brand_serializer.validated_data["radio_option"]
     try:
         serial = int(request.data["serial"])
     except:
         return Response({"error":'serial not found'})
-    return Response({"products":{serial:options.data}})
+    print(search_phrase,12345)
+    # col = search_phrase[0]
+    # col__icontains = col + "__icontains"
+    # options = Brand_Alphabetic.objects.filter(**{col__icontains:True})
+    if radio_type == 'deep':
+        options = Product.objects.filter(brand_description_slug__icontains =search_phrase).order_by('brand_description_slug')
+        options = ProductDetailSerializer(options,many=True)
+        return Response({"products_deep":{serial:options.data}})
+    else:
+        options = Product.objects.filter(brand_description_slug__istartswith =search_phrase).order_by('brand_description_slug')
+        options = ProductDetailSerializer(options,many=True)
+        return Response({"products":{serial:options.data}})
 
 
 @api_view(['POST'])
@@ -160,7 +175,7 @@ class GetLastOrder(APIView):
         for loi in last_order.order_products.all():
             
             obj = {}
-            update_list = ("generic_name","brand_description","selected_unit","cost","raw_cost","quantity_ordered",
+            update_list = ('id',"generic_name","brand_description","selected_unit","cost","raw_cost","quantity_ordered",
                     "full_pack_quantity","unit_quantity","serial","total")
             for field in update_list:
                 obj[field] = getattr(loi,field)
