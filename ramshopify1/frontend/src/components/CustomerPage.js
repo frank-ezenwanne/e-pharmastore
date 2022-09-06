@@ -11,7 +11,7 @@ class CustomerPage extends Component{
     }
 
     pending_style ={
-        color:'pink',
+        color:'white',
         fontWeight:'bolder',
         textShadow:'0.01rem 0.01rem red'
     }

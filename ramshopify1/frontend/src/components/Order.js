@@ -9,7 +9,7 @@ import {clear_brand_desc} from '../actions/search'
 
 //.FIND OUT MEANING OF RENDER PURE FUNC ONLY
 
-class Order extends Component{
+class Order extends Component{class
     constructor(props){
         super(props);
         this.state = {
@@ -267,7 +267,7 @@ quantity_change = (e) =>{
             val = 0
         }
     
-        const c_name = e.target.classList[0]
+        
         if(this.state[c_name]["full_pack_quantity"] === 1 || this.state[c_name]["selected_unit"] === "FULL PACK"){
             cost = this.state[c_name]["raw_cost"]
     
@@ -288,7 +288,7 @@ quantity_change = (e) =>{
         this.setState({
             [c_name]: {...this.state[c_name],quantity_ordered:val,cost:cost.toFixed(2),total:total.toFixed(2)}
         },()=>{
-            
+                console.log(c_name)
             // send order_product data to backend for save
             const item = this.state[c_name] 
           
@@ -309,9 +309,8 @@ quantity_change = (e) =>{
             const current_no = parseInt(e.target.className)
             const last_tracked_id = parseInt(id_list[id_list.length-1])
             if(current_no === last_tracked_id){
-               const new_latest = id_list[id_list.length-1]+1
-               id_list.push(id_list[id_list.length-1]+1)
-               console.log(123)
+               const new_latest = last_tracked_id+1
+               id_list.push(new_latest)
                this.setState({...this.state,
                    id_list,
                    [new_latest]:{
@@ -466,7 +465,7 @@ map_stuff = (num) =>{
                         </div>
                     </div>)
                     }
-                }):null // this null ends the products? as an else component if expression so that notn is displayed
+                }):null // this null ends the products? as an else component expression so that notn is displayed
                 :this.state.radio_search_option === 'deep'?//this links up as the else option for if radio=quick
                 this.props.products_deep[num]? this.props.products_deep[num].map((product,id)=>{
                     const input = this.state[num].brand_description.toLowerCase().replace(/[^a-zA-Z0-9+&%] \s/g,'')
@@ -641,8 +640,8 @@ render(){
                 <div className="order_id">Order Id : {this.props.last_orderid? this.props.last_orderid:null}</div>
                 <div  className = 'radio-delete-div'>
                     <div className = 'radio-search-option-div'>
-                        <div className = 'radio-input'> Quick search<input onChange = {this.onChangeRadioSearch} checked ={this.state.radio_search_option === 'quick' } type ='radio' value='quick' name="radio_search_option"></input></div>
-                        <div className = 'radio-input'> Deep search<input onChange = {this.onChangeRadioSearch} checked ={this.state.radio_search_option === 'deep' } type ='radio' value='deep' name="radio_search_option"></input></div>
+                        <div className = 'radio-input form-check'> Quick search<input className= 'form-check-input' onChange = {this.onChangeRadioSearch} checked ={this.state.radio_search_option === 'quick' } type ='radio' value='quick' name="radio_search_option"></input></div>
+                        <div className = 'radio-input form-check'> Deep search<input className = 'form-check-input' onChange = {this.onChangeRadioSearch} checked ={this.state.radio_search_option === 'deep' } type ='radio' value='deep' name="radio_search_option"></input></div>
                     </div>
                     <div className = 'delete-options-div'>
                         <div onClick = {this.confirmDeleterow} style = {this.state.confirm_del_checkbox_display} className = 'btn btn-danger confirm-delete'>Confirm</div>
