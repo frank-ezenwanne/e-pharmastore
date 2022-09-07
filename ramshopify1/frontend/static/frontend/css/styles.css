@@ -120,6 +120,16 @@ display:flex;
 
 }
 
+.extrainfo-input-div{
+	display: flex;
+}
+
+.modal-extrainfo-class{
+	margin-left:0.5rem;
+	width:18rem;
+	height:6rem
+}
+
 
 
 
@@ -168,12 +178,16 @@ display:flex;
 }
 
 .product-div{
-	width:18rem
+	width:18.5rem
 }
 
 .brand-minus-section{
 	display:flex;
 	justify-content: space-between;
+}
+
+.extra-info-secton{
+	border:0.1rem solid green
 }
 
 .checkbox-elem{
@@ -260,7 +274,8 @@ margin-right:-2rem;
 }
 
 .form-class1{
-	width:50vw
+	width:50vw;
+	margin-top:8rem
 }
 
 .form-class1-generic{
@@ -284,13 +299,20 @@ margin-right:-2rem;
 	width: inherit;
 }
 
+.header{
+	width:85vw;
+	z-index:2;
+	position: fixed;
+	padding-bottom:1rem;
+	background-color: white;
+}
 
 .radio-delete-div{
 	width:82vw;
 	display: flex;
 	margin-top:1rem;
 	margin-bottom:1rem;
-
+	
 }
 
 .radio-search-option-div{

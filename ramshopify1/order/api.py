@@ -38,7 +38,7 @@ class OrderView(APIView):
                         break
                 if instance != "":
                     update_list = ( "product_id","generic_name","brand_description","selected_unit","cost","raw_cost","quantity_ordered",
-                    "full_pack_quantity","unit_quantity","serial",'total')
+                    "full_pack_quantity","unit_quantity","serial",'total','extra_info')
                     for field in update_list:
                         setattr(instance,field,order_product.validated_data[field])
                     instance.created = timezone.now()
@@ -176,7 +176,7 @@ class GetLastOrder(APIView):
             
             obj = {}
             update_list = ('id',"generic_name","brand_description","selected_unit","cost","raw_cost","quantity_ordered",
-                    "full_pack_quantity","unit_quantity","serial","total")
+                    "full_pack_quantity","unit_quantity","serial",'extra_info',"total")
             for field in update_list:
                 obj[field] = getattr(loi,field)
             obj["product_id"] = loi.product_id.id

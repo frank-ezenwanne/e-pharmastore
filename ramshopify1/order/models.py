@@ -110,30 +110,11 @@ class OrderProduct(models.Model):
     full_pack_quantity = models.IntegerField(null=True)
     raw_cost = models.FloatField(null=True)
     total = models.FloatField(null=True)
+    extra_info=models.TextField(null=True)
     created  = models.DateTimeField(default=timezone.now)
     
     def __str__(self):
         return f'{self.product_id.brand_description} OrderProduct'
-
-    # def save(self, *args, **kwargs):
-    #     generic_name = self.generic_name
-    #     brand_name = self.brand_name
-    #     presentation = self.presentation
-    #     quantity_ordered = self.quantity_ordered
-    #     total_cost = self.total_cost
-
-    #     if self.order_product_id:#if there is an  orderproduct id in the request, check if it maps to an existing orderproduct id
-    #         if OrderProduct.objects.get(self.order_product_id):
-    #             order_product = OrderProduct.objects.get(self.order_product_id)
-
-    #             order_product.generic_name = generic_name
-    #             order_product.brand_name = brand_name
-    #             order_product.presentation = presentation
-    #             order_product.quantity_ordered = quantity_ordered
-    #             order_product.total_cost = total_cost
-    #             order_product.save()
-    #     else:
-    #         OrderProduct.objects.create(generic_name=generic_name,brand_name=brand_name,presentation = presentation,quantity_ordered=quantity_ordered,price = price)
 
 class Order(models.Model):
     buyer = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)#SET TO DELETED USER LATER

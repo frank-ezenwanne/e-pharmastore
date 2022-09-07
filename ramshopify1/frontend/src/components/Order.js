@@ -6,10 +6,12 @@ import Tick from '../../svg/tick.svg'
 import Cross from '../../svg/cross.svg'
 import GenericModal from './GenericModal/GenericModal'
 import {clear_brand_desc} from '../actions/search'
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 //.FIND OUT MEANING OF RENDER PURE FUNC ONLY
 
-class Order extends Component{class
+class Order extends Component{
     constructor(props){
         super(props);
         this.state = {
@@ -27,7 +29,8 @@ class Order extends Component{class
                     cost:0,
                     total:0,
                     quantity_ordered:"",
-                    checked_del:false
+                    checked_del:false,
+                    extra_info:''
                 
                 }, 
             radio_search_option:'quick', 
@@ -38,7 +41,9 @@ class Order extends Component{class
             modal_generic:false,
             confirm_del_checkbox_display :{display:'none'},
             delete_button_color : 'btn-danger',
-            delete_button_status : 'Remove items'
+            delete_button_status : 'Remove items',
+            modal_extrainfo:false,
+            extra_info_num:''
             }
     }
 
@@ -83,7 +88,6 @@ componentDidUpdate(prevProps){
         }
 
         if (prevProps.order_productid !== this.props.order_productid){
-            console.log(9076)
             const{current_serial,...rest} = this.props
             this.setState({...this.state,
                 [current_serial] : {...this.state[current_serial],id:this.props.order_productid }
@@ -251,6 +255,30 @@ unit_change = (e) =>{
     
 }
 
+onExtraInfoModelSubmit=(e)=>{
+    const serial = this.state['extra_info_num']
+    this.setState({...this.state,"modal_extrainfo":false,'extra_info_num':''})
+    if(serial && this.state[serial].extra_info && this.state[serial].cost){
+        const item = this.state[serial]
+        this.props.send_orderproduct(item["product_id"],
+            item["generic_name"],
+            item["brand_description"],
+            item["selected_unit"],
+            item["cost"],
+            item["raw_cost"],
+            item["quantity_ordered"],
+            item["full_pack_quantity"],
+            item["unit_quantity"],
+            item["total"],
+            item['extra_info'],
+            serial,this.props.last_orderid)
+    }
+}
+
+onExtraInfoModelHide =(e)=>{
+    this.setState({...this.state,"modal_extrainfo":false,'extra_info_num':''})
+}
+
 
 
 quantity_change = (e) =>{
@@ -288,7 +316,6 @@ quantity_change = (e) =>{
         this.setState({
             [c_name]: {...this.state[c_name],quantity_ordered:val,cost:cost.toFixed(2),total:total.toFixed(2)}
         },()=>{
-                console.log(c_name)
             // send order_product data to backend for save
             const item = this.state[c_name] 
           
@@ -302,6 +329,7 @@ quantity_change = (e) =>{
             item["full_pack_quantity"],
             item["unit_quantity"],
             item["total"],
+            item['extra_info'],
             c_name,this.props.last_orderid)  
              
             
@@ -420,6 +448,10 @@ changeDeleteStatus = (e) =>{
 
 }
 
+clickExtraInfo = (e) =>{
+    const c_name = e.target.classList[0]
+    this.setState({...this.state,modal_extrainfo:true,extra_info_num:c_name})
+}
 
 
 map_stuff = (num) =>{  
@@ -448,16 +480,20 @@ map_stuff = (num) =>{
                 onChange={this.brand_change}
                 value = {this.state[num]["brand_description"]}
             />
+            <div style = {{border:(this.state[num]['extra_info']? '0.134rem solid green': '0.134rem solid orange' )}} onClick={this.clickExtraInfo} className={num + ' ' + 'btn' + ' ' +  'extra-info-section'}>Ex</div>
           </span>
        
           <div style = {this.state.remove_list} className ="list-section" >
           {this.state.radio_search_option === 'quick'? //if radio is quick
                 this.props.products[num]? this.props.products[num].map( (product,id)=>{ //if quick,check if products is in props
                     const input_length = this.state[num].brand_description.length
-                    const brand_slice=product.brand_description_slug.slice(0,input_length)
+                    {/* const bds = product.brand_description.replace(/[^a-zA-Z0-9+&%]\s/g,'') */}
+                    const brand_slice=product.brand_description_slug.slice(0,input_length) //coming from the backend..but decided to make cleanng on d fly with bds var
+                    {/* const brand_slice =bds.slice(0,input_length) */}
                     const brand_slice_raw =product.brand_description.slice(0,input_length)
-                    const entry = this.state[num].brand_description.replace(/[^a-zA-Z0-9+&%] \s/g,'')
+                    const entry = this.state[num].brand_description.replace(/[^a-zA-Z0-9+&%]\s/g,'')
                     if(brand_slice.toLowerCase() === entry.toLowerCase() || brand_slice_raw.toLowerCase() === this.state[num].brand_description.toLowerCase() ){
+
                         return(
                     <div className="drugitem-cover" key={id}>
                         <div className='drugitem stretch' >
@@ -468,7 +504,8 @@ map_stuff = (num) =>{
                 }):null // this null ends the products? as an else component expression so that notn is displayed
                 :this.state.radio_search_option === 'deep'?//this links up as the else option for if radio=quick
                 this.props.products_deep[num]? this.props.products_deep[num].map((product,id)=>{
-                    const input = this.state[num].brand_description.toLowerCase().replace(/[^a-zA-Z0-9+&%] \s/g,'')
+                    const input = this.state[num].brand_description.toLowerCase().replace(/[^a-zA-Z0-9+&%]\s/g,'')
+                    {/* const bds = product.brand_description.replace(/[^a-zA-Z0-9+&%]\s/g,'') */}
                     const input_raw = this.state[num].brand_description.toLowerCase()
                     const str_point = product.brand_description_slug.indexOf(input)
                     const str_point_raw = product.brand_description.toLowerCase().indexOf(input_raw)
@@ -631,23 +668,24 @@ render(){
         total = parseFloat(total) + parseFloat(this.state[id]["total"])
     }
     total= total.toFixed(2)
-
+   
  
     return (
         <Fragment>
             <div className="card" id="form-container-main">
-                
-                <div className="order_id">Order Id : {this.props.last_orderid? this.props.last_orderid:null}</div>
-                <div  className = 'radio-delete-div'>
-                    <div className = 'radio-search-option-div'>
-                        <div className = 'radio-input form-check'> Quick search<input className= 'form-check-input' onChange = {this.onChangeRadioSearch} checked ={this.state.radio_search_option === 'quick' } type ='radio' value='quick' name="radio_search_option"></input></div>
-                        <div className = 'radio-input form-check'> Deep search<input className = 'form-check-input' onChange = {this.onChangeRadioSearch} checked ={this.state.radio_search_option === 'deep' } type ='radio' value='deep' name="radio_search_option"></input></div>
+                <div className='header'>
+                    <div className="order_id">Order Id : {this.props.last_orderid? this.props.last_orderid:null}</div>
+                    <div  className = 'radio-delete-div'>
+                        <div className = 'radio-search-option-div'>
+                            <div className = 'radio-input form-check'> Quick search<input className= 'form-check-input' onChange = {this.onChangeRadioSearch} checked ={this.state.radio_search_option === 'quick' } type ='radio' value='quick' name="radio_search_option"></input></div>
+                            <div className = 'radio-input form-check'> Deep search<input className = 'form-check-input' onChange = {this.onChangeRadioSearch} checked ={this.state.radio_search_option === 'deep' } type ='radio' value='deep' name="radio_search_option"></input></div>
+                        </div>
+                        <div className = 'delete-options-div'>
+                            <div onClick = {this.confirmDeleterow} style = {this.state.confirm_del_checkbox_display} className = 'btn btn-danger confirm-delete'>Confirm</div>
+                            <div onClick = {this.changeDeleteStatus} className = {'btn' +' ' + this.state.delete_button_color + ' ' +'delete-cancel'}> {this.state.delete_button_status} </div>
+                        </div>
+                    
                     </div>
-                    <div className = 'delete-options-div'>
-                        <div onClick = {this.confirmDeleterow} style = {this.state.confirm_del_checkbox_display} className = 'btn btn-danger confirm-delete'>Confirm</div>
-                        <div onClick = {this.changeDeleteStatus} className = {'btn' +' ' + this.state.delete_button_color + ' ' +'delete-cancel'}> {this.state.delete_button_status} </div>
-                    </div>
-                   
                 </div>
  
                 <form className="form-class1">
@@ -674,10 +712,45 @@ render(){
                     this.setState({"modal_generic":false})
                 }}
             />) :null}
+
+            {vals["modal_extrainfo"] === true?
+                   ( <Modal
+                show = {this.state.modal_extrainfo}
+                onHide = {this.onExtraInfoModelHide}
+                size="md"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+                dialogClassName = 'mod'
+                >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                    <div style={{color:'green'}}> {this.state[ this.state['extra_info_num'] ].brand_description}</div>
+                        <span style ={{fontSize:'90%'}}>Any extra detail(Optional) </span>
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                <Fragment>
+                    <div className = 'extrainfo-input-div'>
+                         <div>Extra Description:</div>
+                         <textarea className = 'modal-extrainfo-class' onChange={(e)=>{
+                             const serial = this.state['extra_info_num']
+                             this.setState({...this.state, [serial]: {...this.state[serial],extra_info:e.target.value }})
+                         }} value ={this.state[ this.state['extra_info_num'] ].extra_info || ''} ></textarea>
+                    </div>
+                  <div style={{marginLeft:'15rem',marginTop:'0.5rem'}} onClick = {this.onExtraInfoModelSubmit} className = 'btn btn-success'>Submit and Close</div>
+                </Fragment>
+                </Modal.Body>
+                <Modal.Footer>
+                    {/* <Button onClick={props.onHide}>Close</Button> */}
+                </Modal.Footer>
+                </Modal>)  :null     }
+            
+
+            
         </Fragment>
     )
-}
-}
+ }//end of render method
+}//end of class component
 
 
 const mapStateToProps = (state) => ({
