@@ -20,7 +20,7 @@ body{
 	display:grid;
 	grid-template-columns:repeat(6,1fr);
 	position:relative;
-	width:100%
+	width:inheri
 }
 
 #table-grid-generic{
@@ -42,7 +42,7 @@ z-index:3;
 }
 
 #form-container-main{
-	width:55vw;
+	width:55rem;
 	margin-left:4vw;
 	margin-right:4vw;
 	margin-top:1.5rem;
@@ -240,6 +240,11 @@ margin-right:-2rem;
 .order-svg-style{
 	width:100% \9
 }
+.svg-tick-error-class{
+	width:1.55rem;
+	height:1.55rem;
+	margin-top:0.3rem
+}
 
 .order-info{
 	font-size:95%;
@@ -274,7 +279,7 @@ margin-right:-2rem;
 }
 
 .form-class1{
-	width:50vw;
+	width:53vw;
 	margin-top:8rem
 }
 
@@ -323,6 +328,25 @@ margin-right:-2rem;
 
 .radio-input{
 	margin-right:1rem
+}
+
+.delete-order-div{
+	width:90%;
+	position:relative;
+	
+}
+
+.delete-order-button{
+	position:absolute;
+	right: 6rem
+}
+.del-btn {
+	margin-left:18%
+}
+
+.confirm-delete-buttons{
+	display:flex;
+
 }
 
 

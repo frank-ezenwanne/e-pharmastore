@@ -1,10 +1,13 @@
 import React, {Component,Fragment} from "react"
 import {connect} from 'react-redux'
-import {search_brand,get_last_order,send_orderproduct,getGenProducts,delOrderProducts,clear_loiId} from "../actions/search"
+import {Navigate} from 'react-router-dom'
+import {search_brand,get_last_order,send_orderproduct,getGenProducts,delete_order,
+    delOrderProducts,clear_order_deleted_stat,clear_loiId} from "../actions/search"
 import {TailSpin} from 'react-loader-spinner'
 import Tick from '../../svg/tick.svg'
 import Cross from '../../svg/cross.svg'
 import GenericModal from './GenericModal/GenericModal'
+import DeleteOrderModal from './DeleteOrderModal'
 import {clear_brand_desc} from '../actions/search'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -43,7 +46,9 @@ class Order extends Component{
             delete_button_color : 'btn-danger',
             delete_button_status : 'Remove items',
             modal_extrainfo:false,
-            extra_info_num:''
+            extra_info_num:'',
+            modal_deleteorder:false,
+            
             }
     }
 
@@ -92,6 +97,11 @@ componentDidUpdate(prevProps){
             this.setState({...this.state,
                 [current_serial] : {...this.state[current_serial],id:this.props.order_productid }
              })
+        }
+
+        if(this.props.order_deleted_move === true){
+            this.props.clear_order_deleted_stat()//change the status of ready to move to customerpage to false after deleting order since deleting order changes it to true
+            this.setState({...this.state,order_deleted_move:true})//change the state to true so that we can move to customer page
         }
 
     
@@ -450,7 +460,10 @@ changeDeleteStatus = (e) =>{
 
 clickExtraInfo = (e) =>{
     const c_name = e.target.classList[0]
-    this.setState({...this.state,modal_extrainfo:true,extra_info_num:c_name})
+    if(this.state[c_name]['product_id']){
+        this.setState({...this.state,modal_extrainfo:true,extra_info_num:c_name})
+    }
+    
 }
 
 
@@ -604,23 +617,23 @@ map_stuff = (num) =>{
                     wrapperClass="tailspin-class"
                     visible={true}
                 /> : this.props.loading_serials[num] === false?
-                <img src={Tick}/>
-                :this.props.loading_serials[num] === "error"?
-                <img src={Cross} onClick = {()=>(
-                            
-                    this.props.send_orderproduct(item["product_id"],
-                    item["generic_name"],
-                    item["brand_description"],
-                    item["selected_unit"],
-                    item["cost"],
-                    item["raw_cost"],
-                    item["quantity_ordered"],
-                    item["full_pack_quantity"],
-                    item["unit_quantity"],
-                    item["total"],
-                    num,this.props.last_orderid)  )
-                }/> :null
-                } 
+                <img className = 'svg-tick-error-class' src={Tick}/>
+                :this.props.loading_serials[num] === "error"? 
+                (<div className = 'svg-tick-error-class' onClick = {()=>{
+                    this.props.send_orderproduct( item["product_id"],
+                    item["generic_name"],item["brand_description"],
+                    item["selected_unit"], item["cost"],
+                    item["raw_cost"],item["quantity_ordered"],
+                    item["full_pack_quantity"],item["unit_quantity"],
+                    item["total"],item['extra_info'],
+                    num,this.props.last_orderid)  }}>  {/* end of sendop func*/}
+                                                         
+                    {/* start div content */}
+                    <svg xmlns="http://www.w3.org/2000/svg"  fill="red" width="100%" height="100%" viewBox="0 0 24 24"><path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6 16.094l-4.157-4.104 4.1-4.141-1.849-1.849-4.105 4.159-4.156-4.102-1.833 1.834 4.161 4.12-4.104 4.157 1.834 1.832 4.118-4.159 4.143 4.102 1.848-1.849z"/></svg>
+                    {/* end */}
+
+                </div>) :null
+             }    {/* end of loading serials/svg section */}
                
             
         </div> 
@@ -631,6 +644,9 @@ map_stuff = (num) =>{
 }
 
 render(){
+    if(this.state.order_deleted_move){
+        return <Navigate to = "/customerpage"/>
+    }
     if(this.state.id_list.length === 0){
         this.setState({
             id_list : [1],
@@ -705,7 +721,12 @@ render(){
                         </div>
                 </form>
             </div>
-
+            <div className="delete-order-div">
+                 <div onClick = {()=>{
+                    this.setState({"modal_deleteorder":true})
+                         }} className = 'delete-order-button btn btn-danger'>Delete Order</div>
+            </div>
+            
             {vals["modal_generic"] === true? (<GenericModal
                 show={this.state.modal_generic}
                 onHide={()=>{
@@ -713,7 +734,7 @@ render(){
                 }}
             />) :null}
 
-            {vals["modal_extrainfo"] === true?
+            {vals["modal_extrainfo"] === true?vals[vals['extra_info_num']]['product_id'] !== ''?
                    ( <Modal
                 show = {this.state.modal_extrainfo}
                 onHide = {this.onExtraInfoModelHide}
@@ -743,9 +764,20 @@ render(){
                 <Modal.Footer>
                     {/* <Button onClick={props.onHide}>Close</Button> */}
                 </Modal.Footer>
-                </Modal>)  :null     }
+                </Modal>)  :null  :null   }
             
-
+            {
+               vals['modal_deleteorder']?(<DeleteOrderModal
+                   show={this.state.modal_deleteorder}
+                   onHide={()=>{
+                    this.setState({"modal_deleteorder":false})
+                         }}
+                   id = {this.props.last_orderid}
+                   delete_order = {()=>{
+                       this.props.delete_order(this.props.last_orderid)
+                   }}
+               />):null
+            }
             
         </Fragment>
     )
@@ -761,12 +793,13 @@ const mapStateToProps = (state) => ({
     orderCreating:state.search.orderCreating,
     loading_serials:state.search.loading_serials,
     order_productid:state.search.order_productid,
-    current_serial:state.search.current_serial
+    current_serial:state.search.current_serial,
+    order_deleted_move:state.search.order_deleted_move
 })
 
 const redux_funcs = {
     search_brand,clear_brand_desc,
     get_last_order,send_orderproduct,
-    clear_loiId,getGenProducts,delOrderProducts
+    clear_loiId,clear_order_deleted_stat,getGenProducts,delOrderProducts,delete_order
 }
 export default connect(mapStateToProps,redux_funcs)(Order)

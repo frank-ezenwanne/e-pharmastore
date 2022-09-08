@@ -3,7 +3,8 @@ import {BRANDS_RETRIEVED} from './types'
 import {ORDER_CREATED,CHANGE_CREATED_FALSE,LAST_ORDER_FETCHED,
     ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDER_PRODUCT_NOT_CREATED,
     GENERIC_PRODUCTS_RETRIEVED,CLEAR_GENERIC_PRODUCTS,ORDERS_RETRIEVED,
-    ORDER_MADE_LAST,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC,ORDER_PRODUCTS_DELETED
+    ORDER_MADE_LAST,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC,ORDER_PRODUCTS_DELETED,ORDER_DELETED,
+    RESET_ORDER_DELETED_MOVE
   
 } from '../actions/types'
 
@@ -278,8 +279,41 @@ export const delOrderProducts = (order_id,del_list) => (dispatch,getState) =>{
         }
     )
 
+}
+
+export const delete_order = (id) => (dispatch,getState) =>{
+    const config={
+        headers:{
+            "Content-Type":"application/json"
+        }
+    }
+    const token = getState().auth.token
+
+    if(token) {
+        config.headers["Authorization"] = `Token ${token}`
+    }
+
+
+    axios
+    .delete("api/delete_order",{headers:{"Authorization" : `Token ${token}`},data:{'id':id}})
+    .then((res)=>{
+        console.log("deleted_items")
+        dispatch({
+            type:ORDER_DELETED,
+            payload:res.data
+        })
+    })
+
+    .catch(
+        (err) => {
+            console.log(err.response)
+        }
+    )
 
 }
+
+
+
 
 
 
@@ -298,5 +332,11 @@ export const clear_brand_desc = ()=>(dispatch) =>{
 export const clear_loiId = () =>(dispatch)=>{
     dispatch({
         type:CLEAR_LAST_ORDER_AND_ID
+    })
+}
+
+export const clear_order_deleted_stat = () =>(dispatch)=>{
+    dispatch({
+        type:RESET_ORDER_DELETED_MOVE
     })
 }

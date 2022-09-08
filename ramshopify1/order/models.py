@@ -110,7 +110,7 @@ class OrderProduct(models.Model):
     full_pack_quantity = models.IntegerField(null=True)
     raw_cost = models.FloatField(null=True)
     total = models.FloatField(null=True)
-    extra_info=models.TextField(null=True)
+    extra_info=models.TextField(null=True,blank=True)
     created  = models.DateTimeField(default=timezone.now)
     
     def __str__(self):

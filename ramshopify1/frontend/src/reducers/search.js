@@ -3,7 +3,7 @@ import {ORDER_CREATED,CHANGE_CREATED_FALSE,
     LAST_ORDER_FETCHED,
     ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDERS_RETRIEVED,
     ORDER_PRODUCT_NOT_CREATED,GENERIC_PRODUCTS_RETRIEVED,ORDER_MADE_LAST,
-    CLEAR_GENERIC_PRODUCTS,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC
+    CLEAR_GENERIC_PRODUCTS,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC,ORDER_DELETED,RESET_ORDER_DELETED_MOVE
 } from '../actions/types'
 
 
@@ -39,6 +39,31 @@ export default function (state = initialState,action){
                 ...state,
                 just_created:true,
                ...action.payload
+            }
+
+        case ORDER_DELETED:
+            return{
+                ...state,
+                products:"",
+                products_deep:'',
+                generics:"",
+                order_id:null,
+                just_created:false,
+                last_orderid:null,
+                order_productid:'',
+                current_serial:'',
+                loi:{},
+                orderCreating:false,
+                loading_serials:{},
+                generic_products: null,
+                selected_order_made_last:false,
+                order_deleted_move:true
+
+            }
+        case RESET_ORDER_DELETED_MOVE:
+            return{
+                ...state,
+                order_deleted_move:false
             }
 
         case ORDERS_RETRIEVED:

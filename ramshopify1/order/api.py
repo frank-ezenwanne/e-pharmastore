@@ -21,9 +21,10 @@ class CreateOrder(APIView):
 
 class OrderView(APIView):
     permission_classes = [IsAuthenticated]
-    def post(self,request,*args,**kwargs):#post a new order product
+    def post(self,request,*args,**kwargs):#post or update a new order product
         order_product = OrderProductSerializer(data=request.data)
         order_product.is_valid(raise_exception=True)
+        print(request.data)
         order = order_product.validated_data["order_id"]
         order_id = order.id
         user = request.user
@@ -40,6 +41,10 @@ class OrderView(APIView):
                     update_list = ( "product_id","generic_name","brand_description","selected_unit","cost","raw_cost","quantity_ordered",
                     "full_pack_quantity","unit_quantity","serial",'total','extra_info')
                     for field in update_list:
+                        try:
+                            order_product.validated_data[field]
+                        except KeyError:
+                            continue
                         setattr(instance,field,order_product.validated_data[field])
                     instance.created = timezone.now()
                     instance.save()
@@ -71,10 +76,12 @@ class OrderView(APIView):
     def delete(self,request,*args,**kwargs): #delete the cart at once with all orderproducts
         order_id_request = GetIdSerializer(data = request.data)
         order_id_request.is_valid(raise_exception= True)
-        order_id = order_id_request.order_id
-        if Order.objects.get(id = int(order_id)):
-            order = Order.objects.get(id = int(order_id))#get cart with cart id present in frontend
+        print(order_id_request)
+        order_id = order_id_request.validated_data['id']
+        order = Order.objects.get(id = int(order_id))
+        if order and order.buyer == request.user:
             order.delete()
+            #get cart with cart id present in frontend
             return Response({"status":"delete_successful"})
  
         return Response({"error":"order_id not found"},status = status.HTTP_404_NOT_FOUND)
@@ -84,7 +91,7 @@ class OrderView(APIView):
 
 class OrderProductView(APIView):#finish up with database gen id
     permission_classes = [IsAuthenticated]
-    def post(self,request,*args,**kwargs):
+    def post(self,request,*args,**kwargs): #delete orderproduct
         delete_request = GetOrderProductSerializer(data=request.data)
         delete_request.is_valid(raise_exception = True)
         order_id = delete_request.validated_data['order_id']
