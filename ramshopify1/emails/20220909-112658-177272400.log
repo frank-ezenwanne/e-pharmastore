@@ -1,0 +1,32 @@
+Content-Type: multipart/mixed; boundary="===============1161419455=="
+MIME-Version: 1.0
+Subject: Hello
+From: localhost@gmail.com
+To: myemail@gmail.com
+Date: Fri, 09 Sep 2022 10:26:58 -0000
+Message-ID: <166271921846.14788.2791899833825333949@Frank>
+
+--===============1161419455==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+Your Leads
+--===============1161419455==
+Content-Type: text/csv; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="order.csv"
+
+brand_description,generic_name,selected_unit,quantity_ordered,cost,total
+JAWACLOX DROPS  90mg/0.6ml,,BOTTLE,1,400.0,400.0
+DABAFLOX TABS 200MG,,PACK,3,420.0,1260.0
+DABAPAIN TABS  X 100,,SACHET,5,60.0,300.0
+HAEMARON SYR  200ML,,BOTTLE,4,255.0,1020.0
+JAWACLOX DROPS  90mg/0.6ml,,BOTTLE,2,400.0,800.0
+JAWACLOX DROPS  90mg/0.6ml,,BOTTLE,8,400.0,3200.0
+AC-CLOX SUSP 250MG/5ML 60ML,,BOTTLE,41,0.0,0.0
+
+--===============1161419455==--
+
+-------------------------------------------------------------------------------

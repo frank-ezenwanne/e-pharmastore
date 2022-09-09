@@ -2,10 +2,10 @@ import React, {Component,Fragment} from "react"
 import {connect} from 'react-redux'
 import {Navigate} from 'react-router-dom'
 import {search_brand,get_last_order,send_orderproduct,getGenProducts,delete_order,
-    delOrderProducts,clear_order_deleted_stat,clear_loiId} from "../actions/search"
+    delOrderProducts,clear_order_deleted_stat,clear_loiId,send_email} from "../actions/search"
 import {TailSpin} from 'react-loader-spinner'
 import Tick from '../../svg/tick.svg'
-import Cross from '../../svg/cross.svg'
+import Trash from '../../svg/trash.svg'
 import GenericModal from './GenericModal/GenericModal'
 import DeleteOrderModal from './DeleteOrderModal'
 import {clear_brand_desc} from '../actions/search'
@@ -699,6 +699,15 @@ render(){
                         <div className = 'delete-options-div'>
                             <div onClick = {this.confirmDeleterow} style = {this.state.confirm_del_checkbox_display} className = 'btn btn-danger confirm-delete'>Confirm</div>
                             <div onClick = {this.changeDeleteStatus} className = {'btn' +' ' + this.state.delete_button_color + ' ' +'delete-cancel'}> {this.state.delete_button_status} </div>
+                            <div onClick = {()=>{this.setState({"modal_deleteorder":true}) }}
+                                 className = 'delete-order-button btn'>
+                                <div className = 'delete-svg'>
+                                    <svg fill ='red' width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" clipRule="evenodd"><path d="M19 24h-14c-1.104 0-2-.896-2-2v-16h18v16c0 1.104-.896 2-2 2zm-7-10.414l3.293-3.293 1.414 1.414-3.293 3.293 3.293 3.293-1.414 1.414-3.293-3.293-3.293 3.293-1.414-1.414 3.293-3.293-3.293-3.293 1.414-1.414 3.293 3.293zm10-8.586h-20v-2h6v-1.5c0-.827.673-1.5 1.5-1.5h5c.825 0 1.5.671 1.5 1.5v1.5h6v2zm-8-3h-4v1h4v-1z"/></svg>
+                                </div>
+                                <div className='order-delete-text'>Order</div>
+                            </div>
+
+
                         </div>
                     
                     </div>
@@ -716,15 +725,19 @@ render(){
                             {id_list.map(this.map_stuff)}
                         
                         </div>
-                        <div  className="total-cost">
-                                {"₦" + ' ' + total}
-                        </div>
+                        
                 </form>
             </div>
-            <div className="delete-order-div">
-                 <div onClick = {()=>{
-                    this.setState({"modal_deleteorder":true})
-                         }} className = 'delete-order-button btn btn-danger'>Delete Order</div>
+            <div className="delete-order-total-div">
+                 <div onClick = {()=>{this.props.send_email(this.props.last_orderid)}}
+                      className = 'send-order-button btn btn-success'>
+                   Send Order
+                 </div>
+
+                 <div className="total-cost">
+                             {"₦" + ' ' + total}
+                 </div>
+
             </div>
             
             {vals["modal_generic"] === true? (<GenericModal
@@ -800,6 +813,6 @@ const mapStateToProps = (state) => ({
 const redux_funcs = {
     search_brand,clear_brand_desc,
     get_last_order,send_orderproduct,
-    clear_loiId,clear_order_deleted_stat,getGenProducts,delOrderProducts,delete_order
+    clear_loiId,clear_order_deleted_stat,getGenProducts,delOrderProducts,delete_order,send_email
 }
 export default connect(mapStateToProps,redux_funcs)(Order)

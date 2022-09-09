@@ -10,12 +10,14 @@ GetIdSerializer,ProductSerializer,GetOrderProductSerializer,GenericSerializer)
 from .models import Brand_Alphabetic,Product,Generic_Alphabetic,Order,OrderProduct,Order
 from django.conf.global_settings import AUTH_USER_MODEL as CustomUser
 from django.utils import timezone
+import csv
+from io import StringIO
+from django.core.mail import EmailMessage
 
 class CreateOrder(APIView):
     permission_classes = [IsAuthenticated]
     def post(self,request,*args,**kwargs):
         order = Order.objects.create(buyer = request.user)
-        print(order.id)
         return Response({"order_id":order.id})
 
 
@@ -59,19 +61,6 @@ class OrderView(APIView):
  
         return Response({ "error" : "Order Cart not found","saved":0},status = status.HTTP_404_NOT_FOUND)
         
-            
-
-    def get(self,request,*args,**kwargs): # retrieve cart with orderproducts
-        order_id_request = GetIdSerializer(data = request.data)
-        order_id_request.is_valid(raise_exception= True)
-        order_id = order_id_request.order_id
-        if Order.objects.get(id = int(order_id)):
-            order = Order.objects.get(id = int(order_id))#get cart with cart id present in frontend
-            order_products = OrderProduct.objects.filter(order_id=order_id)
-            order_products = OrderProductSerializer(order_products,many=True)
-            return Response(order_products.data)
-        return Response({"error":"order_id not found"},status = status.HTTP_404_NOT_FOUND)
-            
 
     def delete(self,request,*args,**kwargs): #delete the cart at once with all orderproducts
         order_id_request = GetIdSerializer(data = request.data)
@@ -108,21 +97,6 @@ class OrderProductView(APIView):#finish up with database gen id
                 return Response({'error':'Orderproduct not found'},status = status.HTTP_404_NOT_FOUND)     
         return Response({"status":"deleted successfully"})
     
-
-    def put(self,request,*args,**kwargs):
-        put_request = OrderProductSerializer(data=request.data)
-        put_request.is_valid(raise_exception= True)
-        order_product_id = put_request.id
-        if OrderProduct.objects.get(id = int(order_product_id)):
-            instance = OrderProduct.objects.get(id = int(order_product_id))
-            instance.generic_name = put_request.generic_name
-            instance.brand_name = put_request.brand_name
-            instance.presentation = put_request.presentation
-            instance.quantity_ordered = put_request.quantity_ordered
-            instance.total_cost = put_request.total_cost
-            instance.save()
-            return Response({"status":"updated"})
-        return Response({"error":"OrderProduct not found"},status = status.HTTP_404_NOT_FOUND)
             
 
 
@@ -197,7 +171,6 @@ class GetLastOrder(APIView):
         })
 
 
-
 class GetCustomerOrders(APIView):
     permission_classes=[IsAuthenticated,]
     def get(self,request,*args,**kwargs):
@@ -219,3 +192,27 @@ class MakeLastOrder(APIView):
         return Response({"error":"This orderId does not exist"},status = status.HTTP_404_NOT_FOUND)
 
 
+class SendCSVEmail(APIView):
+    permission_classes=[IsAuthenticated]
+    def post(self,request,*args,**kwargs):
+        order_id_request = GetIdSerializer(data = request.data)
+        order_id_request.is_valid(raise_exception= True)
+        print(order_id_request)
+        order_id = order_id_request.validated_data['id']
+        order = Order.objects.get(id = int(order_id))
+        if order and order.buyer == request.user:
+            order_products = order.order_products.all()
+            csv_file = StringIO()
+            writer = csv.writer(csv_file)
+            writer.writerow(['brand_description','generic_name','selected_unit','quantity_ordered','cost','total'])
+            order_fields = order_products.values_list('brand_description','generic_name','selected_unit','quantity_ordered','cost','total')
+            for row in order_fields:
+                writer.writerow(row)
+            message = EmailMessage("Hello","Your Leads","localhost@gmail.com",["myemail@gmail.com"])
+            message.attach('order.csv', csv_file.getvalue(), 'text/csv')
+            try:
+                message.send()
+                return Response({"sent":'success'})
+            except:
+                return Response({'sent':'failed'},status = status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({"error":"This orderId does not exist"},status = status.HTTP_404_NOT_FOUND)

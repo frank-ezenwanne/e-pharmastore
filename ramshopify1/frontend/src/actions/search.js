@@ -4,7 +4,7 @@ import {ORDER_CREATED,CHANGE_CREATED_FALSE,LAST_ORDER_FETCHED,
     ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDER_PRODUCT_NOT_CREATED,
     GENERIC_PRODUCTS_RETRIEVED,CLEAR_GENERIC_PRODUCTS,ORDERS_RETRIEVED,
     ORDER_MADE_LAST,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC,ORDER_PRODUCTS_DELETED,ORDER_DELETED,
-    RESET_ORDER_DELETED_MOVE
+    RESET_ORDER_DELETED_MOVE,EMAIL_SENT
   
 } from '../actions/types'
 
@@ -300,6 +300,38 @@ export const delete_order = (id) => (dispatch,getState) =>{
         console.log("deleted_items")
         dispatch({
             type:ORDER_DELETED,
+            payload:res.data
+        })
+    })
+
+    .catch(
+        (err) => {
+            console.log(err.response)
+        }
+    )
+
+}
+
+
+export const send_email = (id) => (dispatch,getState) =>{
+    const config={
+        headers:{
+            "Content-Type":"application/json"
+        }
+    }
+    const token = getState().auth.token
+
+    if(token) {
+        config.headers["Authorization"] = `Token ${token}`
+    }
+
+    const body = JSON.stringify({id})
+    axios
+    .post("api/SendCSVEmail",body,config)
+    .then((res)=>{
+        console.log("sent_email")
+        dispatch({
+            type:EMAIL_SENT,
             payload:res.data
         })
     })
