@@ -8,6 +8,7 @@ import Tick from '../../svg/tick.svg'
 import Trash from '../../svg/trash.svg'
 import GenericModal from './GenericModal/GenericModal'
 import DeleteOrderModal from './DeleteOrderModal'
+import SendOrderModal from './SendOrderModal'
 import {clear_brand_desc} from '../actions/search'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -50,7 +51,7 @@ class Order extends Component{
             modal_extrainfo:false,
             extra_info_num:'',
             modal_deleteorder:false,
-            
+            modal_sendorder:false
             }
     }
 
@@ -470,7 +471,7 @@ confirmDeleterow = (e) =>{
                         count_list.push(i)
                    
                     }
-                    count_list.push(i+1)
+                    
                     this.setState({...this.state,id_list,count_list})
 
                 }
@@ -506,6 +507,24 @@ clickExtraInfo = (e) =>{
         this.setState({...this.state,modal_extrainfo:true,extra_info_num:c_name})
     }
     
+}
+
+confirm_order=()=>{
+    let error_ids = []
+    let strn =''
+    for(let id of this.state.id_list){
+        if (this.state[id].saved ===false){
+            error_ids.push(this.state[id].count)
+            strn+=`${this.state[id].count} ,`
+        }
+    }
+    if (error_ids.length > 0){
+        
+        alert(`Resolve ids ${strn}` )
+    }
+    else {
+        this.setState({"modal_sendorder":true})
+    }
 }
 
 
@@ -729,6 +748,7 @@ render(){
         total = parseFloat(total) + parseFloat(this.state[id]["total"])
     }
     total= total.toFixed(2)
+    total =total.toLocaleString('en-US',{style:'currency',currency:'USD'})
    
  
     return (
@@ -773,8 +793,9 @@ render(){
                         
                 </form>
             </div>
-            <div className="delete-order-total-div">
-                 <div onClick = {()=>{this.props.send_email(this.props.last_orderid)}}
+            {/* this.props.send_email(this.props.last_orderid */}
+            <div className="send-order-total-div">
+                 <div onClick = {()=>{this.confirm_order()}}
                       className = 'send-order-button btn btn-success'>
                    Send Order
                  </div>
@@ -827,12 +848,29 @@ render(){
             {
                vals['modal_deleteorder']?(<DeleteOrderModal
                    show={this.state.modal_deleteorder}
+                   last_orderid ={this.props.last_orderid}
                    onHide={()=>{
                     this.setState({"modal_deleteorder":false})
                          }}
                    id = {this.props.last_orderid}
                    delete_order = {()=>{
                        this.props.delete_order(this.props.last_orderid)
+                   }}
+               />):null
+            }
+
+            {
+               vals['modal_sendorder']?(<SendOrderModal
+                   show={this.state.modal_sendorder}
+                   last_orderid ={this.props.last_orderid}
+                   onHide={()=>{
+                    this.setState({"modal_sendorder":false})
+                         }}
+                   send_email_code = {()=>{
+                        this.setState({"modal_sendorder":false},()=>{
+                            this.props.send_email(this.props.last_orderid)
+                        })
+                       
                    }}
                />):null
             }

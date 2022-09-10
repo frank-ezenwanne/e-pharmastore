@@ -1,0 +1,32 @@
+Content-Type: multipart/mixed; boundary="===============0589711832=="
+MIME-Version: 1.0
+Subject: Hello
+From: localhost@gmail.com
+To: myemail@gmail.com
+Date: Sat, 10 Sep 2022 21:40:11 -0000
+Message-ID: <166284601100.5396.16502568153880167965@Frank>
+
+--===============0589711832==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+Your Leads
+--===============0589711832==
+Content-Type: text/csv; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="order.csv"
+
+brand_description,generic_name,selected_unit,quantity_ordered,cost,total
+DABAFLOX TABS 200MG,,PACK,34,420.0,14280.0
+JAWACLOX DROPS  90mg/0.6ml,,BOTTLE,81,400.0,32400.0
+AC-CLOX SUSP 250MG/5ML 60ML,,BOTTLE,4,0.0,0.0
+JARDIANCE TABS 10MG X 30,,FULL PACK,8,17500.0,140000.0
+OBRON-6   X 90,,FOIL STRIP,7,211.27,1478.87
+GABAPENTIN(MEDREICH) (HAB)  TABS 300MG X 100,,BLISTER,77,430.0,33110.0
+FACEMASK   X 50,,PCS,71,30.0,2130.0
+
+--===============0589711832==--
+
+-------------------------------------------------------------------------------
