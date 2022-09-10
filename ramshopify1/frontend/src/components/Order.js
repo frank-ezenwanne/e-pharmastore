@@ -19,6 +19,7 @@ class Order extends Component{
         super(props);
         this.state = {
             id_list : [1],
+            count_list:[1],
                 1:{
                     id:'',
                     product_id:'',
@@ -33,8 +34,9 @@ class Order extends Component{
                     total:0,
                     quantity_ordered:"",
                     checked_del:false,
-                    extra_info:''
-                
+                    extra_info:'',
+                    saved:false
+   
                 }, 
             radio_search_option:'quick', 
             first_letter:'',
@@ -57,22 +59,30 @@ componentDidMount(){
 }
 
 componentDidUpdate(prevProps){
-    let last_elem 
+    let last_elem_serial
+    let last_elem_count 
     let id_list = this.state.id_list
-    const {loi,...rest} = this.props
+    let count_list = this.state.count_list
+    const {loi,loading_serials,...rest} = this.props
         if (Object.keys(prevProps.loi).length !== Object.keys(loi).length){
              if(Object.keys(loi).length > 0){
                  id_list=[]
-                for (const id in this.props.loi){
+                 count_list =[]
+                for (const id in loi){
                     id_list.push(id)
+                    count_list.push(loi[id].count)
                 }
-                last_elem = parseInt(id_list[id_list.length-1])
-                last_elem = last_elem +1
-                id_list.push(String(last_elem))
+                last_elem_serial = parseInt(id_list[id_list.length-1])
+                last_elem_serial = last_elem_serial +1
+                id_list.push(String(last_elem_serial))
+                
+                last_elem_count = parseInt(count_list[count_list.length-1])
+                last_elem_count = last_elem_count +1
+                count_list.push(String(last_elem_count))
 
              }  
 
-            this.setState({ ...this.props.loi,id_list,[last_elem]:{
+            this.setState({...this.props.loi,id_list,count_list,[last_elem_serial]:{
                     id:'',
                     product_id:'',
                     brand_description:'',
@@ -86,7 +96,8 @@ componentDidUpdate(prevProps){
                     total:0,
                     quantity_ordered:'',
                     brand_description_slug:'',
-                    checked_del:false
+                    checked_del:false,
+                    count:last_elem_count
             }
                
             })
@@ -104,7 +115,15 @@ componentDidUpdate(prevProps){
             this.setState({...this.state,order_deleted_move:true})//change the state to true so that we can move to customer page
         }
 
-    
+        if (Object.keys(prevProps.loading_serials).length !== Object.keys(loading_serials).length){
+            if(Object.keys(loading_serials).length > 0){
+                const serial = Object.keys(loading_serials)[0]
+                if(loading_serials[serial] === false){
+                    this.setState({...this.state,[this.state[serial]]:{ ...this.state[serial],saved:true} })
+                }
+                
+            }
+        }
 }
 
 
@@ -115,6 +134,7 @@ componentWillUnmount(){
 
 product_style={
     width:"100%",
+    marginLeft:'0.6rem'
 
 }
 
@@ -168,7 +188,6 @@ onClickDrug = (e) =>{
             cost:"",
             total:0,
             quantity_ordered:""
-        
         },
         remove_list:{display:"none"},
         group_letters:''
@@ -191,8 +210,8 @@ brand_change=(e)=>{
             unit_quantity:"",
             cost:"",
             total:0,
-            quantity_ordered:""
-            
+            quantity_ordered:"",
+            saved:false
         },
         remove_list:{display:"block"}
         
@@ -250,17 +269,13 @@ generic_change = (e)=>{
     
 }
 
-zen_change = (e) =>{
-    this.setState({[e.target.name]:e.target.value},()=>{console.log(this.state.zen)})
-
-}
 
 unit_change = (e) =>{
     const val = e.target.value
     const name_attrib = e.target.name
     const c_name = e.target.classList[0]
     this.setState({
-        [c_name]: {...this.state[c_name],quantity_ordered:"",selected_unit:val,cost:"",total:0}
+        [c_name]: {...this.state[c_name],quantity_ordered:"",selected_unit:val,cost:"",total:0,saved:false}
     })
     
 }
@@ -324,7 +339,7 @@ quantity_change = (e) =>{
         }
         const total = cost * parseInt(val)
         this.setState({
-            [c_name]: {...this.state[c_name],quantity_ordered:val,cost:cost.toFixed(2),total:total.toFixed(2)}
+            [c_name]: {...this.state[c_name],quantity_ordered:val,cost:cost.toFixed(2),total:total.toFixed(2),saved:false}
         },()=>{
             // send order_product data to backend for save
             const item = this.state[c_name] 
@@ -347,11 +362,17 @@ quantity_change = (e) =>{
             const current_no = parseInt(e.target.className)
             const last_tracked_id = parseInt(id_list[id_list.length-1])
             if(current_no === last_tracked_id){
-               const new_latest = last_tracked_id+1
-               id_list.push(new_latest)
-               this.setState({...this.state,
+                const count_list = this.state.count_list
+                const last_tracked_count = parseInt(count_list[count_list.length-1])
+                const new_latest_count = last_tracked_count +1 
+                count_list.push(new_latest_count)
+
+                const new_latest_serial = last_tracked_id+1
+                id_list.push(new_latest_serial)
+                this.setState({...this.state,
+                   count_list,
                    id_list,
-                   [new_latest]:{
+                   [new_latest_serial]:{
                     product_id:null,    
                    generic_name:"",
                    brand_description:"",
@@ -362,7 +383,9 @@ quantity_change = (e) =>{
                    unit_quantity:"",
                    cost:"",
                    total:0,
-                   quantity_ordered:""
+                   quantity_ordered:"",
+                   saved:false,
+                   count:new_latest_count
                 },
                })
             }
@@ -421,18 +444,37 @@ confirmDeleterow = (e) =>{
     else if (all_checked.length > 0 || posted.length > 0){
         if (confirm('E-Pharmastore:\nAre you sure you want to delete the selected item(s)?')){    
             let id_list = [...this.state.id_list]
+            // let count_list = [...this.state.count_list]
             if (all_checked.length > 0){  
                 let new_state = {...this.state}
                 let idlist_index
+                // let countlist_index
                 all_checked.forEach((elem)=>{//loop begins
                     idlist_index = id_list.indexOf(elem)
                     if(idlist_index !== -1){ //if the state index in id_list is present in all_checked i.e has been checked
-                        id_list.splice(idlist_index,1)//splice will delete the checked elem from id_list
-                        new_state = delete new_state[elem]
+                        // const count_to_del = new_state[elem].count //quickly 1st get corresponding count
+                        // countlist_index = count_list.indexOf(count_to_del)//get the index of the count in count_list
+                        // if(countlist_index !== -1){
+                        //     count_list.splice(countlist_index,1)//use the index to remove the element
+                        // }
+                        id_list.splice(idlist_index,1)//now..removing the actual serialand data..splice will delete the checked elem from id_list
+                        delete new_state[elem]
                     }   
                 })//loop ends
-                this.setState({...new_state,id_list})
-            }
+                
+                    let count_list = []
+                    let i = 0
+                    for(let serial_elem of id_list){
+                        i+=1
+                        new_state[serial_elem].count = i
+                        count_list.push(i)
+                   
+                    }
+                    count_list.push(i+1)
+                    this.setState({...this.state,id_list,count_list})
+
+                }
+            
 
             if (posted.length > 0){
                 this.props.delOrderProducts(this.props.last_orderid,posted)
@@ -484,6 +526,8 @@ map_stuff = (num) =>{
                     name = 'delete-row'
                     value={num} />:null:null
             }
+
+            <div className="count">{this.state[num]['count']}</div>
            
             <input
                 style={this.product_style}          
@@ -663,7 +707,8 @@ render(){
                     cost:0,
                     total:0,
                     quantity_ordered:"",
-                    checked_del:false
+                    checked_del:false,
+                    saved:false
                 
                 }, 
             radio_search_option:'quick', 

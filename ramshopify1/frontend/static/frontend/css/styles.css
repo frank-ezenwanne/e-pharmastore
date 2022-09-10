@@ -43,17 +43,18 @@ z-index:3;
 
 #form-container-main{
 	width:55rem;
-	margin-left:4vw;
+	margin-left:2vw;
 	margin-right:4vw;
 	margin-top:1.5rem;
 	padding-right:57rem;
-	padding-left:2.5rem;
+	padding-left:5rem;
 	padding-bottom:15rem;
 	height:25rem;
 	overflow-x:hidden;
 	overflow-y:scroll;
 		
 }
+
 
 #form-container-generic{
 	height:20rem;
@@ -186,6 +187,12 @@ display:flex;
 	justify-content: space-between;
 }
 
+.count{
+
+	margin-left:0.4rem;
+	margin-top:0.4rem
+}
+
 .extra-info-secton{
 	border:0.1rem solid green
 }
@@ -306,9 +313,12 @@ margin-right:-2rem;
 }
 
 .header{
+	
 	width:inherit;
 	z-index:2;
 	position: fixed;
+	margin-left:-2rem;
+	padding-top:0.5rem;
 	padding-bottom:1rem;
 	background-color: white;
 }

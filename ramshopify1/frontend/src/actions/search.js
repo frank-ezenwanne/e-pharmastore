@@ -68,8 +68,8 @@ export const send_orderproduct = (product_id,generic_name,
        
             dispatch({
                 type:ORDER_PRODUCT_CREATED,
-                payload:{   data:res.data, serial: { [serial]:false }
-            }})  
+                payload:{   data:res.data, serial: { [serial]:false } }
+            })  
         })
     
         .catch((err) =>{

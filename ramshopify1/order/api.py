@@ -153,8 +153,7 @@ class GetLastOrder(APIView):
             last_order = Order.objects.create(buyer=request.user)
             return Response({"last_orderid":last_order.id})
         last_order_items = {}
-        for loi in last_order.order_products.all():
-            
+        for loi in last_order.order_products.all(): 
             obj = {}
             update_list = ('id',"generic_name","brand_description","selected_unit","cost","raw_cost","quantity_ordered",
                     "full_pack_quantity","unit_quantity","serial",'extra_info',"total")
@@ -162,9 +161,13 @@ class GetLastOrder(APIView):
                 obj[field] = getattr(loi,field)
             obj["product_id"] = loi.product_id.id
             obj["unit"] = loi.product_id.unit
+            obj['saved'] = True
             last_order_items[loi.serial] = obj
         sorted_loi={}
+        id=0
         for key in sorted(last_order_items):
+            id+=1
+            last_order_items[key]['count'] = id
             sorted_loi[key] = last_order_items[key]
         return Response({"loi":sorted_loi,
                         "last_orderid":last_order.id
