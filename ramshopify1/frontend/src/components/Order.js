@@ -65,7 +65,7 @@ componentDidUpdate(prevProps){
     let id_list = this.state.id_list
     let count_list = this.state.count_list
     const {loi,loading_serials,...rest} = this.props
-        if (Object.keys(prevProps.loi).length !== Object.keys(loi).length){
+        if (Object.keys(prevProps.loi).length !== Object.keys(loi).length){ //CHANGE LATER
              if(Object.keys(loi).length > 0){
                  id_list=[]
                  count_list =[]
@@ -116,7 +116,7 @@ componentDidUpdate(prevProps){
             this.setState({...this.state,order_deleted_move:true})//change the state to true so that we can move to customer page
         }
 
-        if (Object.keys(prevProps.loading_serials).length !== Object.keys(loading_serials).length){
+        if (Object.keys(prevProps.loading_serials).length !== Object.keys(loading_serials).length){//CHANGE THIS TOO
             if(Object.keys(loading_serials).length > 0){
                 const serial = Object.keys(loading_serials)[0]
                 if(loading_serials[serial] === false){

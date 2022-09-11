@@ -26,7 +26,7 @@ body{
 #table-grid-generic{
 	display:grid;
 	grid-template-columns:1fr 1fr 2fr;
-	width:100%
+	width:100%;
 }
 
 .list-section{
@@ -59,7 +59,8 @@ z-index:3;
 #form-container-generic{
 	height:20rem;
 	overflow-x:scroll;
-	overflow-y:scroll;
+	overflow-y:scroll !important;
+	width:100%
 }
 
 
@@ -291,8 +292,12 @@ margin-right:-2rem;
 }
 
 .form-class1-generic{
-	width:60vw
+	width:45vw;
+	overflow-y:scroll !important;
+
+	
 }
+
 .delete-cancel{
 	margin-left:0.5rem;
 	width:9rem;

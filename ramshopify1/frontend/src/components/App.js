@@ -7,8 +7,18 @@ import Login from "./Login"
 import Register from "./Register";
 import Order from "./Order"
 import Nav from "./Nav"
+import Alerts from  './Alerts'
 import CustomerPage from "./CustomerPage"
+import { Provider as AlertProvider } from 'react-alert';
+import AlertTemplate from 'react-alert-template-basic';
 
+
+const alertOptions = {
+    timeout: 5000,
+    position: 'top center',
+    offset:'70px'
+  };
+  
 
 class App extends Component{
 
@@ -20,16 +30,18 @@ class App extends Component{
        
         return(
             <Provider store = {store}>
-                <Nav/>
-                <div id = "web-pages">
-                    <Routes>
-                        <Route path = "login" element = {<Login/>}/>
-                        <Route path = "register" element = {<Register/>}/>
-                        <Route path = "order" element = {<Order/>}/>
-                        <Route path = "customerpage" element = {<CustomerPage/>}/>
-                    </Routes>
-                </div>
-                
+                <AlertProvider template={AlertTemplate} {...alertOptions}>
+                    <Nav/>
+                    <Alerts />
+                    <div id = "web-pages">
+                        <Routes>
+                            <Route path = "login" element = {<Login/>}/>
+                            <Route path = "register" element = {<Register/>}/>
+                            <Route path = "order" element = {<Order/>}/>
+                            <Route path = "customerpage" element = {<CustomerPage/>}/>
+                        </Routes>
+                    </div>
+                </AlertProvider>
             </Provider>
         )
     }

@@ -4,10 +4,10 @@ import {ORDER_CREATED,CHANGE_CREATED_FALSE,LAST_ORDER_FETCHED,
     ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDER_PRODUCT_NOT_CREATED,
     GENERIC_PRODUCTS_RETRIEVED,CLEAR_GENERIC_PRODUCTS,ORDERS_RETRIEVED,
     ORDER_MADE_LAST,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC,ORDER_PRODUCTS_DELETED,ORDER_DELETED,
-    RESET_ORDER_DELETED_MOVE,EMAIL_SENT
+    RESET_ORDER_DELETED_MOVE
   
 } from '../actions/types'
-
+import {createMessage} from './message_error'
 
 export const create_order = () => (dispatch,getState) =>{
     const config={
@@ -328,12 +328,10 @@ export const send_email = (id) => (dispatch,getState) =>{
     const body = JSON.stringify({id})
     axios
     .post("api/SendCSVEmail",body,config)
+    
     .then((res)=>{
-        console.log("sent_email")
-        dispatch({
-            type:EMAIL_SENT,
-            payload:res.data
-        })
+        
+        dispatch(createMessage({email_sent:'Email Sent!'}))
     })
 
     .catch(

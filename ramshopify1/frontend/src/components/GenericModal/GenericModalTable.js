@@ -163,7 +163,7 @@ const unit_change = (e) =>{
       <Fragment>
       <div id="form-container-generic">
 
-          <form className="form-class1">
+          <form className="form-class1-generic">
                   <div id = "table-grid-generic" >
                           <div className="grid-headings">Product</div>
                           <div className="grid-headings">Unit</div>

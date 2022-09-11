@@ -11,7 +11,7 @@ function Nav(props){
     const transbar_linenav = useRef()
     const transbar_sidebar = useRef()
     
-
+	console.log(9999999)
     const lines_white_internal = {
         backgroundColor:linecolor
     }

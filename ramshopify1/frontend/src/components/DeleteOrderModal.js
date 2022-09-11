@@ -20,7 +20,7 @@ export default function DeleteOrderModal(props) {
       </Modal.Header>
       <Modal.Body>
       <Fragment>
-        <div> Are you sure you want to delete this Order ? <span style={{color:'red'}}>{props.last_orderid}</span></div><br/>
+        <div> Are you sure you want to delete this Order with Id <span style={{color:'red'}}>{ props.last_orderid}?</span></div><br/>
          <div className = 'confirm-delete-buttons'>
          <div onClick = {props.delete_order} align="center" className = 'del-btn btn btn-danger'>
                 Yes, Delete
