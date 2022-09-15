@@ -98,7 +98,7 @@ export default function (state = initialState,action){
             return{
                 ...state,
                 orderCreating:true,
-                loading_serials:{...state.loading_serials,...action.payload},
+                loading_serials:{...action.payload},
                 products:'',
                 products_deep:''
             }
@@ -107,13 +107,13 @@ export default function (state = initialState,action){
             return{
                 ...state,
                 ...action.payload.data,
-                loading_serials:{...state.loading_serials,...action.payload.serial}
+                loading_serials:{...action.payload.serial}
             }
 
         case ORDER_PRODUCT_NOT_CREATED:
             return {
                 ...state,
-                loading_serials:{...state.loading_serials,...action.payload}
+                loading_serials:{...action.payload}
             }
 
         case GENERIC_PRODUCTS_RETRIEVED:

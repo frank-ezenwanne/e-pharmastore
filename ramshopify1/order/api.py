@@ -211,11 +211,11 @@ class SendCSVEmail(APIView):
             order_fields = order_products.values_list('brand_description','generic_name','selected_unit','quantity_ordered','cost','total')
             for row in order_fields:
                 writer.writerow(row)
-            message = EmailMessage("Hello","Your Leads","localhost@gmail.com",["myemail@gmail.com"])
+            message = EmailMessage("Hello",f"The Order from {order.buyer.company_name} to Ramsgate", 'efrank938@gmail.com',[order.buyer.email])
             message.attach('order.csv', csv_file.getvalue(), 'text/csv')
             try:
                 message.send()
-                return Response({"sent":'success'})
+                return Response({'email_sent':'Email Sent!'})
             except:
-                return Response({'sent':'failed'},status = status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return Response({'email_send_error':'Email Error in Sending Order!'},status = status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response({"error":"This orderId does not exist"},status = status.HTTP_404_NOT_FOUND)

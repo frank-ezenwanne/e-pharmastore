@@ -12,6 +12,7 @@ import SendOrderModal from './SendOrderModal'
 import {clear_brand_desc} from '../actions/search'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import _ from 'underscore'
 
 //.FIND OUT MEANING OF RENDER PURE FUNC ONLY
 
@@ -36,7 +37,8 @@ class Order extends Component{
                     quantity_ordered:"",
                     checked_del:false,
                     extra_info:'',
-                    saved:false
+                    saved:false,
+                    count:1
    
                 }, 
             radio_search_option:'quick', 
@@ -65,7 +67,7 @@ componentDidUpdate(prevProps){
     let id_list = this.state.id_list
     let count_list = this.state.count_list
     const {loi,loading_serials,...rest} = this.props
-        if (Object.keys(prevProps.loi).length !== Object.keys(loi).length){ //CHANGE LATER
+        if (!_.isMatch(prevProps.loi,loi)){ //CHANGE LATER
              if(Object.keys(loi).length > 0){
                  id_list=[]
                  count_list =[]
@@ -116,12 +118,15 @@ componentDidUpdate(prevProps){
             this.setState({...this.state,order_deleted_move:true})//change the state to true so that we can move to customer page
         }
 
-        if (Object.keys(prevProps.loading_serials).length !== Object.keys(loading_serials).length){//CHANGE THIS TOO
+    
+        if (!_.isMatch(prevProps.loading_serials,loading_serials)){//CHANGE THIS TOO
             if(Object.keys(loading_serials).length > 0){
-                const serial = Object.keys(loading_serials)[0]
+                let serial = Object.keys(loading_serials)[0]
                 if(loading_serials[serial] === false){
-                    this.setState({...this.state,[this.state[serial]]:{ ...this.state[serial],saved:true} })
+                    serial= String(serial)
+                    this.setState({...this.state,[serial]:{ ...this.state[serial],saved:true} })
                 }
+                
                 
             }
         }
@@ -512,10 +517,10 @@ clickExtraInfo = (e) =>{
 confirm_order=()=>{
     let error_ids = []
     let strn =''
-    for(let id of this.state.id_list){
-        if (this.state[id].saved ===false){
-            error_ids.push(this.state[id].count)
-            strn+=`${this.state[id].count} ,`
+    for(let serial of this.state.id_list){
+        if ( this.state[serial].product_id && this.state[serial].saved ===false){
+            error_ids.push(this.state[serial].count)
+            strn+=`${this.state[serial].count} ,`
         }
     }
     if (error_ids.length > 0){
@@ -727,7 +732,8 @@ render(){
                     total:0,
                     quantity_ordered:"",
                     checked_del:false,
-                    saved:false
+                    saved:false,
+                    count:1
                 
                 }, 
             radio_search_option:'quick', 

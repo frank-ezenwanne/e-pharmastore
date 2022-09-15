@@ -7,7 +7,7 @@ import {ORDER_CREATED,CHANGE_CREATED_FALSE,LAST_ORDER_FETCHED,
     RESET_ORDER_DELETED_MOVE
   
 } from '../actions/types'
-import {createMessage} from './message_error'
+import {createMessage,returnErrors} from './message_error'
 
 export const create_order = () => (dispatch,getState) =>{
     const config={
@@ -331,12 +331,12 @@ export const send_email = (id) => (dispatch,getState) =>{
     
     .then((res)=>{
         
-        dispatch(createMessage({email_sent:'Email Sent!'}))
+        dispatch(createMessage(res.data))
     })
 
     .catch(
         (err) => {
-            console.log(err.response)
+            dispatch(returnErrors(err.response.data,err.response.status))
         }
     )
 

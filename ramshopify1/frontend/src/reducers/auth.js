@@ -19,9 +19,10 @@ export default function(state=initialState,action){
     switch(action.type){
         case LOGIN_SUCCESS:
             localStorage.setItem("token",action.payload.token)
+            console.log(action.payload.user,998)
             return {
                 ...state,
-                ...action.payload,
+                ...action.payload.user,
                 isAuthenticated:true,
                 isLoading:false,
                 justregistered:false
@@ -33,7 +34,7 @@ export default function(state=initialState,action){
             }
 
         case USER_LOADED:
-            console.log(action.payload)
+            console.log(action.payload,900)
             return {
                 ...state,
                 ...action.payload,
