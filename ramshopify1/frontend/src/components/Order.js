@@ -47,7 +47,7 @@ class Order extends Component{
             remove_list : {
                 display:"none"},
             modal_generic:false,
-            confirm_del_checkbox_display :{display:'none'},
+            confirm_del_checkbox_display :'none',
             delete_button_color : 'btn-danger',
             delete_button_status : 'Remove items',
             modal_extrainfo:false,
@@ -62,19 +62,22 @@ componentDidMount(){
 }
 
 componentDidUpdate(prevProps){
-    let last_elem_serial
-    let last_elem_count 
-    let id_list = this.state.id_list
-    let count_list = this.state.count_list
-    const {loi,loading_serials,...rest} = this.props
-        if (!_.isMatch(prevProps.loi,loi)){ //CHANGE LATER
+   
+    const {loi,loading_serials,last_order_status,...rest} = this.props
+        if (!_.isMatch(prevProps.loi,loi)){ 
+            let last_elem_serial
+            let last_elem_count 
+            let id_list
+            let count_list
              if(Object.keys(loi).length > 0){
+                 
                  id_list=[]
                  count_list =[]
                 for (const id in loi){
                     id_list.push(id)
                     count_list.push(loi[id].count)
                 }
+
                 last_elem_serial = parseInt(id_list[id_list.length-1])
                 last_elem_serial = last_elem_serial +1
                 id_list.push(String(last_elem_serial))
@@ -82,10 +85,9 @@ componentDidUpdate(prevProps){
                 last_elem_count = parseInt(count_list[count_list.length-1])
                 last_elem_count = last_elem_count +1
                 count_list.push(String(last_elem_count))
+             
 
-             }  
-
-            this.setState({...this.props.loi,id_list,count_list,[last_elem_serial]:{
+            this.setState({...loi,id_list,count_list,[last_elem_serial]:{
                     id:'',
                     product_id:'',
                     brand_description:'',
@@ -101,17 +103,26 @@ componentDidUpdate(prevProps){
                     brand_description_slug:'',
                     checked_del:false,
                     count:last_elem_count
-            }
-               
-            })
+            },
+            radio_search_option:'quick', 
+            first_letter:'',
+            group_letters:'',
+            remove_list : {
+                display:"none"},
+            modal_generic:false,
+            confirm_del_checkbox_display :'none',
+            delete_button_color : 'btn-danger',
+            delete_button_status : 'Remove items',
+            modal_extrainfo:false,
+            extra_info_num:'',
+            modal_deleteorder:false,
+            modal_sendorder:false,
+            ordered:this.props.last_order_status
+                })
+          }
         }
 
-        if (prevProps.order_productid !== this.props.order_productid){
-            const{current_serial,...rest} = this.props
-            this.setState({...this.state,
-                [current_serial] : {...this.state[current_serial],id:this.props.order_productid }
-             })
-        }
+
 
         if(this.props.order_deleted_move === true){
             this.props.clear_order_deleted_stat()//change the status of ready to move to customerpage to false after deleting order since deleting order changes it to true
@@ -124,13 +135,62 @@ componentDidUpdate(prevProps){
                 let serial = Object.keys(loading_serials)[0]
                 if(loading_serials[serial] === false){
                     serial= String(serial)
-                    this.setState({...this.state,[serial]:{ ...this.state[serial],saved:true} })
+                    this.setState({...this.state,[serial]:{ ...this.state[serial],saved:true,id:this.props.order_productid} })
                 }
                 
                 
             }
-        }
+        
+        } 
+
 }
+
+static getDerivedStateFromProps(props,state){
+        if (props.last_order_status !== state.ordered){
+            return {
+                ...state,ordered:props.last_order_status
+            }
+        }
+        
+
+        else if(state.id_list.length === 0){
+        return({
+            id_list : [1],
+            count_list:[1],
+                1:{
+                    id:'',
+                    product_id:'',
+                    brand_description:'',
+                    generic_name:'',
+                    unit:'',
+                    selected_unit:'',
+                    raw_cost:'',
+                    full_pack_quantity:'',
+                    unit_quantity:0,
+                    cost:0,
+                    total:0,
+                    quantity_ordered:"",
+                    checked_del:false,
+                    saved:false,
+                    count:1
+                
+                }, 
+            radio_search_option:'quick', 
+            first_letter:'',
+            group_letters:'',
+            remove_list : {
+                display:"none"},
+            modal_generic:false,
+            confirm_del_checkbox_display :'none',
+            delete_button_color : 'btn-danger',
+            delete_button_status : 'Remove items'
+            })
+    }    
+    else{
+        return null
+    }
+}
+
 
 
 componentWillUnmount(){
@@ -178,6 +238,13 @@ onClickDrug = (e) =>{
         product = this.props.products[c_name][data_serial]}
     else{
         product = this.props.products_deep[c_name][data_serial]
+    }
+    for(let serial of this.state.id_list){
+        if(this.state[serial].product_id === product.id){//check if product already exists in order with id
+              alert('Come, this item already exists in this order oo!!')
+              break  
+            }
+         
     }
     
     return this.setState({
@@ -268,7 +335,6 @@ generic_change = (e)=>{
     const val = e.target.value
     const name_attrib = e.target.name
     const c_name = e.target.className
-    console.log({brand_description:val,...this.state[c_name]})
     this.setState({
         [c_name]: {...this.state[c_name],generic_name:val}
     })
@@ -344,7 +410,7 @@ quantity_change = (e) =>{
             }
         }
         const total = cost * parseInt(val)
-        this.setState({
+        this.setState({...this.state,group_letters:'',first_letter:'',
             [c_name]: {...this.state[c_name],quantity_ordered:val,cost:cost.toFixed(2),total:total.toFixed(2),saved:false}
         },()=>{
             // send order_product data to backend for save
@@ -389,6 +455,7 @@ quantity_change = (e) =>{
                    unit_quantity:"",
                    cost:"",
                    total:0,
+                   checked_del:false,
                    quantity_ordered:"",
                    saved:false,
                    count:new_latest_count
@@ -417,21 +484,24 @@ onChangeRadioSearch = (e) =>{
 }
 
 OnChangeCheckBox = (e)=>{
-    const c_name = e.target.classList[0]
-    if(this.state[c_name].checked_del === true ){
-        this.setState({...this.state,[c_name]:{
-            ...this.state[c_name],checked_del:false
-        }})
-    }
-    else{
-        this.setState({...this.state,[c_name]:{
-            ...this.state[c_name],checked_del:true
-        }})
+    if(!this.state.ordered){
+        const c_name = e.target.classList[0]
+        if(this.state[c_name].checked_del === true ){
+            this.setState({...this.state,[c_name]:{
+                ...this.state[c_name],checked_del:false
+            }})
+        }
+        else{
+            this.setState({...this.state,[c_name]:{
+                ...this.state[c_name],checked_del:true
+            }})
+        }
     }
 }
 
 
 confirmDeleterow = (e) =>{
+if(!this.state.ordered){
     const all_checked=[]
     const posted=[]
     for(const id of this.state.id_list){
@@ -458,11 +528,6 @@ confirmDeleterow = (e) =>{
                 all_checked.forEach((elem)=>{//loop begins
                     idlist_index = id_list.indexOf(elem)
                     if(idlist_index !== -1){ //if the state index in id_list is present in all_checked i.e has been checked
-                        // const count_to_del = new_state[elem].count //quickly 1st get corresponding count
-                        // countlist_index = count_list.indexOf(count_to_del)//get the index of the count in count_list
-                        // if(countlist_index !== -1){
-                        //     count_list.splice(countlist_index,1)//use the index to remove the element
-                        // }
                         id_list.splice(idlist_index,1)//now..removing the actual serialand data..splice will delete the checked elem from id_list
                         delete new_state[elem]
                     }   
@@ -475,9 +540,12 @@ confirmDeleterow = (e) =>{
                         new_state[serial_elem].count = i
                         count_list.push(i)
                    
-                    }
+                    }   
                     
-                    this.setState({...this.state,id_list,count_list})
+                    
+                    this.setState({...this.state,id_list,count_list,confirm_del_checkbox_display:'none',delete_button_color : 'btn-danger',
+                    delete_button_status : 'Remove items',
+                })
 
                 }
             
@@ -488,49 +556,75 @@ confirmDeleterow = (e) =>{
 
         }
     }
-}
+
+}}
 
 changeDeleteStatus = (e) =>{
-    if(this.state.delete_button_status !== 'Cancel'){
+    if(!this.state.ordered){
+    if(this.state.delete_button_status === 'Remove items'){
         this.setState({
-            ...this.state, confirm_del_checkbox_display:{display:'inline-block'},
+            ...this.state, confirm_del_checkbox_display:'inline-block',
             delete_button_color:'btn-warning',delete_button_status : 'Cancel'
         })
     }
     else{
         this.setState({
-            ...this.state, confirm_del_checkbox_display:{display:'none'},
+            ...this.state, confirm_del_checkbox_display:'none',
             delete_button_color:'btn-danger',delete_button_status : 'Remove items'
         })
     }
+}
+else{
+    alert('This Order has already been sent!!')
+}
 
 }
 
 clickExtraInfo = (e) =>{
     const c_name = e.target.classList[0]
-    if(this.state[c_name]['product_id']){
+    if(this.state[c_name]['product_id'] && !this.state.ordered){
         this.setState({...this.state,modal_extrainfo:true,extra_info_num:c_name})
     }
     
 }
 
 confirm_order=()=>{
-    let error_ids = []
-    let strn =''
-    for(let serial of this.state.id_list){
-        if ( this.state[serial].product_id && this.state[serial].saved ===false){
-            error_ids.push(this.state[serial].count)
-            strn+=`${this.state[serial].count} ,`
+    if(!this.state.ordered){
+        let error_ids = []
+        let strn =''
+        let empty_check =true
+        for(let serial of this.state.id_list){
+            if ( this.state[serial].product_id && this.state[serial].saved ===false || this.state[serial].id && this.state[serial].saved ===false ){
+                empty_check=false
+                error_ids.push(this.state[serial].count)
+                strn+=`${this.state[serial].count} ,`
+            }
+            else if (this.state[serial].product_id && this.state[serial].saved ===true) {
+                empty_check=false
+            }
+  
         }
+
+            if(empty_check === true){
+                alert('No item to order!')
+                return
+            }
+            if (error_ids.length > 0){
+                alert(`Resolve ids ${strn}` )
+            }
+            else {
+                this.setState({"modal_sendorder":true})
+            }
     }
-    if (error_ids.length > 0){
-        
-        alert(`Resolve ids ${strn}` )
+    else{
+        alert('This Order has already been sent!!')
     }
-    else {
-        this.setState({"modal_sendorder":true})
-    }
+    
 }
+
+
+
+
 
 
 map_stuff = (num) =>{  
@@ -540,11 +634,11 @@ map_stuff = (num) =>{
        
     <Fragment key={num}>
         <div className="product-div form-class">
-        <span className='brand-minus-section'>
-            {this.state[num].brand_description?this.state[num].id? 
+        <div className='brand-minus-section'>
+            {this.state[num].brand_description?this.state[num].product_id? 
                  <input onChange = {this.OnChangeCheckBox} 
                     checked ={this.state[num]['checked_del'] || ''} 
-                    style = {this.state.confirm_del_checkbox_display}
+                    style = {{display:this.state.confirm_del_checkbox_display}}
                     className = {num + ' ' +'checkbox-elem'} 
                     type='checkbox' 
                     name = 'delete-row'
@@ -554,7 +648,8 @@ map_stuff = (num) =>{
             <div className="count">{this.state[num]['count']}</div>
            
             <input
-                style={this.product_style}          
+                style={this.product_style} 
+                readOnly={this.state.ordered}       
                 className={num + ' ' + 'form-control'}
                 type="text"
                 name="brand_description"
@@ -562,7 +657,7 @@ map_stuff = (num) =>{
                 value = {this.state[num]["brand_description"]}
             />
             <div style = {{border:(this.state[num]['extra_info']? '0.134rem solid green': '0.134rem solid orange' )}} onClick={this.clickExtraInfo} className={num + ' ' + 'btn' + ' ' +  'extra-info-section'}>Ex</div>
-          </span>
+          </div>
        
           <div style = {this.state.remove_list} className ="list-section" >
           {this.state.radio_search_option === 'quick'? //if radio is quick
@@ -624,7 +719,8 @@ map_stuff = (num) =>{
         
        
         <div className="unit-div form-group">
-            <select  className={num + ' '+  'form-control'} name="selected_unit" value={this.state[num]["selected_unit"] || ''} style = {this.unit_style} onChange = {this.unit_change}>
+            <select  disabled={this.state.ordered}  className={num + ' '+  'form-control'} name="selected_unit" value={this.state[num]["selected_unit"] || ''} style = {this.unit_style} onChange = {this.unit_change}>
+            
                <option value="SELECT">SELECT</option>
                 {this.state[num]["full_pack_quantity"] === 1 ? 
                     <option value = {this.state[num]["unit"]}>{this.state[num]["unit"]}</option> :
@@ -646,6 +742,7 @@ map_stuff = (num) =>{
 
         <div className="quantity-div form-group">
             <input
+                readOnly={this.state.ordered} 
                 className={num + ' ' + 'form-control'}
                 type="number"
                 name="quantity"
@@ -715,38 +812,7 @@ render(){
     if(this.state.order_deleted_move){
         return <Navigate to = "/customerpage"/>
     }
-    if(this.state.id_list.length === 0){
-        this.setState({
-            id_list : [1],
-                1:{
-                    id:'',
-                    product_id:'',
-                    brand_description:'',
-                    generic_name:'',
-                    unit:'',
-                    selected_unit:'',
-                    raw_cost:'',
-                    full_pack_quantity:'',
-                    unit_quantity:0,
-                    cost:0,
-                    total:0,
-                    quantity_ordered:"",
-                    checked_del:false,
-                    saved:false,
-                    count:1
-                
-                }, 
-            radio_search_option:'quick', 
-            first_letter:'',
-            group_letters:'',
-            remove_list : {
-                display:"none"},
-            modal_generic:false,
-            confirm_del_checkbox_display :{display:'none'},
-            delete_button_color : 'btn-danger',
-            delete_button_status : 'Remove items'
-            })
-    }
+   
     const {id_list,...vals} = this.state
 
     let total = 0
@@ -768,9 +834,10 @@ render(){
                             <div className = 'radio-input form-check'> Deep search<input className = 'form-check-input' onChange = {this.onChangeRadioSearch} checked ={this.state.radio_search_option === 'deep' } type ='radio' value='deep' name="radio_search_option"></input></div>
                         </div>
                         <div className = 'delete-options-div'>
-                            <div onClick = {this.confirmDeleterow} style = {this.state.confirm_del_checkbox_display} className = 'btn btn-danger confirm-delete'>Confirm</div>
+                            <div onClick = {this.confirmDeleterow} style = {{display:this.state.confirm_del_checkbox_display}} className = 'btn btn-danger confirm-delete'>Confirm</div>
                             <div onClick = {this.changeDeleteStatus} className = {'btn' +' ' + this.state.delete_button_color + ' ' +'delete-cancel'}> {this.state.delete_button_status} </div>
-                            <div onClick = {()=>{this.setState({"modal_deleteorder":true}) }}
+                            <div onClick = {()=>{
+                               this.setState({"modal_deleteorder":true}) }}
                                  className = 'delete-order-button btn'>
                                 <div className = 'delete-svg'>
                                     <svg fill ='red' width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" clipRule="evenodd"><path d="M19 24h-14c-1.104 0-2-.896-2-2v-16h18v16c0 1.104-.896 2-2 2zm-7-10.414l3.293-3.293 1.414 1.414-3.293 3.293 3.293 3.293-1.414 1.414-3.293-3.293-3.293 3.293-1.414-1.414 3.293-3.293-3.293-3.293 1.414-1.414 3.293 3.293zm10-8.586h-20v-2h6v-1.5c0-.827.673-1.5 1.5-1.5h5c.825 0 1.5.671 1.5 1.5v1.5h6v2zm-8-3h-4v1h4v-1z"/></svg>
@@ -800,15 +867,21 @@ render(){
                 </form>
             </div>
             {/* this.props.send_email(this.props.last_orderid */}
-            <div className="send-order-total-div">
-                 <div onClick = {()=>{this.confirm_order()}}
-                      className = 'send-order-button btn btn-success'>
-                   Send Order
-                 </div>
+            <div className="temp-send-order-total-div">
+                <div title = 'Create identical order that you can edit' style = {{display:!this.state.ordered? 'none':'block'}} className ='template-button btn btn-success'>
+                    Use as Template
+                </div>                
+                
+               <div className = 'send-order-total-div' style = {{marginLeft:!this.state.ordered?'40rem':'27rem'}}>
+                    <div onClick = {()=>{this.confirm_order()}}
+                        className = {this.state.ordered? 'btn-warning send-order-button btn': 'btn-success send-order-button btn'}>
+                    Send Order
+                    </div>
 
-                 <div className="total-cost">
-                             {"₦" + ' ' + total}
-                 </div>
+                    <div className="total-cost">
+                                {"₦" + ' ' + total}
+                    </div>
+                </div>
 
             </div>
             
@@ -896,7 +969,8 @@ const mapStateToProps = (state) => ({
     loading_serials:state.search.loading_serials,
     order_productid:state.search.order_productid,
     current_serial:state.search.current_serial,
-    order_deleted_move:state.search.order_deleted_move
+    order_deleted_move:state.search.order_deleted_move,
+    last_order_status:state.search.last_order_status
 })
 
 const redux_funcs = {

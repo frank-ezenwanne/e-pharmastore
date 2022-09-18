@@ -7,7 +7,7 @@ import {ORDER_CREATED,CHANGE_CREATED_FALSE,LAST_ORDER_FETCHED,
     RESET_ORDER_DELETED_MOVE
   
 } from '../actions/types'
-import {createMessage,returnErrors} from './message_error'
+import {createMessage,returnErrors,email_error_handler,email_sent_handler} from './message_error'
 
 export const create_order = () => (dispatch,getState) =>{
     const config={
@@ -330,13 +330,13 @@ export const send_email = (id) => (dispatch,getState) =>{
     .post("api/SendCSVEmail",body,config)
     
     .then((res)=>{
-        
         dispatch(createMessage(res.data))
+        dispatch(email_sent_handler())
     })
 
     .catch(
         (err) => {
-            dispatch(returnErrors(err.response.data,err.response.status))
+            dispatch(email_error_handler(err.response.data,err.response.status))
         }
     )
 

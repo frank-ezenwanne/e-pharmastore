@@ -1,0 +1,47 @@
+Content-Type: multipart/mixed; boundary="===============1420165928=="
+MIME-Version: 1.0
+Subject: Hello
+From: efrank938@gmail.com
+To: frankdevspace@gmail.com
+Date: Sat, 17 Sep 2022 05:15:14 -0000
+Message-ID: <166339171431.14484.2013514225873929048@Frank>
+
+--===============1420165928==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+The Order from ZenCompany to Ramsgate
+--===============1420165928==
+Content-Type: text/csv; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="order.csv"
+
+brand_description,generic_name,selected_unit,quantity_ordered,cost,total
+H.D CREAM,,TUBE,9,300.0,2700.0
+A&D MEDICAL WRIST B.P MACHINE X 1,,PACK,6,14500.0,87000.0
+SABRESTEN CREAM  20G,Clotrimazole,TUBE,3,630.0,1890.0
+A&D MEDICAL WRIST B.P MACHINE X 1,,PACK,8,14500.0,116000.0
+SAFECUT 125ML,,BOTTLE,2,340.0,680.0
+A&D MEDICAL WRIST B.P MACHINE X 1,,PACK,5,14500.0,72500.0
+DABAFORT X 100 TABS,,PACK,4,750.0,3000.0
+RABEC TABS 20MG X 30,,BLISTER,5,300.0,1500.0
+DABAFORT X 100 TABS,,PACK,8,750.0,6000.0
+H.D CREAM,,TUBE,9,300.0,2700.0
+VALIUM INJ 10MG/1ML 2ML {SWIPHA},Diazepam,FULL PACK,8,1800.0,14400.0
+DABAFORT X 100 TABS,,PACK,5,750.0,3750.0
+SACOVITE CAPS X 30,,PACK,4,150.0,600.0
+A&D MEDICAL WRIST B.P MACHINE X 1,,PACK,8,14500.0,116000.0
+XALATAN EYE DROPS  2.5ML,Latanoprost,BOTTLE,9,4800.0,43200.0
+VALIUM 5MG TAB X 12,Diazepam,FULL PACK,6,760.0,4560.0
+WAIPA ACT TABS X 12,,PACK,3,455.0,1365.0
+A&D MEDICAL B.P MACHINE X 1,,PACK,3,24000.0,72000.0
+EASADOL CAPLET 500MG X 100,,FULL PACK,2,600.0,1200.0
+SABRESTEN (VAGINAL) CREAM 30G,,TUBE,4,380.0,1520.0
+B .COMPLEX  2LITER SYR,,JAR,8,800.0,6400.0
+HAEMARON CAPS X 30,,PACK,9,310.0,2790.0
+
+--===============1420165928==--
+
+-------------------------------------------------------------------------------

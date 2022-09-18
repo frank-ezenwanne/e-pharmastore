@@ -25,7 +25,10 @@ export default function(state=initialState,action){
                 ...action.payload.user,
                 isAuthenticated:true,
                 isLoading:false,
-                justregistered:false
+                justregistered:false,
+                token:localStorage.getItem("token") //check login ability after token expiry without havin to rfresh
+                 
+                
             }
 
         case REGISTER_SUCCESS:

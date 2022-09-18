@@ -10,11 +10,16 @@ export class Alerts extends Component{
       }
 
     componentDidUpdate(prevProps){
-        const {alert,message,error} = this.props
+        const {alert,message,error,email_sent_status} = this.props
         if(message !== prevProps.message){
+            console.log(message,prevProps.message)
             if(message.email_sent){
                 alert.success(message.email_sent)
             } 
+        }
+
+        if(email_sent_status !== prevProps.email_sent_status){
+            alert.success('Email Sent')
         }
 
         if(error !== prevProps.error){
@@ -33,7 +38,8 @@ export class Alerts extends Component{
 
 const mapStateToProps = (state) =>({
     message:state.messages,
-    error:state.errors
+    error:state.errors,
+    email_sent_status:state.search.email_sent
 })
 
 export default connect(mapStateToProps)(withAlert()(Alerts))

@@ -26,11 +26,10 @@ class OrderView(APIView):
     def post(self,request,*args,**kwargs):#post or update a new order product
         order_product = OrderProductSerializer(data=request.data)
         order_product.is_valid(raise_exception=True)
-        print(request.data)
         order = order_product.validated_data["order_id"]
         order_id = order.id
         user = request.user
-          #check cart id gotten from frontend
+          #check cart id gotten from frontend.
         order = Order.objects.get(id = int(order_product.validated_data["order_id"].id))
         if order:
             if order.buyer == request.user:
@@ -169,9 +168,10 @@ class GetLastOrder(APIView):
             id+=1
             last_order_items[key]['count'] = id
             sorted_loi[key] = last_order_items[key]
+        print(last_order.ordered)
         return Response({"loi":sorted_loi,
-                        "last_orderid":last_order.id
-        })
+                        "last_orderid":last_order.id,"last_order_status":last_order.ordered})
+     
 
 
 class GetCustomerOrders(APIView):
@@ -215,7 +215,14 @@ class SendCSVEmail(APIView):
             message.attach('order.csv', csv_file.getvalue(), 'text/csv')
             try:
                 message.send()
-                return Response({'email_sent':'Email Sent!'})
             except:
                 return Response({'email_send_error':'Email Error in Sending Order!'},status = status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            for op in order.order_products.all():
+                op.ordered = True
+                op.save()
+            order.ordered = True
+            order.save()
+            
+            return Response({'email_sent':'Email Sent!'})
         return Response({"error":"This orderId does not exist"},status = status.HTTP_404_NOT_FOUND)

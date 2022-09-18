@@ -1,0 +1,32 @@
+Content-Type: multipart/mixed; boundary="===============1615158248=="
+MIME-Version: 1.0
+Subject: Hello
+From: efrank938@gmail.com
+To: frankdevspace@gmail.com
+Date: Sun, 18 Sep 2022 14:56:54 -0000
+Message-ID: <166351301422.9800.14420862117314354125@Frank>
+
+--===============1615158248==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+The Order from ZenCompany to Ramsgate
+--===============1615158248==
+Content-Type: text/csv; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="order.csv"
+
+brand_description,generic_name,selected_unit,quantity_ordered,cost,total
+JAWARON X 30 CAPS,,PACK,9,500.0,4500.0
+JAWACLOX SUSP  100ML,,BOTTLE,9,525.0,4725.0
+DABAFORT X 100 TABS,,PACK,9,750.0,6750.0
+DABAFORT X 100 TABS,,PACK,90,750.0,67500.0
+FACEMASK   X 50,,FULL PACK,1,1500.0,1500.0
+JAWACLOX SUSP  100ML,,BOTTLE,2,525.0,1050.0
+SABRESTEN CREAM  20G,Clotrimazole,TUBE,1,630.0,630.0
+
+--===============1615158248==--
+
+-------------------------------------------------------------------------------

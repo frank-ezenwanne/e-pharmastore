@@ -345,10 +345,18 @@ margin-right:-2rem;
 .radio-input{
 	margin-right:1rem
 }
+.temp-send-order-total-div{
+	display:flex
+}
+
+.template-button{
+	margin-left:5rem;
+	display:none
+}
 
 .send-order-total-div{
 	display:flex;
-	margin-left:41rem;
+
 	
 	
 }

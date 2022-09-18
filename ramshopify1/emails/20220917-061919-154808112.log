@@ -1,0 +1,26 @@
+Content-Type: multipart/mixed; boundary="===============0444160352=="
+MIME-Version: 1.0
+Subject: Hello
+From: efrank938@gmail.com
+To: frankdevspace@gmail.com
+Date: Sat, 17 Sep 2022 05:19:19 -0000
+Message-ID: <166339195951.14484.3169501477025469328@Frank>
+
+--===============0444160352==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+The Order from ZenCompany to Ramsgate
+--===============0444160352==
+Content-Type: text/csv; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="order.csv"
+
+brand_description,generic_name,selected_unit,quantity_ordered,cost,total
+ACECLOFENAC (MULTICOY) TABS  X 100,Aceclofenac,BLISTER,8,92.0,736.0
+
+--===============0444160352==--
+
+-------------------------------------------------------------------------------

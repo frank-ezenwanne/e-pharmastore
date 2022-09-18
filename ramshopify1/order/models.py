@@ -98,7 +98,7 @@ class Generic_Alphabetic(models.Model):
 class OrderProduct(models.Model):
     serial = models.IntegerField(null=True) #serial created by frontend
     selected_unit = models.CharField(max_length = 30)
-    brand_description = models.CharField(max_length = 50)
+    brand_description = models.CharField(max_length = 150)
     generic_name = models.CharField(max_length = 50,null=True,blank=True)
     product_id = models.ForeignKey(Product,on_delete=models.PROTECT)
     buyer = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)#SET TO DELETED USER LATER

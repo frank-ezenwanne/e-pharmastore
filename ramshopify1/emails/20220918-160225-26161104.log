@@ -1,0 +1,31 @@
+Content-Type: multipart/mixed; boundary="===============1391855992=="
+MIME-Version: 1.0
+Subject: Hello
+From: efrank938@gmail.com
+To: frankdevspace@gmail.com
+Date: Sun, 18 Sep 2022 15:02:25 -0000
+Message-ID: <166351334540.9800.11618091816797371048@Frank>
+
+--===============1391855992==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+The Order from ZenCompany to Ramsgate
+--===============1391855992==
+Content-Type: text/csv; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="order.csv"
+
+brand_description,generic_name,selected_unit,quantity_ordered,cost,total
+JAWAMOX 125MG/5ML SUSP,Amoxicillin,BOTTLE,9,520.0,4680.0
+FALCIMON TABS 100MG/270MG X 6,,PACK,2,150.0,300.0
+DABAFORT X 100 TABS,,PACK,2,750.0,1500.0
+HAEMARON SYR  200ML,,BOTTLE,2,255.0,510.0
+LABDIC RELIEF TABS  X 200,,SACHET,2,73.5,147.0
+A&D MEDICAL B.P MACHINE X 1,,PACK,3,24000.0,72000.0
+
+--===============1391855992==--
+
+-------------------------------------------------------------------------------

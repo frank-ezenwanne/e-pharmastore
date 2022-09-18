@@ -3,7 +3,7 @@ import {ORDER_CREATED,CHANGE_CREATED_FALSE,
     LAST_ORDER_FETCHED,
     ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDERS_RETRIEVED,
     ORDER_PRODUCT_NOT_CREATED,GENERIC_PRODUCTS_RETRIEVED,ORDER_MADE_LAST,
-    CLEAR_GENERIC_PRODUCTS,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC,ORDER_DELETED,RESET_ORDER_DELETED_MOVE
+    CLEAR_GENERIC_PRODUCTS,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC,ORDER_DELETED,RESET_ORDER_DELETED_MOVE,EMAIL_SENT
 } from '../actions/types'
 
 
@@ -22,6 +22,7 @@ const initialState = {
     generic_products: null,
     customer_orders:null,
     selected_order_made_last:false,
+    last_order_status:false,
     
 }
 
@@ -133,7 +134,20 @@ export default function (state = initialState,action){
             return{
                 ...state,
                 loi:{},
-                order_id:null
+                order_id:null,
+                products:"",
+                products_deep:'',
+                generics:"",
+                just_created:false,
+                last_orderid:null,
+                order_productid:'',
+                current_serial:'',
+                orderCreating:false,
+                loading_serials:{},
+                generic_products: null,
+                customer_orders:null,
+                selected_order_made_last:false,
+                last_order_status:false,
             }
         
         case CLEAR_BRAND_DESC:
@@ -142,6 +156,13 @@ export default function (state = initialState,action){
                 products:'',
                 products_deep:'',
 
+            }
+
+        case EMAIL_SENT:
+            return{
+                ...state,
+                ...action.payload,
+                last_order_status:true,
             }
         
 
