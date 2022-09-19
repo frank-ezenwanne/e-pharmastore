@@ -1,0 +1,30 @@
+Content-Type: multipart/mixed; boundary="===============0085571079=="
+MIME-Version: 1.0
+Subject: Hello
+From: efrank938@gmail.com
+To: frankdevspace@gmail.com
+Date: Mon, 19 Sep 2022 18:58:04 -0000
+Message-ID: <166361388480.13172.6294058513592857295@Frank>
+
+--===============0085571079==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+The Order from ZenCompany to Ramsgate
+--===============0085571079==
+Content-Type: text/csv; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="order.csv"
+
+brand_description,generic_name,selected_unit,quantity_ordered,cost,total
+LABET INJ 50MG X 1,Labetalol,AMPOULES,7,950.0,6650.0
+KADPHAGE TABS  X 30,,FULL PACK,9,1250.0,11250.0
+M2-TONE X 20 TABS,,PACK,61,1950.0,118950.0
+JARDIANCE TABS 10MG X 30,,FULL PACK,8,17500.0,140000.0
+KADPHAGE TABS  X 30,,FULL PACK,71,1250.0,88750.0
+
+--===============0085571079==--
+
+-------------------------------------------------------------------------------

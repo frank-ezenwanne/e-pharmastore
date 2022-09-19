@@ -20,6 +20,35 @@ class CreateOrder(APIView):
         order = Order.objects.create(buyer = request.user)
         return Response({"order_id":order.id})
 
+class CreateOrderWithTemplate(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self,request,*args,**kwargs):
+        id_serializer = GetIdSerializer(data=request.data)
+        id_serializer.is_valid(raise_exception=True)
+        old_order_id = id_serializer.validated_data['id']
+        old_order=Order.objects.get(id=old_order_id) #check get for errors 
+        if old_order and old_order.buyer == request.user:
+            new_order = Order.objects.create(buyer = request.user)
+            new_order.open_date=timezone.now()
+            for op in old_order.order_products.all():
+                op.pk=None
+                op._state.adding = True
+                op.save()
+                op.ordered = False
+                op.order_id = new_order
+                op.created = timezone.now()
+                op.save()
+                new_order.order_products.add(op)
+            new_order.ordered_date=None
+            new_order.ordered = False
+            new_order.order_total = None
+            new_order.last_updated = timezone.now()
+            new_order.save()
+            return Response({'success':'Copy order created'})
+        return Response({ "error" : "Order Cart not found"},status = status.HTTP_404_NOT_FOUND)
+            
+
+
 
 class OrderView(APIView):
     permission_classes = [IsAuthenticated]
@@ -186,7 +215,6 @@ class MakeLastOrder(APIView):
     def post(self,request,*args,**kwargs):
         serializer = GetIdSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        print(serializer.validated_data,900)
         id = serializer.validated_data["id"]
         order = Order.objects.get(id=id)
         if order:

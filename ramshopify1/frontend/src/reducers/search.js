@@ -23,6 +23,7 @@ const initialState = {
     customer_orders:null,
     selected_order_made_last:false,
     last_order_status:false,
+    all_loaded_serials:{}
     
 }
 
@@ -100,6 +101,7 @@ export default function (state = initialState,action){
                 ...state,
                 orderCreating:true,
                 loading_serials:{...action.payload},
+                all_loaded_serials:{...state.all_loaded_serials,...action.payload},
                 products:'',
                 products_deep:''
             }
@@ -108,13 +110,15 @@ export default function (state = initialState,action){
             return{
                 ...state,
                 ...action.payload.data,
-                loading_serials:{...action.payload.serial}
+                loading_serials:{...action.payload.serial},
+                all_loaded_serials:{...state.all_loaded_serials,...action.payload.serial}
             }
 
         case ORDER_PRODUCT_NOT_CREATED:
             return {
                 ...state,
-                loading_serials:{...action.payload}
+                loading_serials:{...action.payload},
+                all_loaded_serials:{...state.all_loaded_serials,...action.payload}
             }
 
         case GENERIC_PRODUCTS_RETRIEVED:
@@ -148,6 +152,7 @@ export default function (state = initialState,action){
                 customer_orders:null,
                 selected_order_made_last:false,
                 last_order_status:false,
+                all_loaded_serials:{}
             }
         
         case CLEAR_BRAND_DESC:

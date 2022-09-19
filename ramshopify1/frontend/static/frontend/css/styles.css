@@ -533,7 +533,7 @@ transition: transform 0.3s, background-color 0.3s;
 	color:rgb(200,200,200);
 	margin-left: 0.5rem;
 	margin-top:2rem;
-	text-decoration:none;
+	text-decoration:none !important;
 	max-width:100%;
 }
 

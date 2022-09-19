@@ -342,6 +342,37 @@ export const send_email = (id) => (dispatch,getState) =>{
 
 }
 
+export const copy_order = (id) => (dispatch,getState) =>{
+    const config={
+        headers:{
+            "Content-Type":"application/json"
+        }
+    }
+    const token = getState().auth.token
+
+    if(token) {
+        config.headers["Authorization"] = `Token ${token}`
+    }
+
+    const body = JSON.stringify({id})
+    axios
+    .post("api/CreateOrderWithTemplate",body,config)
+    
+    .then((res)=>{
+        console.log("successfully created copy order")
+    })
+
+    .catch(
+        (err) => {
+            console.log(err)
+        }
+    )
+
+}
+
+
+
+
 
 
 

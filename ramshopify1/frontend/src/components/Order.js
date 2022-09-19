@@ -2,7 +2,7 @@ import React, {Component,Fragment} from "react"
 import {connect} from 'react-redux'
 import {Navigate} from 'react-router-dom'
 import {search_brand,get_last_order,send_orderproduct,getGenProducts,delete_order,
-    delOrderProducts,clear_order_deleted_stat,clear_loiId,send_email} from "../actions/search"
+    delOrderProducts,clear_order_deleted_stat,clear_loiId,send_email,copy_order} from "../actions/search"
 import {TailSpin} from 'react-loader-spinner'
 import Tick from '../../svg/tick.svg'
 import Trash from '../../svg/trash.svg'
@@ -772,7 +772,7 @@ map_stuff = (num) =>{
                 name="total"
                 value = {this.state[num]["total"] ||''} 
             />
-            {this.props.loading_serials[num] === true? <TailSpin
+            {this.props.all_loaded_serials[num] === true? <TailSpin
                     height="20"
                     width="20"
                     color="#4fa94d"
@@ -781,9 +781,9 @@ map_stuff = (num) =>{
                     wrapperStyle={{}}
                     wrapperClass="tailspin-class"
                     visible={true}
-                /> : this.props.loading_serials[num] === false?
+                /> : this.props.all_loaded_serials[num] === false?
                 <img className = 'svg-tick-error-class' src={Tick}/>
-                :this.props.loading_serials[num] === "error"? 
+                :this.props.all_loaded_serials[num] === "error"? 
                 (<div className = 'svg-tick-error-class' onClick = {()=>{
                     this.props.send_orderproduct( item["product_id"],
                     item["generic_name"],item["brand_description"],
@@ -868,7 +868,7 @@ render(){
             </div>
             {/* this.props.send_email(this.props.last_orderid */}
             <div className="temp-send-order-total-div">
-                <div title = 'Create identical order that you can edit' style = {{display:!this.state.ordered? 'none':'block'}} className ='template-button btn btn-success'>
+                <div onClick = {()=>{this.props.copy_order(this.props.last_orderid)}} title = 'Create identical order that you can edit' style = {{display:!this.state.ordered? 'none':'block'}} className ='template-button btn btn-success'>
                     Use as Template
                 </div>                
                 
@@ -970,12 +970,14 @@ const mapStateToProps = (state) => ({
     order_productid:state.search.order_productid,
     current_serial:state.search.current_serial,
     order_deleted_move:state.search.order_deleted_move,
-    last_order_status:state.search.last_order_status
+    last_order_status:state.search.last_order_status,
+    all_loaded_serials:state.search.all_loaded_serials
 })
 
 const redux_funcs = {
     search_brand,clear_brand_desc,
     get_last_order,send_orderproduct,
-    clear_loiId,clear_order_deleted_stat,getGenProducts,delOrderProducts,delete_order,send_email
+    clear_loiId,clear_order_deleted_stat,getGenProducts,
+    delOrderProducts,delete_order,send_email,copy_order
 }
 export default connect(mapStateToProps,redux_funcs)(Order)

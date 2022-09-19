@@ -80,8 +80,7 @@ function Nav(props){
 					{props.isAuthenticated?<Fragment>
 					<div className = "side-bar-combo">
 						<span className = "side-bar-email">{props.email}</span>
-						<span className = "lower-side-bar">My Page</span>
-						<span className = "lower-side-bar">View My Orders</span>
+						<span className = "lower-side-bar"><Link to ='/customerpage'>View My Orders</Link></span>
 						<span className = "lower-side-bar">Logout</span>
 					</div>
 					</Fragment>:
