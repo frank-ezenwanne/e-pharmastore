@@ -41,6 +41,41 @@ z-index:3;
 
 }
 
+.main-generic-input-div{
+	position:relative;
+	margin-bottom:1rem;
+}
+
+.main-generic-input-button-div{
+	display:flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.add-confirm-button-div{
+
+}
+
+.brand-add-section{
+	display:flex
+}
+
+.checkbox-elem-generic{
+display:block;
+zoom:1.5;
+accent-color:green;
+}
+
+.generic-list-section{
+display: inline;
+position:absolute;
+background-color:rgb(240,240,240);
+max-height:20rem;
+overflow-y:scroll;
+min-width:25rem;
+z-index:3;
+}
+
 #form-container-main{
 	width:55rem;
 	margin-left:2vw;
@@ -60,7 +95,8 @@ z-index:3;
 	height:20rem;
 	overflow-x:scroll;
 	overflow-y:scroll !important;
-	width:100%
+	width:100%;
+	margin-left:5%;
 }
 
 
@@ -293,7 +329,6 @@ margin-right:-2rem;
 
 .form-class1-generic{
 	width:45vw;
-	overflow-y:scroll !important;
 
 	
 }

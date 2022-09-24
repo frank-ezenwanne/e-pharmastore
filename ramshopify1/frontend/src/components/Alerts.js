@@ -12,10 +12,12 @@ export class Alerts extends Component{
     componentDidUpdate(prevProps){
         const {alert,message,error,email_sent_status} = this.props
         if(message !== prevProps.message){
-            console.log(message,prevProps.message)
             if(message.email_sent){
                 alert.success(message.email_sent)
             } 
+            if(message.order_copied){
+                alert.success(message.order_copied)
+            }
         }
 
         if(email_sent_status !== prevProps.email_sent_status){

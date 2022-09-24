@@ -92,7 +92,7 @@ class Generic_Alphabetic(models.Model):
     z = models.BooleanField(default=False,null=True)
 
     def __str__(self):
-        return self.brand.brand_description
+        return self.generic_name
 
 
 class OrderProduct(models.Model):

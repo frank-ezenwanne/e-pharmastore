@@ -4,7 +4,7 @@ import {ORDER_CREATED,CHANGE_CREATED_FALSE,LAST_ORDER_FETCHED,
     ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDER_PRODUCT_NOT_CREATED,
     GENERIC_PRODUCTS_RETRIEVED,CLEAR_GENERIC_PRODUCTS,ORDERS_RETRIEVED,
     ORDER_MADE_LAST,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC,ORDER_PRODUCTS_DELETED,ORDER_DELETED,
-    RESET_ORDER_DELETED_MOVE
+    RESET_ORDER_DELETED_MOVE,ORDER_COPY_CREATED,GENERIC_NAMES_RETRIEVED,CLEAR_GENERIC_OPTIONS_INPUT
   
 } from '../actions/types'
 import {createMessage,returnErrors,email_error_handler,email_sent_handler} from './message_error'
@@ -152,6 +152,37 @@ export const search_brand = (brand_description,radio_option,serial) => (dispatch
     )
 }
 
+export const search_generic_names = (generic_name) => (dispatch,getState) =>{
+    const config={
+        headers:{
+            "Content-Type":"application/json"
+        }
+    }
+
+    const token = getState().auth.token
+    if(token){
+        config.headers['Authorization'] = `Token ${token}`
+    }
+
+    const body = JSON.stringify({generic_name})
+
+    axios
+    .post("api/get_generic_options",body,config)
+    .then((res)=>{
+        console.log("retrieved")
+        dispatch({
+            type:GENERIC_NAMES_RETRIEVED,
+            payload:res.data
+        })
+    })
+
+    .catch(
+        (err) => {
+            console.log(err.response)
+        }
+    )
+}
+
 export const get_customer_orders = () => (dispatch,getState) =>{
     const config={
         headers:{
@@ -237,7 +268,7 @@ export const getGenProducts = (generic_name) => (dispatch) =>{
         console.log("retrieved")
         dispatch({
             type:GENERIC_PRODUCTS_RETRIEVED,
-            payload:res.data
+            payload:{data:res.data,generic_name_prop:generic_name}
         })
     })
 
@@ -360,6 +391,10 @@ export const copy_order = (id) => (dispatch,getState) =>{
     
     .then((res)=>{
         console.log("successfully created copy order")
+        dispatch({
+            type:ORDER_COPY_CREATED,
+        })
+        dispatch(createMessage(res.data))
     })
 
     .catch(
@@ -381,6 +416,11 @@ export const copy_order = (id) => (dispatch,getState) =>{
 export const clear_gen_products = ()=>(dispatch)=>{
     dispatch({
         type:CLEAR_GENERIC_PRODUCTS,
+    })
+}
+export const clear_gen_options_input = ()=>(dispatch)=>{
+    dispatch({
+        type:CLEAR_GENERIC_OPTIONS_INPUT,
     })
 }
 

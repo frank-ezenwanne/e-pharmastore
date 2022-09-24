@@ -1,7 +1,7 @@
 import React, {Component,Fragment} from "react"
 import {connect} from 'react-redux'
 import {Navigate} from 'react-router-dom'
-import {search_brand,get_last_order,send_orderproduct,getGenProducts,delete_order,
+import {search_brand,get_last_order,send_orderproduct,getGenProducts,delete_order,clear_gen_options_input,
     delOrderProducts,clear_order_deleted_stat,clear_loiId,send_email,copy_order} from "../actions/search"
 import {TailSpin} from 'react-loader-spinner'
 import Tick from '../../svg/tick.svg'
@@ -9,6 +9,7 @@ import Trash from '../../svg/trash.svg'
 import GenericModal from './GenericModal/GenericModal'
 import DeleteOrderModal from './DeleteOrderModal'
 import SendOrderModal from './SendOrderModal'
+import MainGenericModal from './MainGenericModal/MainGenericModal'
 import {clear_brand_desc} from '../actions/search'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -53,7 +54,8 @@ class Order extends Component{
             modal_extrainfo:false,
             extra_info_num:'',
             modal_deleteorder:false,
-            modal_sendorder:false
+            modal_sendorder:false,
+            modal_maingeneric:false
             }
     }
 
@@ -142,6 +144,11 @@ componentDidUpdate(prevProps){
             }
         
         } 
+
+        if(this.props.order_copy_created === true){
+            this.props.clear_order_deleted_stat()
+            this.props.get_last_order()
+        }
 
 }
 
@@ -302,7 +309,7 @@ brand_change=(e)=>{
                     
                 }
 
-                else if (entry_txt_length <= 2 ){
+                else if (entry_txt_length < 2 ){
                     this.setState({...this.state,remove_list:{display:"none"} })
                 }
              
@@ -468,13 +475,17 @@ quantity_change = (e) =>{
 }
 
 
-onModal = (e) =>{
-    if(e.target.value){
-        this.setState({...this.state,"modal_generic":true},()=>{
-            this.props.getGenProducts(e.target.value)
-        })
+onMainGenericModal = (e) =>{    
+    const productid_list = []
+    for (let id of this.state.id_list){
+        productid_list.push(this.state[id].product_id)   
     }
-    
+    console.log(productid_list)
+        this.setState({...this.state,"modal_maingeneric":true,productid_list:productid_list},()=>{
+            if(e.target.value){
+                this.props.getGenProducts(e.target.value)
+            }    
+        }) 
 }
 
 onChangeRadioSearch = (e) =>{
@@ -712,7 +723,7 @@ map_stuff = (num) =>{
                 type="text"
                 name="generic"
                 onChange={this.generic_change}
-                onClick={ this.onModal}
+                onClick={ this.onMainGenericModal}
                 value = {this.state[num]["generic_name"] || ''}
             />
         </div> 
@@ -866,13 +877,21 @@ render(){
                         
                 </form>
             </div>
-            {/* this.props.send_email(this.props.last_orderid */}
+            {/* this.props.send_email(this.props.last_orderid 
+                style = {{display:!this.state.ordered? 'none':'block'}}
+            */}
             <div className="temp-send-order-total-div">
-                <div onClick = {()=>{this.props.copy_order(this.props.last_orderid)}} title = 'Create identical order that you can edit' style = {{display:!this.state.ordered? 'none':'block'}} className ='template-button btn btn-success'>
-                    Use as Template
-                </div>                
-                
-               <div className = 'send-order-total-div' style = {{marginLeft:!this.state.ordered?'40rem':'27rem'}}>
+                {this.state.ordered?
+                        <div onClick = {()=>{this.props.copy_order(this.props.last_orderid)}} title = 'Create identical order that you can edit' style = {{display:'block'}} className ='template-button btn btn-success'>
+                        Use as Template
+                        </div> :
+                    <div onClick = {this.onMainGenericModal} title = 'Search By Generic' style = {{display:'block'}} className ='template-button btn btn-success'>
+                        Search By Generic
+                    </div>  
+                 }
+                              
+                {/* {{marginLeft:!this.state.ordered?'40rem':'27rem'}} */}
+               <div className = 'send-order-total-div' style = {{marginLeft:'27rem'}}>
                     <div onClick = {()=>{this.confirm_order()}}
                         className = {this.state.ordered? 'btn-warning send-order-button btn': 'btn-success send-order-button btn'}>
                     Send Order
@@ -884,13 +903,16 @@ render(){
                 </div>
 
             </div>
+
+
             
-            {vals["modal_generic"] === true? (<GenericModal
+            {/* {vals["modal_generic"] === true? (<GenericModal
                 show={this.state.modal_generic}
+                
                 onHide={()=>{
                     this.setState({"modal_generic":false})
                 }}
-            />) :null}
+            />) :null} */}
 
             {vals["modal_extrainfo"] === true?vals[vals['extra_info_num']]['product_id'] !== ''?
                    ( <Modal
@@ -953,6 +975,19 @@ render(){
                    }}
                />):null
             }
+
+            {
+               vals['modal_maingeneric']?(<MainGenericModal
+                   show={this.state.modal_maingeneric}
+                   productid_list={this.state.productid_list}
+                   onHide={()=>{
+                    this.props.clear_gen_options_input()
+                    this.setState({"modal_maingeneric":false})
+                         }}
+                  
+               />):null
+            }
+            
             
         </Fragment>
     )
@@ -971,13 +1006,14 @@ const mapStateToProps = (state) => ({
     current_serial:state.search.current_serial,
     order_deleted_move:state.search.order_deleted_move,
     last_order_status:state.search.last_order_status,
-    all_loaded_serials:state.search.all_loaded_serials
+    all_loaded_serials:state.search.all_loaded_serials,
+    order_copy_created:state.search.order_copy_created
 })
 
 const redux_funcs = {
     search_brand,clear_brand_desc,
     get_last_order,send_orderproduct,
     clear_loiId,clear_order_deleted_stat,getGenProducts,
-    delOrderProducts,delete_order,send_email,copy_order
+    delOrderProducts,delete_order,send_email,copy_order,clear_gen_options_input
 }
 export default connect(mapStateToProps,redux_funcs)(Order)

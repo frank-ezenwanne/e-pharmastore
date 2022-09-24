@@ -1,8 +1,8 @@
 import {BRANDS_RETRIEVED} from '../actions/types'
 import {ORDER_CREATED,CHANGE_CREATED_FALSE,
     LAST_ORDER_FETCHED,
-    ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDERS_RETRIEVED,
-    ORDER_PRODUCT_NOT_CREATED,GENERIC_PRODUCTS_RETRIEVED,ORDER_MADE_LAST,
+    ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDERS_RETRIEVED,CLEAR_GENERIC_OPTIONS_INPUT,
+    ORDER_PRODUCT_NOT_CREATED,GENERIC_PRODUCTS_RETRIEVED,ORDER_MADE_LAST,ORDER_COPY_CREATED,GENERIC_NAMES_RETRIEVED,
     CLEAR_GENERIC_PRODUCTS,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC,ORDER_DELETED,RESET_ORDER_DELETED_MOVE,EMAIL_SENT
 } from '../actions/types'
 
@@ -23,7 +23,9 @@ const initialState = {
     customer_orders:null,
     selected_order_made_last:false,
     last_order_status:false,
-    all_loaded_serials:{}
+    all_loaded_serials:{},
+    order_copy_created:false,
+    generic_name_prop:''
     
 }
 
@@ -65,7 +67,14 @@ export default function (state = initialState,action){
         case RESET_ORDER_DELETED_MOVE:
             return{
                 ...state,
-                order_deleted_move:false
+                order_deleted_move:false,
+                order_copy_created:false,
+                current_serial:'',
+                loading_serials:{},
+                all_loaded_serials:{},
+                products:"",
+                products_deep:'',
+                generics:"",
             }
 
         case ORDERS_RETRIEVED:
@@ -122,8 +131,15 @@ export default function (state = initialState,action){
             }
 
         case GENERIC_PRODUCTS_RETRIEVED:
-            
+            console.log(action.payload.generic_name_prop,'data')
             return {
+                ...state,
+                ...action.payload.data,
+                generic_name_prop:action.payload.generic_name_prop
+            }
+        case GENERIC_NAMES_RETRIEVED:
+            console.log(action.payload)
+            return{
                 ...state,
                 ...action.payload
             }
@@ -131,7 +147,8 @@ export default function (state = initialState,action){
         case CLEAR_GENERIC_PRODUCTS:
             return {
                 ...state,
-                generic_products:null
+                generic_products:null,
+                generic_name_options:null
             }
 
         case CLEAR_LAST_ORDER_AND_ID:
@@ -162,6 +179,13 @@ export default function (state = initialState,action){
                 products_deep:'',
 
             }
+        case CLEAR_GENERIC_OPTIONS_INPUT:
+            return{
+                ...state,
+                generic_name_options:null,
+                generic_name_prop:''
+
+            }
 
         case EMAIL_SENT:
             return{
@@ -170,6 +194,12 @@ export default function (state = initialState,action){
                 last_order_status:true,
             }
         
+        case ORDER_COPY_CREATED:
+            return{
+                ...state,
+                order_copy_created:true
+
+            }
 
         default:
             return state

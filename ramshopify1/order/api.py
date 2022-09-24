@@ -26,7 +26,7 @@ class CreateOrderWithTemplate(APIView):
         id_serializer = GetIdSerializer(data=request.data)
         id_serializer.is_valid(raise_exception=True)
         old_order_id = id_serializer.validated_data['id']
-        old_order=Order.objects.get(id=old_order_id) #check get for errors 
+        old_order=Order.objects.filter(id=old_order_id).first() 
         if old_order and old_order.buyer == request.user:
             new_order = Order.objects.create(buyer = request.user)
             new_order.open_date=timezone.now()
@@ -44,7 +44,7 @@ class CreateOrderWithTemplate(APIView):
             new_order.order_total = None
             new_order.last_updated = timezone.now()
             new_order.save()
-            return Response({'success':'Copy order created'})
+            return Response({'order_copied':'Order Copied Successfully'})
         return Response({ "error" : "Order Cart not found"},status = status.HTTP_404_NOT_FOUND)
             
 
@@ -59,7 +59,7 @@ class OrderView(APIView):
         order_id = order.id
         user = request.user
           #check cart id gotten from frontend.
-        order = Order.objects.get(id = int(order_product.validated_data["order_id"].id))
+        order = Order.objects.filter(id = int(order_product.validated_data["order_id"].id)).first()
         if order:
             if order.buyer == request.user:
                 instance=""
@@ -93,9 +93,8 @@ class OrderView(APIView):
     def delete(self,request,*args,**kwargs): #delete the cart at once with all orderproducts
         order_id_request = GetIdSerializer(data = request.data)
         order_id_request.is_valid(raise_exception= True)
-        print(order_id_request)
         order_id = order_id_request.validated_data['id']
-        order = Order.objects.get(id = int(order_id))
+        order = Order.objects.filter(id = int(order_id)).first()
         if order and order.buyer == request.user:
             order.delete()
             #get cart with cart id present in frontend
@@ -112,12 +111,12 @@ class OrderProductView(APIView):#finish up with database gen id
         delete_request = GetOrderProductSerializer(data=request.data)
         delete_request.is_valid(raise_exception = True)
         order_id = delete_request.validated_data['order_id']
-        order = Order.objects.get(id = order_id)
+        order = Order.objects.filter(id = order_id).first()
         if not order or order.buyer != request.user:
             return Response({'error':'Order not found'},status = status.HTTP_404_NOT_FOUND)
         del_list = delete_request.validated_data['del_list']
         for id in del_list:
-            order_product = OrderProduct.objects.get(id=id)
+            order_product = OrderProduct.objects.filter(id=id).first()
             if order_product and order_product.buyer==request.user and order_product in order.order_products.all():
                 order.order_products.remove(order_product)
                 order_product.delete()
@@ -138,7 +137,6 @@ def product_forbrand(request): # On insert of brand description, it returns list
         serial = int(request.data["serial"])
     except:
         return Response({"error":'serial not found'})
-    print(search_phrase,12345)
     # col = search_phrase[0]
     # col__icontains = col + "__icontains"
     # options = Brand_Alphabetic.objects.filter(**{col__icontains:True})
@@ -159,17 +157,28 @@ def product_forgeneric(request):# On insert of generic, it returns list of corr 
     search_phrase = generic_serializer.validated_data["generic_name"]
     options = Product.objects.filter(generic_name = search_phrase)
     options = ProductDetailSerializerGen(options,many=True)
-    print(options.data)
     return Response({"generic_products":options.data})
-    
-@api_view(['GET'])
-def generic_list(request): #returns list of generic names similar to input
-    generic_serializer = GenericSerializer(data=request.data)
-    generic_serializer.is_valid(raise_exception=True)
-    search_phrase = generic_serializer.validated_data["generic_name"]
-    options = Generic_Alphabetic.objects.filter(generic_name = search_phrase)
-    options = GenericSerializer(options,many=True)
-    return Response({"generics":options.data})
+
+class GetGenericNames(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self,request,*args,**kwargs): #returns list of generic names similar to input
+        generic_serializer = GenericSerializer(data=request.data)
+        generic_serializer.is_valid(raise_exception=True)
+        search_phrase = generic_serializer.validated_data["generic_name"]
+        print(search_phrase)
+        options = Generic_Alphabetic.objects.filter(generic_name__istartswith = search_phrase)
+        print(options)
+        options = GenericSerializer(options,many=True)
+        return Response({"generic_name_options":options.data})
+
+# @api_view(['POST'])
+# def generic_list(request): #returns list of generic names similar to input
+#     generic_serializer = GenericSerializer(data=request.data)
+#     generic_serializer.is_valid(raise_exception=True)
+#     search_phrase = generic_serializer.validated_data["generic_name"]
+#     options = Generic_Alphabetic.objects.filter(generic_name = search_phrase)
+#     options = GenericSerializer(options,many=True)
+#     return Response({"generic_name_options":options.data})
 
 
 class GetLastOrder(APIView):
@@ -197,7 +206,6 @@ class GetLastOrder(APIView):
             id+=1
             last_order_items[key]['count'] = id
             sorted_loi[key] = last_order_items[key]
-        print(last_order.ordered)
         return Response({"loi":sorted_loi,
                         "last_orderid":last_order.id,"last_order_status":last_order.ordered})
      
@@ -216,7 +224,7 @@ class MakeLastOrder(APIView):
         serializer = GetIdSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         id = serializer.validated_data["id"]
-        order = Order.objects.get(id=id)
+        order = Order.objects.filter(id=id).first()
         if order:
             order.save()
             return Response({"last_orderid":order.id})
@@ -228,9 +236,8 @@ class SendCSVEmail(APIView):
     def post(self,request,*args,**kwargs):
         order_id_request = GetIdSerializer(data = request.data)
         order_id_request.is_valid(raise_exception= True)
-        print(order_id_request)
         order_id = order_id_request.validated_data['id']
-        order = Order.objects.get(id = int(order_id))
+        order = Order.objects.filter(id = int(order_id)).first()
         if order and order.buyer == request.user:
             order_products = order.order_products.all()
             csv_file = StringIO()
