@@ -65,8 +65,8 @@ componentDidMount(){
 
 componentDidUpdate(prevProps){
    
-    const {loi,loading_serials,last_order_status,...rest} = this.props
-        if (!_.isMatch(prevProps.loi,loi)){ 
+    const {loi,order_gen_products,loading_serials,last_order_status,...rest} = this.props
+        if (!_.isEqual(prevProps.loi,loi)){ //might use orderId later
             let last_elem_serial
             let last_elem_count 
             let id_list
@@ -132,7 +132,7 @@ componentDidUpdate(prevProps){
         }
 
     
-        if (!_.isMatch(prevProps.loading_serials,loading_serials)){//CHANGE THIS TOO
+        if (!_.isEqual(prevProps.loading_serials,loading_serials)){//CHANGE THIS TOO
             if(Object.keys(loading_serials).length > 0){
                 let serial = Object.keys(loading_serials)[0]
                 if(loading_serials[serial] === false){
@@ -150,7 +150,75 @@ componentDidUpdate(prevProps){
             this.props.get_last_order()
         }
 
-}
+        if(JSON.stringify(prevProps.order_gen_products) !== JSON.stringify(order_gen_products) ){
+            const obj={}
+            let id_list
+            let count_list
+            id_list = [...this.state.id_list]
+            count_list = [...this.state.count_list]
+            let first_timer = true
+            for(let num of Object.keys(order_gen_products)){ 
+                let last_elem_serial = parseInt(id_list[id_list.length-1])
+                let last_elem_count = parseInt(count_list[count_list.length-1]) 
+                if (first_timer ===true ){
+                    const b_desc = this.state[last_elem_serial].brand_description
+                    if(b_desc !== ''){
+                        last_elem_serial = last_elem_serial +1
+                        id_list.push(String(last_elem_serial))
+                        last_elem_count = last_elem_count +1
+                        count_list.push(String(last_elem_count))
+                    }     
+                }
+                else{
+                    last_elem_serial = last_elem_serial +1
+                    id_list.push(String(last_elem_serial))
+                    last_elem_count = last_elem_count +1
+                    count_list.push(String(last_elem_count))
+                }
+                    
+               
+        
+                first_timer = false
+                obj[last_elem_serial]={...order_gen_products[num],count:last_elem_count,serial:last_elem_serial}
+            }//end of for loop
+            let last_elem_serial = parseInt(id_list[id_list.length-1])//for new empty row
+            last_elem_serial = last_elem_serial +1
+            id_list.push(String(last_elem_serial))
+            
+            let last_elem_count = parseInt(count_list[count_list.length-1])
+            last_elem_count = last_elem_count +1
+            count_list.push(String(last_elem_count))
+                
+            this.setState({...this.state,...obj,id_list,count_list,[last_elem_serial]:{
+                id:'',
+                product_id:'',
+                brand_description:'',
+                generic_name:'',
+                unit:'',
+                selected_unit:'',
+                raw_cost:'',
+                full_pack_quantity:'',
+                unit_quantity:0,
+                cost:0,
+                total:0,
+                quantity_ordered:'',
+                brand_description_slug:'',
+                checked_del:false,
+                count:last_elem_count
+            } },()=>{
+                for(let product of Object.keys(obj)){
+                    console.log(obj,'obj')
+                this.props.send_orderproduct(obj[product].product_id,obj[product].generic_name,obj[product].brand_description,
+                    obj[product].selected_unit,obj[product].cost,obj[product].raw_cost,obj[product].quantity_ordered,
+                    obj[product].full_pack_quantity,obj[product].unit_quantity,obj[product].total,obj[product].extra_info,
+                    obj[product].serial,this.props.last_orderid
+                )
+                
+            }}
+            )//end of obj setState
+        }//end of order_gen_prod update block
+
+}//end of CompDidUpdate
 
 static getDerivedStateFromProps(props,state){
         if (props.last_order_status !== state.ordered){
@@ -1007,7 +1075,8 @@ const mapStateToProps = (state) => ({
     order_deleted_move:state.search.order_deleted_move,
     last_order_status:state.search.last_order_status,
     all_loaded_serials:state.search.all_loaded_serials,
-    order_copy_created:state.search.order_copy_created
+    order_copy_created:state.search.order_copy_created,
+    order_gen_products:state.search.order_gen_products
 })
 
 const redux_funcs = {

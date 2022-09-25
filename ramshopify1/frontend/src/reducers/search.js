@@ -1,7 +1,7 @@
 import {BRANDS_RETRIEVED} from '../actions/types'
 import {ORDER_CREATED,CHANGE_CREATED_FALSE,
     LAST_ORDER_FETCHED,
-    ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDERS_RETRIEVED,CLEAR_GENERIC_OPTIONS_INPUT,
+    ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDERS_RETRIEVED,CLEAR_GENERIC_OPTIONS_INPUT,PREPARE_GENERIC_PRODUCTS,
     ORDER_PRODUCT_NOT_CREATED,GENERIC_PRODUCTS_RETRIEVED,ORDER_MADE_LAST,ORDER_COPY_CREATED,GENERIC_NAMES_RETRIEVED,
     CLEAR_GENERIC_PRODUCTS,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC,ORDER_DELETED,RESET_ORDER_DELETED_MOVE,EMAIL_SENT
 } from '../actions/types'
@@ -25,7 +25,8 @@ const initialState = {
     last_order_status:false,
     all_loaded_serials:{},
     order_copy_created:false,
-    generic_name_prop:''
+    generic_name_prop:'',
+    order_gen_products:null
     
 }
 
@@ -199,6 +200,13 @@ export default function (state = initialState,action){
                 ...state,
                 order_copy_created:true
 
+            }
+
+        case PREPARE_GENERIC_PRODUCTS:
+            console.log(action.payload,'pay')
+            return{
+                ...state,
+                order_gen_products:action.payload
             }
 
         default:

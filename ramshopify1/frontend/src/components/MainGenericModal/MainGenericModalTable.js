@@ -1,6 +1,6 @@
 import React ,{Fragment,useState,useEffect} from "react"
 import {connect} from 'react-redux'
-import {clear_gen_products,getGenProducts,search_generic_names} from '../../actions/search'
+import {clear_gen_products,getGenProducts,search_generic_names,prepareGenericProducts} from '../../actions/search'
 
 
 
@@ -73,7 +73,6 @@ useEffect(
 
 useEffect(
   ()=>{
-    console.log(props.productid_list,9098)
     let id_list = []
     let counter = 0
     let obj = {}
@@ -122,7 +121,9 @@ const generic_style ={
 }
 
 const product_style={
-  width:"100%"
+  width:"100%",
+  display:'block',
+  marginLeft:'1rem',
 }
 
 const unit_style = {
@@ -131,7 +132,8 @@ const unit_style = {
 }
 
 const cost_style ={
-  width:"100%"
+  width:"100%",
+
 }
 
 const onClickGeneric = (e)=>{
@@ -142,16 +144,47 @@ const onClickGeneric = (e)=>{
 
 const OnChangeCheckBox = (e)=>{
       const c_name = e.target.classList[0]
-      if(products[c_name].checked_del === true ){
+      if(products[c_name].checked_add === true ){
         setProducts({...products,[c_name]:{
-              ...products[c_name],checked_del:false
+              ...products[c_name],checked_add:false
           }})
       }
       else{
         setProducts({...products,[c_name]:{
-              ...products[c_name],checked_del:true
+              ...products[c_name],checked_add:true
           }})
       }
+}
+
+const confirm_add =()=>{
+  const order_prods = {}
+  let count =1
+  for(let id of products.id_list){
+    if(products[id].checked_add){
+      const obj_op = {}
+      obj_op['product_id'] = id
+      obj_op['brand_description'] = products[id].brand_description
+      obj_op['generic_name'] = props.generic_name_prop
+      obj_op['selected_unit'] = products[id].selected_unit
+      obj_op['unit'] = products[id].unit
+      obj_op['raw_cost'] = products[id].raw_cost
+      obj_op['cost'] = products[id].cost
+      obj_op['total'] = products[id].cost
+      obj_op['quantity_ordered'] = 1
+      obj_op['extra_info'] =''
+      obj_op['full_pack_quantity'] =products[id].full_pack_quantity
+      obj_op['unit_quantity'] = products[id].unit_quantity
+      order_prods[count] = obj_op
+    }
+    count+=1
+  }
+  if(Object.keys(order_prods).length > 0){
+    props.prepareGenericProducts(order_prods)
+  }
+  else{
+      alert('No Product was Selected')
+  }
+  props.onHide()
 }
 
 const unit_change = (e) =>{
@@ -199,15 +232,15 @@ const unit_change = (e) =>{
       <Fragment key={num}>
           <div className="product-div form-class">
             <div className="brand-add-section">
-            {!products[num].in_cart?
               <input onChange = {OnChangeCheckBox} 
-                checked ={products[num]['checked_del'] || ''} 
-                style = {{display:addbutton.confirm_add_checkbox_display,marginRight:'0.3rem'}}
+                disabled={products[num].in_cart?true:false}
+                checked ={products[num]['checked_add'] || ''} 
+                style = {{display:addbutton.confirm_add_checkbox_display}}
                 className = {num + ' ' +'checkbox-elem-generic'} 
                 type='checkbox' 
                 name = 'add-row'
-                value={num} />:null }
-              
+                value={num} />
+       
               <input
                   disabled
                   style={product_style}          
@@ -254,6 +287,10 @@ const unit_change = (e) =>{
                 value = {products[num]["cost"] ||''}
                 style = {cost_style}
             />
+            
+            {products[num].in_cart?
+            <div style={{color:'green',display:addbutton.confirm_add_checkbox_display}} 
+              className='in-cart'>Already In!</div>:null}
         </div> 
     </Fragment>)}
 
@@ -290,7 +327,7 @@ const unit_change = (e) =>{
             </div>
           </div>
           <div className='add-confirm-button-div'>
-            <div style ={{display:addbutton.confirm_add_checkbox_display,marginRight:'0.5rem'}} className="btn btn-success">Confirm</div>
+            <div onClick={confirm_add} style ={{display:addbutton.confirm_add_checkbox_display,marginRight:'0.5rem'}} className="btn btn-success">Confirm</div>
             <div onClick = {onClickAddButton} className={"btn" + ' ' + addbutton.add_btn_colour}>{addbutton.add_btn_state}</div>
           </div>
         </div> 
@@ -317,7 +354,7 @@ const mapStateToProps=(state)=>({
 })
 
 const redux_funcs ={
-  clear_gen_products,search_generic_names,getGenProducts
+  clear_gen_products,search_generic_names,getGenProducts,prepareGenericProducts
 }
 
 export default connect(mapStateToProps,redux_funcs)(MainGenericModalTable)

@@ -4,7 +4,7 @@ import {ORDER_CREATED,CHANGE_CREATED_FALSE,LAST_ORDER_FETCHED,
     ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDER_PRODUCT_NOT_CREATED,
     GENERIC_PRODUCTS_RETRIEVED,CLEAR_GENERIC_PRODUCTS,ORDERS_RETRIEVED,
     ORDER_MADE_LAST,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC,ORDER_PRODUCTS_DELETED,ORDER_DELETED,
-    RESET_ORDER_DELETED_MOVE,ORDER_COPY_CREATED,GENERIC_NAMES_RETRIEVED,CLEAR_GENERIC_OPTIONS_INPUT
+    RESET_ORDER_DELETED_MOVE,ORDER_COPY_CREATED,GENERIC_NAMES_RETRIEVED,CLEAR_GENERIC_OPTIONS_INPUT,PREPARE_GENERIC_PRODUCTS
   
 } from '../actions/types'
 import {createMessage,returnErrors,email_error_handler,email_sent_handler} from './message_error'
@@ -410,7 +410,12 @@ export const copy_order = (id) => (dispatch,getState) =>{
 
 
 
-
+export const prepareGenericProducts = (order_prods)=>(dispatch)=>{
+    dispatch({
+        type:PREPARE_GENERIC_PRODUCTS,
+        payload:order_prods
+    })
+}
 
 
 export const clear_gen_products = ()=>(dispatch)=>{

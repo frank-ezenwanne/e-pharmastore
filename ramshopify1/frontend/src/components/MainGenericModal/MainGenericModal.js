@@ -10,7 +10,7 @@ export default function MainGenericModal(props) {
   }
 
   const generic_modal_table = {
-  
+  marginLeft:'5%'
 
   }
 
@@ -33,6 +33,7 @@ export default function MainGenericModal(props) {
           <div style={generic_modal_table}>
             <MainGenericModalTable
               productid_list={props.productid_list}
+              onHide={props.onHide}
             />
           </div>
       </Fragment>
