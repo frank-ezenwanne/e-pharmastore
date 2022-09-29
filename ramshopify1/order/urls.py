@@ -1,6 +1,7 @@
 from django.urls import path,include
 from .api import (product_forbrand,product_forgeneric,CreateOrder,GetLastOrder,OrderView,SendCSVEmail,
-GetCustomerOrders,MakeLastOrder,OrderProductView,CreateOrderWithTemplate,GetGenericNames)
+GetCustomerOrders,MakeLastOrder,OrderProductView,CreateOrderWithTemplate,
+GetGenericNames,UpdateProductStock,UpdateProductPrice,CreateUpdateDefProduct)
 
 urlpatterns = [
 
@@ -16,6 +17,9 @@ urlpatterns = [
     path('api/SendCSVEmail',SendCSVEmail.as_view()),
     path('api/CreateOrderWithTemplate',CreateOrderWithTemplate.as_view()),
     path('api/get_generic_options',GetGenericNames.as_view()),
+    path('api/update_product_stock',UpdateProductStock.as_view()),
+    path('api/update_product_price',UpdateProductPrice.as_view()),
+    path('api/create_update_product',CreateUpdateDefProduct.as_view()),
 
 
 ]

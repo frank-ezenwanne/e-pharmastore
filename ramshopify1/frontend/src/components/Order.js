@@ -150,7 +150,7 @@ componentDidUpdate(prevProps){
             this.props.get_last_order()
         }
 
-        if(JSON.stringify(prevProps.order_gen_products) !== JSON.stringify(order_gen_products) ){
+        if(JSON.stringify(prevProps.order_gen_products) !== JSON.stringify(order_gen_products) ){//add if statem to check for emptiness
             const obj={}
             let id_list
             let count_list
@@ -213,7 +213,6 @@ componentDidUpdate(prevProps){
                     obj[product].full_pack_quantity,obj[product].unit_quantity,obj[product].total,obj[product].extra_info,
                     obj[product].serial,this.props.last_orderid
                 )
-                
             }}
             )//end of obj setState
         }//end of order_gen_prod update block

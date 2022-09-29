@@ -4,8 +4,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.decorators import api_view
 from .serializers import( OrderProductSerializer,BrandDescSerializer,
-OrderSerializer,ProductDetailSerializer,ProductDetailSerializerGen,
-GetIdSerializer,ProductSerializer,GetOrderProductSerializer,GenericSerializer)
+OrderSerializer,ProductDetailSerializer,ProductDetailSerializerGen,ProductDefSerializer,
+GetIdSerializer,GetOrderProductSerializer,GenericSerializer,UpdatePriceSerializer,UpdateStockSerializer)
 
 from .models import Brand_Alphabetic,Product,Generic_Alphabetic,Order,OrderProduct,Order
 from django.conf.global_settings import AUTH_USER_MODEL as CustomUser
@@ -141,11 +141,11 @@ def product_forbrand(request): # On insert of brand description, it returns list
     # col__icontains = col + "__icontains"
     # options = Brand_Alphabetic.objects.filter(**{col__icontains:True})
     if radio_type == 'deep':
-        options = Product.objects.filter(brand_description_slug__icontains =search_phrase).order_by('brand_description_slug')
+        options = Product.objects.filter(brand_description_slug__icontains =search_phrase,disabled_status=False).order_by('brand_description_slug')
         options = ProductDetailSerializer(options,many=True)
         return Response({"products_deep":{serial:options.data}})
     else:
-        options = Product.objects.filter(brand_description_slug__istartswith =search_phrase).order_by('brand_description_slug')
+        options = Product.objects.filter(brand_description_slug__istartswith =search_phrase,disabled_status=False).order_by('brand_description_slug')
         options = ProductDetailSerializer(options,many=True)
         return Response({"products":{serial:options.data}})
 
@@ -155,7 +155,7 @@ def product_forgeneric(request):# On insert of generic, it returns list of corr 
     generic_serializer = GenericSerializer(data=request.data)
     generic_serializer.is_valid(raise_exception=True)
     search_phrase = generic_serializer.validated_data["generic_name"]
-    options = Product.objects.filter(generic_name = search_phrase)
+    options = Product.objects.filter(generic_name = search_phrase,disabled_status=False)
     options = ProductDetailSerializerGen(options,many=True)
     return Response({"generic_products":options.data})
 
@@ -195,8 +195,8 @@ class GetLastOrder(APIView):
             update_list = ('id',"generic_name","brand_description","selected_unit","cost","raw_cost","quantity_ordered",
                     "full_pack_quantity","unit_quantity","serial",'extra_info',"total")
             for field in update_list:
-                obj[field] = getattr(loi,field)
-            obj["product_id"] = loi.product_id.id
+                obj[field] = getattr(loi,field) #get attributes of loi dynamically
+            obj["product_id"] = loi.product_id.id #extract and send id bcoz object isn't JSON serializable
             obj["unit"] = loi.product_id.unit
             obj['saved'] = True
             last_order_items[loi.serial] = obj
@@ -261,3 +261,66 @@ class SendCSVEmail(APIView):
             
             return Response({'email_sent':'Email Sent!'})
         return Response({"error":"This orderId does not exist"},status = status.HTTP_404_NOT_FOUND)
+
+
+
+class CreateUpdateDefProduct(APIView):
+    def post(self,request,*args,**kwargs):
+        def_serializer = ProductDefSerializer(data=request.data)
+        def_serializer.is_valid(raise_exception=True)
+        instance = Product.objects.filter(product_code=def_serializer.validated_data['product_code']).first()
+        if instance:
+            fields = ('brand_name','generic_name','brand_description','department','dosage_form','unit',
+           'quantity_left','category','company','full_pack_quantity','unit_quantity')
+            for field in fields:
+                setattr(instance,field,def_serializer.validated_data[field])
+            if instance.raw_cost:
+                instance.disabled_status = False
+            return Response({'success':'Product Updated'})
+        else:
+            instance = def_serializer.save(disabled_status=True)
+            return Response({'success':'Product Created'})
+
+class UpdateProductPrice(APIView):
+    def post(self,request,*args,**kwargs):
+        update_serializer = UpdatePriceSerializer(data=request.data)
+        update_serializer.is_valid(raise_exception=True)
+        instance = Product.objects.filter(product_code=update_serializer.validated_data['product_code']).first()
+        if instance:
+            unit = update_serializer.validated_data['unit']
+            if int(instance.full_pack_quantity) == 1:
+                instance.raw_cost = int(update_serializer.validated_data['price'])
+                instance.disabled_status = False
+                instance.save()
+                return Response({'success':'Price Updated Successfully'})
+            elif int(instance.full_pack_quantity) > 1:
+                if update_serializer.validated_data['unit'] != 'FULL PACK':
+                    try:
+                        int(instance.unit_quantity)
+                    except ValueError:
+                        instance.raw_cost = int(update_serializer.validated_data['price']) * int(instance.full_pack_quantity)
+                        instance.disabled_status = False                       
+                        instance.save()  
+                        return Response({'success':'Price Updated Successfully'})         
+                    ratio = int(instance.full_pack_quantity)/int(instance.unit_quantity)
+                    instance.raw_cost = int(update_serializer.validated_data['price']) * ratio
+                    instance.disabled_status = False
+                    instance.save()
+                else:
+                    instance.raw_cost = int(update_serializer.validated_data['price'])
+                    instance.disabled_status = False
+                    instance.save()
+                return Response({'success':'Price Updated Successfully'}) 
+        else:
+            return Response({'error':'Product Not Found'},status = status.HTTP_404_NOT_FOUND)
+
+class UpdateProductStock(APIView):
+    def post(self,request,*args,**kwargs):
+        update_serializer = UpdateStockSerializer(data=request.data)
+        update_serializer.is_valid(raise_exception=True)
+        instance = Product.objects.filter(product_code=update_serializer.validated_data['product_code']).first()
+        if instance:
+            instance.quantity_left = update_serializer.validated_data['quantity_left']
+            instance.save()
+            return Response({'success':'Stock Updated Successfully','stock':instance.quantity_left})
+        return Response({'error':'Product Not Found'},status = status.HTTP_404_NOT_FOUND)

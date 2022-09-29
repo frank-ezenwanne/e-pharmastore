@@ -47,11 +47,6 @@ class ProductDetailSerializerGen(serializers.Serializer):
     full_pack_quantity = serializers.IntegerField()
     unit_quantity = serializers.CharField()
 
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = ("brand_description","generic_name","unit",)
-
 
 class OrderSerializer(serializers.ModelSerializer):
     num_items = serializers.SerializerMethodField()
@@ -73,4 +68,21 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         exclude = ('buyer','order_products')
 
+
+class ProductDefSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ('product_code','brand_name','generic_name','brand_description','department','dosage_form','unit',
+           'quantity_left','category','company','full_pack_quantity','unit_quantity' 
+        )
+
+class UpdateStockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ('product_code','quantity_left')
+
+class UpdatePriceSerializer(serializers.Serializer):
+    product_code = serializers.CharField()
+    unit = serializers.CharField()
+    price = serializers.FloatField()
         
