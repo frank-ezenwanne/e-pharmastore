@@ -208,7 +208,7 @@ componentDidUpdate(prevProps){
             } },()=>{
                 for(let product of Object.keys(obj)){
                     console.log(obj,'obj')
-                this.props.send_orderproduct(obj[product].product_id,obj[product].generic_name,obj[product].brand_description,
+                this.props.send_orderproduct(obj[product].product_id,
                     obj[product].selected_unit,obj[product].cost,obj[product].raw_cost,obj[product].quantity_ordered,
                     obj[product].full_pack_quantity,obj[product].unit_quantity,obj[product].total,obj[product].extra_info,
                     obj[product].serial,this.props.last_orderid
@@ -432,8 +432,6 @@ onExtraInfoModelSubmit=(e)=>{
     if(serial && this.state[serial].extra_info && this.state[serial].cost){
         const item = this.state[serial]
         this.props.send_orderproduct(item["product_id"],
-            item["generic_name"],
-            item["brand_description"],
             item["selected_unit"],
             item["cost"],
             item["raw_cost"],
@@ -491,8 +489,6 @@ quantity_change = (e) =>{
             const item = this.state[c_name] 
           
             this.props.send_orderproduct(item["product_id"],
-            item["generic_name"],
-            item["brand_description"],
             item["selected_unit"],
             item["cost"],
             item["raw_cost"],
@@ -864,7 +860,6 @@ map_stuff = (num) =>{
                 :this.props.all_loaded_serials[num] === "error"? 
                 (<div className = 'svg-tick-error-class' onClick = {()=>{
                     this.props.send_orderproduct( item["product_id"],
-                    item["generic_name"],item["brand_description"],
                     item["selected_unit"], item["cost"],
                     item["raw_cost"],item["quantity_ordered"],
                     item["full_pack_quantity"],item["unit_quantity"],

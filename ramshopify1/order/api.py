@@ -1,3 +1,4 @@
+import copy
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -7,7 +8,7 @@ from .serializers import( OrderProductSerializer,BrandDescSerializer,
 OrderSerializer,ProductDetailSerializer,ProductDetailSerializerGen,ProductDefSerializer,
 GetIdSerializer,GetOrderProductSerializer,GenericSerializer,UpdatePriceSerializer,UpdateStockSerializer)
 
-from .models import Brand_Alphabetic,Product,Generic_Alphabetic,Order,OrderProduct,Order
+from .models import Product,Generic_Alphabetic,Order,OrderProduct,Order
 from django.conf.global_settings import AUTH_USER_MODEL as CustomUser
 from django.utils import timezone
 import csv
@@ -68,7 +69,7 @@ class OrderView(APIView):
                         instance = stored_op
                         break
                 if instance != "":
-                    update_list = ( "product_id","generic_name","brand_description","selected_unit","cost","raw_cost","quantity_ordered",
+                    update_list = ( "product_id","selected_unit","cost","raw_cost","quantity_ordered",
                     "full_pack_quantity","unit_quantity","serial",'total','extra_info')
                     for field in update_list:
                         try:
@@ -190,15 +191,79 @@ class GetLastOrder(APIView):
             last_order = Order.objects.create(buyer=request.user)
             return Response({"last_orderid":last_order.id})
         last_order_items = {}
+        last_order_status = last_order.ordered
         for loi in last_order.order_products.all(): 
+            # print(loi.full_pack_quantity,loi.brand_description)
+            # print(loi.product_id.full_pack_quantity,loi.brand_description)
+            if last_order_status ==False:
+                if( int(loi.full_pack_quantity) != int(loi.product_id.full_pack_quantity) or 
+                loi.unit_quantity != loi.product_id.unit_quantity or loi.unit != loi.product_id.unit):
+
+                    if int(loi.full_pack_quantity) != int(loi.product_id.full_pack_quantity):
+
+                        if int(loi.product_id.full_pack_quantity) == 1:#orderproduct unit should merge into 1 as product fpq is now 1
+                            loi.full_pack_quantity = loi.product_id.full_pack_quantity
+                            loi.unit_quantity = loi.product_id.unit_quantity
+                            loi.selected_unit = loi.product_id.unit
+                            
+            
+                        elif int(loi.full_pack_quantity) == 1: #orderproduct unit should now split
+                            loi.full_pack_quantity = loi.product_id.full_pack_quantity
+                            loi.unit_quantity = loi.product_id.unit_quantity
+                            loi.selected_unit = 'FULL PACK'
+                        else:
+                            loi.full_pack_quantity = loi.product_id.full_pack_quantity
+                            loi.unit_quantity = loi.product_id.unit_quantity
+                        
+
+                    elif loi.unit_quantity != loi.product_id.unit_quantity:
+                        loi.unit_quantity = loi.product_id.unit_quantity
+
+                    if loi.unit != loi.product_id.unit:
+                        loi.unit = loi.product_id.unit
+                    loi.save()
+
+                if loi.raw_cost != loi.product_id.raw_cost:
+                    loi.raw_cost = loi.product_id.raw_cost
+                    if loi.full_pack_quantity > 1:
+                        if loi.selected_unit != 'FULL PACK':
+                            try:
+                                int(loi.unit_quantity)
+                                ratio = int(loi.full_pack_quantity)/int(loi.unit_quantity)
+                            except ValueError:
+                                ratio = int(loi.full_pack_quantity)
+                            old_cost = copy.copy(loi.cost)
+                            loi.cost = loi.product_id.cost/ratio #raw_cost/ratio
+                            loi.raw_cost = loi.product_id.raw_cost
+                            loi.total = int(loi.cost * int(loi.quantity_ordered))
+                            loi.save()
+                        else:
+                            old_cost = copy.copy(loi.cost)
+                            loi.cost = loi.product_id.raw_cost
+                            loi.raw_cost = loi.product_id.raw_cost
+                            loi.total = int(loi.cost * int(loi.quantity_ordered))
+                            loi.save()
+                    elif loi.full_pack_quantity == 1:
+                        old_cost = copy.copy(loi.cost)
+                        loi.cost = loi.product_id.raw_cost
+                        loi.raw_cost = loi.product_id.raw_cost
+                        loi.total = int(loi.cost * int(loi.quantity_ordered))
+                        loi.save()
+
+
             obj = {}
-            update_list = ('id',"generic_name","brand_description","selected_unit","cost","raw_cost","quantity_ordered",
+            update_list = ('id',"generic_name","selected_unit","cost","raw_cost","quantity_ordered",'unit',
                     "full_pack_quantity","unit_quantity","serial",'extra_info',"total")
             for field in update_list:
                 obj[field] = getattr(loi,field) #get attributes of loi dynamically
             obj["product_id"] = loi.product_id.id #extract and send id bcoz object isn't JSON serializable
-            obj["unit"] = loi.product_id.unit
             obj['saved'] = True
+            obj['brand_description'] = loi.product_id.brand_description
+            obj['generic_name'] = loi.product_id.generic_name
+            obj['unit'] = loi.unit
+            print(loi.unit,90999,loi.brand_description)
+
+
             last_order_items[loi.serial] = obj
         sorted_loi={}
         id=0
@@ -276,6 +341,7 @@ class CreateUpdateDefProduct(APIView):
                 setattr(instance,field,def_serializer.validated_data[field])
             if instance.raw_cost:
                 instance.disabled_status = False
+            instance.save()
             return Response({'success':'Product Updated'})
         else:
             instance = def_serializer.save(disabled_status=True)

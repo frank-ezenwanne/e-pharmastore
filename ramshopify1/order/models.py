@@ -109,6 +109,7 @@ class OrderProduct(models.Model):
     unit_quantity = models.CharField(max_length=10,null=True) #Remove null later
     full_pack_quantity = models.IntegerField(null=True)
     raw_cost = models.FloatField(null=True)
+    unit = models.CharField(max_length = 30,null=True) #remove null later
     total = models.FloatField(null=True)
     extra_info=models.TextField(null=True,blank=True)
     created  = models.DateTimeField(default=timezone.now)

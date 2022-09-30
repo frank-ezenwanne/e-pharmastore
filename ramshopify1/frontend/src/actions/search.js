@@ -36,8 +36,7 @@ export const create_order = () => (dispatch,getState) =>{
     })
 }
 
-export const send_orderproduct = (product_id,generic_name,
-    brand_description,
+export const send_orderproduct = (product_id,
     selected_unit,cost,raw_cost,quantity_ordered,
     full_pack_quantity,unit_quantity,total,extra_info,
     serial,order_id) => (dispatch,getState) =>
@@ -56,8 +55,7 @@ export const send_orderproduct = (product_id,generic_name,
             config.headers["Authorization"] = `Token ${token}`
         }
 
-        const body = {product_id,generic_name,
-            brand_description,
+        const body = {product_id,
             selected_unit,cost,raw_cost,quantity_ordered,
             full_pack_quantity,unit_quantity,total,extra_info,
             serial,order_id}
