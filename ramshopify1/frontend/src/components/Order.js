@@ -55,7 +55,8 @@ class Order extends Component{
             extra_info_num:'',
             modal_deleteorder:false,
             modal_sendorder:false,
-            modal_maingeneric:false
+            modal_maingeneric:false,
+            modal_updates:false
             }
     }
 
@@ -65,7 +66,7 @@ componentDidMount(){
 
 componentDidUpdate(prevProps){
    
-    const {loi,order_gen_products,loading_serials,last_order_status,...rest} = this.props
+    const {loi,updates,order_gen_products,loading_serials,last_order_status,...rest} = this.props
         if (!_.isEqual(prevProps.loi,loi)){ //might use orderId later
             let last_elem_serial
             let last_elem_count 
@@ -216,6 +217,10 @@ componentDidUpdate(prevProps){
             }}
             )//end of obj setState
         }//end of order_gen_prod update block
+
+        if(JSON.stringify(prevProps.updates) != JSON.stringify(updates) ){
+            this.setState({...this.state,'modal_updates':true})
+        } 
 
 }//end of CompDidUpdate
 
@@ -1045,6 +1050,17 @@ render(){
                    onHide={()=>{
                     this.props.clear_gen_options_input()
                     this.setState({"modal_maingeneric":false})
+                         }}
+                  
+               />):null
+            }
+
+            {
+               vals['modal_updates']?(<UpdateModal
+                   show={this.state.modal_updates}
+                   onHide={()=>{
+                    this.props.clear_updates()
+                    this.setState({"modal_updates":false})
                          }}
                   
                />):null

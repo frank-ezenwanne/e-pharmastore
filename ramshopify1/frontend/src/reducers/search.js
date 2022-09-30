@@ -26,7 +26,12 @@ const initialState = {
     all_loaded_serials:{},
     order_copy_created:false,
     generic_name_prop:'',
-    order_gen_products:null
+    order_gen_products:null,
+    updates:{
+        'unit':{},
+        'unit_name':{},
+        'cost':{},  
+    }
     
 }
 

@@ -196,6 +196,11 @@ class GetLastOrder(APIView):
             # print(loi.full_pack_quantity,loi.brand_description)
             # print(loi.product_id.full_pack_quantity,loi.brand_description)
             if last_order_status ==False:
+                updates={
+                    'unit':{},
+                    'unit_name':{},
+                    'cost':{},  
+                }
                 if( int(loi.full_pack_quantity) != int(loi.product_id.full_pack_quantity) or 
                 loi.unit_quantity != loi.product_id.unit_quantity or loi.unit != loi.product_id.unit):
 
@@ -205,22 +210,32 @@ class GetLastOrder(APIView):
                             loi.full_pack_quantity = loi.product_id.full_pack_quantity
                             loi.unit_quantity = loi.product_id.unit_quantity
                             loi.selected_unit = loi.product_id.unit
+                            if loi.product_id.brand_description not in updates['unit']:
+                                updates['unit'][loi.product_id.brand_description] = "This product is now defined with a single unit" 
                             
             
                         elif int(loi.full_pack_quantity) == 1: #orderproduct unit should now split
                             loi.full_pack_quantity = loi.product_id.full_pack_quantity
                             loi.unit_quantity = loi.product_id.unit_quantity
                             loi.selected_unit = 'FULL PACK'
+                            if loi.product_id.brand_description not in updates['unit']:
+                                updates['unit'][loi.product_id.brand_description] = "This product is now defined with multiple units " 
                         else:
                             loi.full_pack_quantity = loi.product_id.full_pack_quantity
                             loi.unit_quantity = loi.product_id.unit_quantity
+                            if loi.product_id.brand_description not in updates['unit']:
+                                updates['unit'][loi.product_id.brand_description] = "This product has its pack size defintion updated" 
                         
 
                     elif loi.unit_quantity != loi.product_id.unit_quantity:
                         loi.unit_quantity = loi.product_id.unit_quantity
+                        if loi.product_id.brand_description not in updates['unit']:
+                            updates['unit'][loi.product_id.brand_description] = "This product has its pack size defintion updated" 
 
                     if loi.unit != loi.product_id.unit:
                         loi.unit = loi.product_id.unit
+                        if loi.product_id.brand_description not in updates['unit_name']:
+                            updates['unit_name'][loi.product_id.brand_description] = "This product has its unit name updated" 
                     loi.save()
 
                 if loi.raw_cost != loi.product_id.raw_cost:
@@ -235,20 +250,26 @@ class GetLastOrder(APIView):
                             old_cost = copy.copy(loi.cost)
                             loi.cost = loi.product_id.cost/ratio #raw_cost/ratio
                             loi.raw_cost = loi.product_id.raw_cost
-                            loi.total = int(loi.cost * int(loi.quantity_ordered))
+                            loi.total = float(loi.cost) * int(loi.quantity_ordered)
                             loi.save()
+                            if loi.product_id.brand_description not in updates['cost'] and abs( float(loi.cost) - float(old_cost) ) > 0.1 :
+                                updates['cost'][loi.product_id.brand_description] = {'old_cost':old_cost,'new_cost':loi.cost} 
                         else:
                             old_cost = copy.copy(loi.cost)
                             loi.cost = loi.product_id.raw_cost
                             loi.raw_cost = loi.product_id.raw_cost
-                            loi.total = int(loi.cost * int(loi.quantity_ordered))
+                            loi.total = float(loi.cost) * int(loi.quantity_ordered)
                             loi.save()
+                            if loi.product_id.brand_description not in updates['cost'] and abs( float(loi.cost) - float(old_cost) ) > 0.1:
+                                updates['cost'][loi.product_id.brand_description] = {'old_cost':old_cost,'new_cost':loi.cost} 
                     elif loi.full_pack_quantity == 1:
                         old_cost = copy.copy(loi.cost)
                         loi.cost = loi.product_id.raw_cost
                         loi.raw_cost = loi.product_id.raw_cost
-                        loi.total = int(loi.cost * int(loi.quantity_ordered))
+                        loi.total = float(loi.cost) * int(loi.quantity_ordered)
                         loi.save()
+                        if loi.product_id.brand_description not in updates['cost'] and abs( float(loi.cost) - float(old_cost) ) > 0.1:
+                            updates['cost'][loi.product_id.brand_description] = {'old_cost':old_cost,'new_cost':loi.cost} 
 
 
             obj = {}
@@ -261,7 +282,8 @@ class GetLastOrder(APIView):
             obj['brand_description'] = loi.product_id.brand_description
             obj['generic_name'] = loi.product_id.generic_name
             obj['unit'] = loi.unit
-            print(loi.unit,90999,loi.brand_description)
+            # print(loi.unit,90999,loi.brand_description)
+            # print(loi.selected_unit,90999,loi.brand_description)
 
 
             last_order_items[loi.serial] = obj
@@ -272,7 +294,7 @@ class GetLastOrder(APIView):
             last_order_items[key]['count'] = id
             sorted_loi[key] = last_order_items[key]
         return Response({"loi":sorted_loi,
-                        "last_orderid":last_order.id,"last_order_status":last_order.ordered})
+                        "last_orderid":last_order.id,"last_order_status":last_order.ordered,'updates':updates})
      
 
 
