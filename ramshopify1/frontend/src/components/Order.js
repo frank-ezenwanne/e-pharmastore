@@ -9,6 +9,7 @@ import Trash from '../../svg/trash.svg'
 import GenericModal from './GenericModal/GenericModal'
 import DeleteOrderModal from './DeleteOrderModal'
 import SendOrderModal from './SendOrderModal'
+import UpdateModal from './UpdateModal'
 import MainGenericModal from './MainGenericModal/MainGenericModal'
 import {clear_brand_desc} from '../actions/search'
 import Button from 'react-bootstrap/Button';
@@ -16,7 +17,6 @@ import Modal from 'react-bootstrap/Modal';
 import _ from 'underscore'
 
 //.FIND OUT MEANING OF RENDER PURE FUNC ONLY
-
 class Order extends Component{
     constructor(props){
         super(props);
@@ -56,7 +56,8 @@ class Order extends Component{
             modal_deleteorder:false,
             modal_sendorder:false,
             modal_maingeneric:false,
-            modal_updates:false
+            modal_updates:false,
+         
             }
     }
 
@@ -76,6 +77,7 @@ componentDidUpdate(prevProps){
                  
                  id_list=[]
                  count_list =[]
+                 let modal_updates = false
                 for (const id in loi){
                     id_list.push(id)
                     count_list.push(loi[id].count)
@@ -88,42 +90,51 @@ componentDidUpdate(prevProps){
                 last_elem_count = parseInt(count_list[count_list.length-1])
                 last_elem_count = last_elem_count +1
                 count_list.push(String(last_elem_count))
+
+                if(JSON.stringify(prevProps.updates) !== JSON.stringify(updates) ){
+                    console.log('display')
+                    modal_updates=true
+                } 
              
 
-            this.setState({...loi,id_list,count_list,[last_elem_serial]:{
-                    id:'',
-                    product_id:'',
-                    brand_description:'',
-                    generic_name:'',
-                    unit:'',
-                    selected_unit:'',
-                    raw_cost:'',
-                    full_pack_quantity:'',
-                    unit_quantity:0,
-                    cost:0,
-                    total:0,
-                    quantity_ordered:'',
-                    brand_description_slug:'',
-                    checked_del:false,
-                    count:last_elem_count
-            },
-            radio_search_option:'quick', 
-            first_letter:'',
-            group_letters:'',
-            remove_list : {
-                display:"none"},
-            modal_generic:false,
-            confirm_del_checkbox_display :'none',
-            delete_button_color : 'btn-danger',
-            delete_button_status : 'Remove items',
-            modal_extrainfo:false,
-            extra_info_num:'',
-            modal_deleteorder:false,
-            modal_sendorder:false,
-            ordered:this.props.last_order_status
-                })
-          }
-        }
+                    this.setState({...loi,id_list,count_list,[last_elem_serial]:{
+                                id:'',
+                                product_id:'',
+                                brand_description:'',
+                                generic_name:'',
+                                unit:'',
+                                selected_unit:'',
+                                raw_cost:'',
+                                full_pack_quantity:'',
+                                unit_quantity:0,
+                                cost:0,
+                                total:0,
+                                quantity_ordered:'',
+                                brand_description_slug:'',
+                                checked_del:false,
+                                count:last_elem_count
+                                },
+                        ready_update_stat:true,
+                        radio_search_option:'quick', 
+                        first_letter:'',
+                        group_letters:'',
+                        remove_list : {
+                            display:"none"},
+                        modal_generic:false,
+                        confirm_del_checkbox_display :'none',
+                        delete_button_color : 'btn-danger',
+                        delete_button_status : 'Remove items',
+                        modal_extrainfo:false,
+                        extra_info_num:'',
+                        modal_deleteorder:false,
+                        modal_sendorder:false,
+                        ordered:this.props.last_order_status,
+                        modal_updates:modal_updates
+                        })
+
+            
+                }
+             }
 
 
 
@@ -218,9 +229,7 @@ componentDidUpdate(prevProps){
             )//end of obj setState
         }//end of order_gen_prod update block
 
-        if(JSON.stringify(prevProps.updates) != JSON.stringify(updates) ){
-            this.setState({...this.state,'modal_updates':true})
-        } 
+       
 
 }//end of CompDidUpdate
 
@@ -548,7 +557,6 @@ onMainGenericModal = (e) =>{
     for (let id of this.state.id_list){
         productid_list.push(this.state[id].product_id)   
     }
-    console.log(productid_list)
         this.setState({...this.state,"modal_maingeneric":true,productid_list:productid_list},()=>{
             if(e.target.value){
                 this.props.getGenProducts(e.target.value)
@@ -970,6 +978,7 @@ render(){
                 </div>
 
             </div>
+           
 
 
             
@@ -1058,8 +1067,8 @@ render(){
             {
                vals['modal_updates']?(<UpdateModal
                    show={this.state.modal_updates}
+                //    updates={this.props.updates}
                    onHide={()=>{
-                    this.props.clear_updates()
                     this.setState({"modal_updates":false})
                          }}
                   
@@ -1086,7 +1095,8 @@ const mapStateToProps = (state) => ({
     last_order_status:state.search.last_order_status,
     all_loaded_serials:state.search.all_loaded_serials,
     order_copy_created:state.search.order_copy_created,
-    order_gen_products:state.search.order_gen_products
+    order_gen_products:state.search.order_gen_products,
+    updates:state.search.updates
 })
 
 const redux_funcs = {

@@ -3,7 +3,8 @@ import {ORDER_CREATED,CHANGE_CREATED_FALSE,
     LAST_ORDER_FETCHED,
     ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDERS_RETRIEVED,CLEAR_GENERIC_OPTIONS_INPUT,PREPARE_GENERIC_PRODUCTS,
     ORDER_PRODUCT_NOT_CREATED,GENERIC_PRODUCTS_RETRIEVED,ORDER_MADE_LAST,ORDER_COPY_CREATED,GENERIC_NAMES_RETRIEVED,
-    CLEAR_GENERIC_PRODUCTS,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC,ORDER_DELETED,RESET_ORDER_DELETED_MOVE,EMAIL_SENT
+    CLEAR_GENERIC_PRODUCTS,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC,ORDER_DELETED,
+    RESET_ORDER_DELETED_MOVE,EMAIL_SENT
 } from '../actions/types'
 
 
@@ -105,6 +106,7 @@ export default function (state = initialState,action){
             }
 
         case LAST_ORDER_FETCHED:
+            console.log(action.payload.updates)
             return {
                 ...state,
                 ...action.payload,
@@ -213,6 +215,8 @@ export default function (state = initialState,action){
                 ...state,
                 order_gen_products:action.payload
             }
+
+        
 
         default:
             return state

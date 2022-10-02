@@ -477,8 +477,26 @@ color:white
 	margin-bottom:13.5rem
 }
 
+/* UPDATE MODAL */
 
-	
+.modal-update-body{
+	max-height:30rem;
+	overflow-y:scroll
+}
+.price-update-grid{
+	display:grid;
+	grid-template-columns:repeat(4,1fr);
+}
+
+.unit-update-flex{
+	display:flex;
+	justify-content: space-around;
+}
+
+.cost-unit-update-flex{
+	display: flex;
+	flex-direction: column;
+}
 
 
 
