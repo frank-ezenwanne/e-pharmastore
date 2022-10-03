@@ -1,0 +1,33 @@
+{
+"product_code":6011610,
+ "unit":"FULL PACK",
+ "price":2879
+}
+
+{ "product_code":6011610 
+"brand_name":,
+"generic_name":,
+"brand_description":,
+"department":,
+"dosage_form":,
+"unit":,
+"quantity_left":,
+"category":,
+"company":,
+"full_pack_quantity":,
+"unit_quantity":
+}
+
+{"product_code":6011610 ,
+"brand_name": "KACIPTIN",
+"generic_name": "Ciprofloxacin +Tinidazole",
+"brand_description": "KACIPTIN TABS X 10",
+"department": "Pharmacy",
+"dosage_form": "TABS",
+"unit": "PACK",
+"quantity_left":100,
+"category":"",
+"company":"",
+"full_pack_quantity":1,
+"unit_quantity":10
+}

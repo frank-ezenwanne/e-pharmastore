@@ -5,7 +5,9 @@ import {connect} from 'react-redux'
 
 function UpdateModal(props) {
 
-    const [updates,setUpdates] = useState({cost:'',unit:'',unit_name:'',cost_list:[],unit_list:[],unit_name_list:[]})
+    const [update_cost,setCostUpdate] = useState({cost:'',cost_list:[]})
+    const [update_unit,setUnitUpdate] = useState({unit:'',unit_list:[]})
+    const [update_unit_name,setUnitNameUpdate] = useState({unit_name:'',unit_name_list:[]})
     
  
     useEffect(()=>{
@@ -20,11 +22,12 @@ function UpdateModal(props) {
                     }
                 id+=1
         }
-        setUpdates({...updates,cost:elem_obj,cost_list:id_list})
+        setCostUpdate({...update_cost,cost:elem_obj,cost_list:id_list})
     }      
-},[props.updates])
+},[props.updates.cost])
 
     useEffect(()=>{
+        console.log('unit-enter')
         if(Object.keys(props.updates.unit).length > 0){
             const id_list=[]
             const elem_obj ={}
@@ -34,12 +37,13 @@ function UpdateModal(props) {
                 elem_obj[id] = {brand_description:key_name,message:props.updates.unit[key_name]}
                 id+=1
             }
-            setUpdates({...updates,unit:elem_obj,unit_list:id_list})
+            setUnitUpdate({...update_unit,unit:elem_obj,unit_list:id_list})
         }
             
-    },[props.updates])
+    },[props.updates.unit])
 
     useEffect(()=>{
+        console.log('unit-name-enter')
         if( Object.keys(props.updates.unit_name).length > 0){
             const id_list=[]
             const elem_obj ={}
@@ -49,46 +53,46 @@ function UpdateModal(props) {
                 elem_obj[id] = {brand_description:key_name,message:props.updates.unit_name[key_name]}
                 id+=1
             }
-            setUpdates({...updates,unit_name:elem_obj,unit_name_list:id_list})
+            setUnitNameUpdate({...update_unit_name,unit_name:elem_obj,unit_name_list:id_list})
         }   
         
-    },[props.updates])
+    },[props.updates.unit_name])
 
    const map_price_updates =(id,count)=>{
       
        return(
         <div key ={count} className = 'price-update-grid'>
-            <div>{updates['cost'][id]['brand_description']}</div>
+            <div>{update_cost['cost'][id]['brand_description']}</div>
             <div className = 'cost-unit-update-flex'>
                 <div>Old Cost</div>
-                <div style={{color:'#7dc244'}}>{"₦" + ' ' + updates['cost'][id]['old_cost']}</div>
-                <div>per {updates['cost'][id]['selected_unit']}</div>
+                <div style={{color:'#7dc244'}}>{"₦" + ' ' + update_cost['cost'][id]['old_cost']}</div>
+                <div>per {update_cost['cost'][id]['selected_unit']}</div>
             </div>
             <div className = 'cost-unit-update-flex'>
                 <div>New Cost</div> 
-                <div style={{color:'green'}}>{"₦" + ' ' + updates['cost'][id]['new_cost']}</div>
-                <div> per {updates['cost'][id]['selected_unit']}</div>
+                <div style={{color:'green'}}>{"₦" + ' ' + update_cost['cost'][id]['new_cost']}</div>
+                <div> per {update_cost['cost'][id]['selected_unit']}</div>
             </div>
 
-            <div>{updates['cost'][id]['new_cost'] > updates['cost'][id]['old_cost'] ? 'Increased' :'Decreased'}</div>
+            <div>{update_cost['cost'][id]['new_cost'] > update_cost['cost'][id]['old_cost'] ? 'Increased' :'Decreased'}</div>
         </div>
        ) 
    }
 
-   const map_unit_updates =(data,id)=>{
+   const map_unit_updates =(id,count)=>{
     return(
-     <div className = 'unit-update-flex'>
-         <div>{updates['unit'][id]['brand_description']}</div>
-         <div>{updates['unit'][id]['message']}</div>
+     <div key ={count} className = 'unit-update-flex'>
+         <div>{update_unit['unit'][id]['brand_description']}</div>
+         <div>{update_unit['unit'][id]['message']}</div>
      </div>
     ) 
 }
 
-const map_unit_name_updates =(data,id)=>{
+const map_unit_name_updates =(id,count)=>{
     return(
-     <div className = 'unit-update-flex'>
-         <div>{updates['unit_name'][id]['brand_description']}</div>
-         <div>{updates['unit_name'][id]['message']}</div>
+     <div key ={count} className = 'unit-update-flex'>
+         <div>{update_unit_name['unit_name'][id]['brand_description']}</div>
+         <div>{update_unit_name['unit_name'][id]['message']}</div>
      </div>
     ) 
 }
@@ -109,26 +113,35 @@ const map_unit_name_updates =(data,id)=>{
       <Modal.Body>
         <div className = 'modal-update-body'>
             <Fragment>
-                {updates.cost &&
-                        <div>
-                            <h3>Price Updates</h3>
-                            {updates.cost_list.map(map_price_updates)}     
-                        </div>
-                }
+            <div>
+                {update_cost.cost &&
+                    <div>
+                        <h5>Price Updates</h5>
+                        {update_cost.cost_list.map(map_price_updates)}     
+                    </div>
+                    }
+            </div><br/>
+               
 
-                {updates.unit &&
+            <div>
+                {update_unit_name.unit_name &&
                         <div>
-                            <h3>Unit Updates</h3>
-                            {updates.unit_list.map(map_unit_updates)}     
+                            <h5>Unit Names</h5>
+                            {update_unit_name.unit_name_list.map(map_unit_name_updates)}     
                         </div>
                 }
+            </div><br/>
 
-                {updates.unit_name &&
+            <div>
+                {update_unit.unit &&
                         <div>
-                            <h3>Unit Names</h3>
-                            {updates.unit_name_list.map(map_unit_name_updates)}     
+                            <h5>Unit Updates</h5>
+                            {update_unit.unit_list.map(map_unit_updates)}     
                         </div>
                 }
+            </div><br/>
+
+                
             </Fragment>
         </div>
       </Modal.Body>

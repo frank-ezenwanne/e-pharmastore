@@ -172,14 +172,6 @@ class GetGenericNames(APIView):
         options = GenericSerializer(options,many=True)
         return Response({"generic_name_options":options.data})
 
-# @api_view(['POST'])
-# def generic_list(request): #returns list of generic names similar to input
-#     generic_serializer = GenericSerializer(data=request.data)
-#     generic_serializer.is_valid(raise_exception=True)
-#     search_phrase = generic_serializer.validated_data["generic_name"]
-#     options = Generic_Alphabetic.objects.filter(generic_name = search_phrase)
-#     options = GenericSerializer(options,many=True)
-#     return Response({"generic_name_options":options.data})
 
 
 class GetLastOrder(APIView):
@@ -198,8 +190,6 @@ class GetLastOrder(APIView):
                 'cost':{},  
                 }
         for loi in last_order.order_products.all(): 
-            # print(loi.full_pack_quantity,loi.brand_description)
-            # print(loi.product_id.full_pack_quantity,loi.brand_description)
             if last_order_status ==False:
               
                 if( int(loi.full_pack_quantity) != int(loi.product_id.full_pack_quantity) or 
@@ -208,21 +198,24 @@ class GetLastOrder(APIView):
                     if int(loi.full_pack_quantity) != int(loi.product_id.full_pack_quantity):
 
                         if int(loi.product_id.full_pack_quantity) == 1:#orderproduct unit should merge into 1 as product fpq is now 1
-                            loi.full_pack_quantity = loi.product_id.full_pack_quantity
+                            loi.full_pack_quantity = 1
                             loi.unit_quantity = loi.product_id.unit_quantity
+                            if loi.selected_unit != 'FULL PACK': #special case to set cost for non-full pack selected
+                                loi.cost = loi.raw_cost #set to itz already selected full pack cost for comparison later
+                                loi.total = loi.raw_cost
                             loi.selected_unit = loi.product_id.unit
                             if loi.product_id.brand_description not in updates['unit']:
                                 updates['unit'][loi.product_id.brand_description] = "This product is now defined with a single unit" 
                             
             
                         elif int(loi.full_pack_quantity) == 1: #orderproduct unit should now split
-                            loi.full_pack_quantity = loi.product_id.full_pack_quantity
+                            loi.full_pack_quantity = int(loi.product_id.full_pack_quantity)
                             loi.unit_quantity = loi.product_id.unit_quantity
                             loi.selected_unit = 'FULL PACK'
                             if loi.product_id.brand_description not in updates['unit']:
                                 updates['unit'][loi.product_id.brand_description] = "This product is now defined with multiple units " 
                         else:
-                            loi.full_pack_quantity = loi.product_id.full_pack_quantity
+                            loi.full_pack_quantity = int(loi.product_id.full_pack_quantity)
                             loi.unit_quantity = loi.product_id.unit_quantity
                             if loi.product_id.brand_description not in updates['unit']:
                                 updates['unit'][loi.product_id.brand_description] = "This product has its pack size defintion updated" 
@@ -241,7 +234,7 @@ class GetLastOrder(APIView):
 
                 if loi.raw_cost != loi.product_id.raw_cost:
                     loi.raw_cost = loi.product_id.raw_cost
-                    if loi.full_pack_quantity > 1:
+                    if int(loi.full_pack_quantity) > 1:
                         print('herrrrre')
                         if loi.selected_unit != 'FULL PACK':
                             try:
@@ -250,7 +243,7 @@ class GetLastOrder(APIView):
                             except ValueError:
                                 ratio = int(loi.full_pack_quantity)
                             old_cost = copy.copy(loi.cost)
-                            loi.cost = loi.product_id.cost/ratio #raw_cost/ratio
+                            loi.cost = loi.product_id.raw_cost/ratio #raw_cost/ratio
                             loi.raw_cost = loi.product_id.raw_cost
                             loi.total = float(loi.cost) * int(loi.quantity_ordered)
                             loi.save()
@@ -266,7 +259,7 @@ class GetLastOrder(APIView):
                             if loi.product_id.brand_description not in updates['cost'] and abs( float(loi.cost) - float(old_cost) ) > 0.1:
                                 updates['cost'][loi.product_id.brand_description] = {'selected_unit':loi.selected_unit,'old_cost':old_cost,'new_cost':loi.cost} 
                                 
-                    elif loi.full_pack_quantity == 1:
+                    elif int(loi.full_pack_quantity) == 1:
                         old_cost = copy.copy(loi.cost)
                         loi.cost = loi.product_id.raw_cost
                         loi.raw_cost = loi.product_id.raw_cost
@@ -332,7 +325,7 @@ class SendCSVEmail(APIView):
         order = Order.objects.filter(id = int(order_id)).first()
         if order and order.buyer == request.user:
             order_products = order.order_products.all()
-            csv_file = StringIO()
+            csv_file = StringIO() #creates writing pad for the csvwriter
             writer = csv.writer(csv_file)
             writer.writerow(['brand_description','generic_name','selected_unit','quantity_ordered','cost','total'])
             order_fields = order_products.values_list('brand_description','generic_name','selected_unit','quantity_ordered','cost','total')
@@ -353,6 +346,7 @@ class SendCSVEmail(APIView):
             
             return Response({'email_sent':'Email Sent!'})
         return Response({"error":"This orderId does not exist"},status = status.HTTP_404_NOT_FOUND)
+
 
 
 
