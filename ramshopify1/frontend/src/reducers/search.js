@@ -13,7 +13,7 @@ const initialState = {
     products_deep:'',
     generics:"",
     order_id:null,
-    just_created:false,
+    order_just_created:false,
     last_orderid:null,
     order_productid:'',
     current_serial:'',
@@ -48,7 +48,7 @@ export default function (state = initialState,action){
         case ORDER_CREATED:
             return {
                 ...state,
-                just_created:true,
+                order_just_created:true,
                ...action.payload
             }
 
@@ -59,7 +59,7 @@ export default function (state = initialState,action){
                 products_deep:'',
                 generics:"",
                 order_id:null,
-                just_created:false,
+                order_just_created:false,
                 last_orderid:null,
                 order_productid:'',
                 current_serial:'',
@@ -101,7 +101,7 @@ export default function (state = initialState,action){
         case CHANGE_CREATED_FALSE:
             return {
                 ...state,
-                just_created:false,
+                order_just_created:false,
                 selected_order_made_last:false
             }
 
@@ -167,7 +167,7 @@ export default function (state = initialState,action){
                 products:"",
                 products_deep:'',
                 generics:"",
-                just_created:false,
+                order_just_created:false,
                 last_orderid:null,
                 order_productid:'',
                 current_serial:'',

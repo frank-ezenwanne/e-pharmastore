@@ -26,7 +26,7 @@ class CustomerPage extends Component{
     }
 
     componentDidUpdate(prevProps){
-        if(this.props.just_created || this.props.selected_order_made_last){
+        if(this.props.order_just_created || this.props.selected_order_made_last){
             this.props.change_created_status()
             this.setState({move:true})
         }
@@ -79,7 +79,7 @@ class CustomerPage extends Component{
 
 const mapStateToProps = (state)=>({
     email: state.auth.email,
-    just_created : state.search.just_created,
+    order_just_created : state.search.order_just_created,
     customer_orders:state.search.customer_orders,
     selected_order_made_last:state.search.selected_order_made_last
 })

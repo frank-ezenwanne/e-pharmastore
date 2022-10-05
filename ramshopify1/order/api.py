@@ -235,7 +235,6 @@ class GetLastOrder(APIView):
                 if loi.raw_cost != loi.product_id.raw_cost:
                     loi.raw_cost = loi.product_id.raw_cost
                     if int(loi.full_pack_quantity) > 1:
-                        print('herrrrre')
                         if loi.selected_unit != 'FULL PACK':
                             try:
                                 int(loi.unit_quantity)

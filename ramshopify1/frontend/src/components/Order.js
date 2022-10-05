@@ -92,9 +92,9 @@ componentDidUpdate(prevProps){
                 count_list.push(String(last_elem_count))
 
                 if(JSON.stringify(prevProps.updates) !== JSON.stringify(updates) ){
-                    console.log('display')
-                    modal_updates=true
-                } 
+                    if(Object.keys(updates.cost).length > 0 || Object.keys(updates.unit).length > 0 || Object.keys(updates.unit_name).length > 0  ){
+                        modal_updates=true
+                } }
              
 
                     this.setState({...loi,id_list,count_list,[last_elem_serial]:{
@@ -554,16 +554,19 @@ quantity_change = (e) =>{
 }
 
 
-onMainGenericModal = (e) =>{    
-    const productid_list = []
-    for (let id of this.state.id_list){
-        productid_list.push(this.state[id].product_id)   
-    }
-        this.setState({...this.state,"modal_maingeneric":true,productid_list:productid_list},()=>{
-            if(e.target.value){
-                this.props.getGenProducts(e.target.value)
-            }    
-        }) 
+onMainGenericModal = (e) =>{ 
+    if(!this.state.ordered){
+        const productid_list = []
+        for (let id of this.state.id_list){
+            productid_list.push(this.state[id].product_id)   
+        }
+            this.setState({...this.state,"modal_maingeneric":true,productid_list:productid_list},()=>{
+                if(e.target.value){
+                    this.props.getGenProducts(e.target.value)
+                }    
+            }) 
+    }   
+ 
 }
 
 onChangeRadioSearch = (e) =>{
