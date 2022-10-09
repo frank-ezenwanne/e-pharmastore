@@ -60,8 +60,8 @@ function Nav(props){
 						<div id="nav-main-name">
 							<span className ="nav-bar-gamersblog">
 								<Link to = "/">
-									<span id= "navbar-name1">E-PHARMA</span>
-									<span id= "navbar-name2">STORE</span>
+									<span id= "navbar-name1">RAMSGATE</span>
+									<span id= "navbar-name2">PHARMACY</span>
 								</Link>
 							</span>
 						</div>
@@ -80,7 +80,7 @@ function Nav(props){
 					{props.isAuthenticated?<Fragment>
 					<div className = "side-bar-combo">
 						<span className = "side-bar-email">{props.email}</span>
-						<span className = "lower-side-bar"><Link to ='/customerpage'>View My Orders</Link></span>
+						<span className = "lower-side-bar"><Link style = {{textDecoration:'none',color:'white'}} to ='/customerpage'>View My Orders</Link></span>
 						<span className = "lower-side-bar">Logout</span>
 					</div>
 					</Fragment>:

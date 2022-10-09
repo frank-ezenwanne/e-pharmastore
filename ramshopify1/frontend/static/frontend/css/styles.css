@@ -7,7 +7,7 @@
 
 html{
 	height:100%;
-	font-size:15px	
+	font-size:15px;	
 	
 	}
 
@@ -17,19 +17,21 @@ html{
 
 body{
 	background-color: rgb(240,240,240);
-	height:100%
+	min-height:100vh;
+	font-family: Montserrat Light, Arial, Helvetica, sans-serif;
+	
 }
 
 #app{
 	display:flex;
 	flex-direction: column;
 	justify-content:space-between;
-	height:100%;
+	min-height:100vh;
 }
 
 #bottom-body{
 	width:100%;
-	margin:auto;
+	margin-bottom:0px;
 	position:relative;
 
 }
@@ -41,13 +43,36 @@ body{
 	display:block;
 	margin-top:-2rem;
 	filter: brightness(60%);
+	height:100vh;
 }
 
 .home-img-button-div{
 	position:absolute;
 	width:100%;
-	top:45%;
+	top:65%;
+	
+}
 
+#home-img-heading{
+	position:absolute;
+	top:37%;
+	left:0;
+	right:0;
+	text-align: center;
+	
+}
+
+#home-img-top-heading{
+	margin-top:1.5rem;
+	color:white;
+	font-weight: bolder;
+	font-size:200%
+}
+
+#home-img-bottom-heading{
+	margin-top:1rem;
+	color:white;
+	font-weight: bolder;
 }
 
 .home-auth-button-div{
@@ -59,6 +84,43 @@ body{
 .home-guest-button{
 
 }
+
+
+
+.typewriter{
+    overflow:hidden;
+    white-space:nowrap;
+    margin:0 auto;
+    letter-spacing:0.5rem;
+    animation: typing 3.5s steps(40, end);
+}
+
+
+@keyframes typing{
+    from {width:0}
+    to {width:100%}
+}
+
+
+.anime-class{
+animation-name:fade;
+animation-duration:3s;
+animation-iteration-count: 1;
+animation-timing-function: ease-in-out;
+
+}
+
+@keyframes fade{
+    0%{
+        opacity:0;
+    }
+
+    100%{
+        opacity:1;
+    }
+}
+
+
 
 
 #table-grid-main{
@@ -89,12 +151,15 @@ z-index:3;
 .main-generic-input-div{
 	position:relative;
 	margin-bottom:1rem;
+	
+
 }
 
 .main-generic-input-button-div{
 	display:flex;
 	justify-content: space-between;
 	align-items: center;
+	font-family: Helvetica, sans-serif;
 }
 
 .add-confirm-button-div{
@@ -147,7 +212,7 @@ z-index:3;
 	height:25rem;
 	overflow-x:hidden;
 	overflow-y:scroll;
-		
+	
 }
 
 
@@ -157,6 +222,7 @@ z-index:3;
 	overflow-y:scroll !important;
 	width:100%;
 	margin-left:5%;
+	font-family: Helvetica, sans-serif;
 }
 
 
@@ -200,6 +266,7 @@ width:100%
 	padding:0.1rem 0.4rem ;
 	width:7rem;
 	margin-left:1.2rem;
+	font-family: Helvetica, sans-serif;
 }
 
 .total-div{
@@ -372,6 +439,7 @@ margin-right:-2rem;
 .form-class1{
 	width:53vw;
 	margin-top:8rem;
+	font-family:Helvetica, sans-serif;
 }
 
 .form-class1-generic{
@@ -474,6 +542,8 @@ margin-right:-2rem;
 	display:flex;
 
 }
+
+
 
 
 nav  a{
@@ -654,7 +724,7 @@ margin:0.25rem;
 
 .side-bar{
 	width:30vw;
-	margin-top:-0.8rem;
+	margin-top:3.4rem;
 	position:fixed;
 	height:70vh;
 	z-index:3;
@@ -811,10 +881,11 @@ main{
 .login-block{
 	height:40%;
 	margin:auto;
-	width:35%;
+	margin-top:8rem;
+	width:45%;
 	border:0.3rem solid rgb(100,100,100);
 	padding:2rem;
-	padding-left:10%;
+	padding-left:13%;
 	border-radius:0.5rem;
 	background-color: #2E4A57;
 

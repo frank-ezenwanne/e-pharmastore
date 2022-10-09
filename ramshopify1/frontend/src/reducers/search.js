@@ -15,6 +15,7 @@ const initialState = {
     order_id:null,
     order_just_created:false,
     last_orderid:null,
+    last_ordercode:null,
     order_productid:'',
     current_serial:'',
     loi:{},

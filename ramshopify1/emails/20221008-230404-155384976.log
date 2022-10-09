@@ -1,0 +1,29 @@
+Content-Type: multipart/mixed; boundary="===============0061968928=="
+MIME-Version: 1.0
+Subject: Hello
+From: efrank938@gmail.com
+To: frankdevspace@gmail.com
+Date: Sat, 08 Oct 2022 22:04:04 -0000
+Message-ID: <166526664409.2352.10467747648599951658@Frank>
+
+--===============0061968928==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+The Order from ZenCorp to Ramsgate
+--===============0061968928==
+Content-Type: text/csv; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="order.csv"
+
+brand_description,generic_name,selected_unit,quantity_ordered,cost,total
+HAEM F SYR 200ML,,BOTTLE,9,90.0,810.0
+DABAFORT X 100 TABS,,PACK,8,750.0,6000.0
+PIRITON  4MG TAB  X 250 (EVANS),Chlorpheniramine,FULL PACK,1,1145.0,1145.0
+ALLERGIN SYR 60ML,Chlorpheniramine,BOTTLE,1,230.0,230.0
+
+--===============0061968928==--
+
+-------------------------------------------------------------------------------

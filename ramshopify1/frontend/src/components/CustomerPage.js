@@ -39,11 +39,12 @@ class CustomerPage extends Component{
                 <div className="order-svg-container">
                     <img className='img-fluid order-svg-style' src= {Cart}/>
                     <div onClick = {()=>this.props.get_selected_order(order.id)} className = "order-info">
-                        <div className="order-info-item order-info-create-date">Created:<br/>
+                        <div className="order-info-item order-info-create-date mb-2">
                             <Moment format="LLL">
                                 {order.open_date}
                             </Moment>
                         </div>
+                        <div className="order-info-id">Order Id : {order.order_code}</div>
                         <div className="order-info-item ">
                             {order.ordered_date && <Moment format="LLL">
                                 order.ordered_date_date </Moment>}
@@ -52,7 +53,7 @@ class CustomerPage extends Component{
                         <div className="order-info-item"> Status: {order.ordered === true ?
                             <span>Ordered</span> :<span style= {this.pending_style}>Pending</span>}
                         </div>
-                        <div className="order-info-item"> Value: {order.order_total}
+                        <div className="order-info-item"> Value: {"₦" + ' ' + order.order_total}
                         </div>
                     </div>
                 </div>

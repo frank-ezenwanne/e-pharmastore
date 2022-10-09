@@ -20,6 +20,13 @@ class Home extends Component{
         }
     }
 
+    background = {
+        backgroundColor:'rgb(0,0,0) !important',
+		backgroundImage: `url('${DrugStoreImg}')`,
+		backgroundRepeat: 'no-repeat',
+		backgroundPosition:'top',
+    }
+
     render(){
         if(this.state.order_just_created){
             return <Navigate to = '/order'/>
@@ -27,6 +34,10 @@ class Home extends Component{
         return(
             <div id = 'home-back-img-div'>
                 <img id='home-back-img' src = {DrugStoreImg}/>
+                <div id= 'home-img-heading'>
+                    <div id ='home-img-top-heading'> RAMSGATE PHARMACY WHOLESALES</div>
+                    <div id ='home-img-bottom-heading'> To Restore Confidence</div>
+                </div>
                 <div style= {{left:this.props.isAuthenticated?'0%':'45%'}} className = 'home-img-button-div'>
                     {this.props.isAuthenticated?
                        <div className= 'home-auth-button-div' >

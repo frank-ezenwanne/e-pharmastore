@@ -1,0 +1,31 @@
+Content-Type: multipart/mixed; boundary="===============0332664753=="
+MIME-Version: 1.0
+Subject: Hello
+From: efrank938@gmail.com
+To: frankdevspace@gmail.com
+Date: Sat, 08 Oct 2022 22:23:58 -0000
+Message-ID: <166526783841.6564.12946086405990298299@Frank>
+
+--===============0332664753==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+The Order from ZenCorp to Ramsgate
+--===============0332664753==
+Content-Type: text/csv; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="order.csv"
+
+brand_description,generic_name,selected_unit,quantity_ordered,cost,total
+HAEMATONE SYR 200ML,,BOTTLE,6,500.0,3000.0
+FACEMASK   X 50,,PCS,7,30.0,210.0
+DABAFLOX TABS 200MG,,PACK,3,420.0,1260.0
+ABONIKI INHALER X 1,,PACK,5,170.0,850.0
+XALATAN (PARALLEL)  EYE DROPS X 1,,PACK,8,1600.0,12800.0
+JARDIANCE TABS 10MG X 30,,BLISTER,1,5833.33,5833.33
+
+--===============0332664753==--
+
+-------------------------------------------------------------------------------

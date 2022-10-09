@@ -917,9 +917,9 @@ render(){
  
     return (
         <Fragment>
-            <div className="card" id="form-container-main">
+            <div style ={{fontWeight:'bolder'}} className="card" id="form-container-main">
                 <div className='header'>
-                    <div className="order_id">Order Id : {this.props.last_orderid? this.props.last_orderid:null}</div>
+                    <div className="order_id">Order Id : {this.props.last_ordercode? this.props.last_ordercode:null}</div>
                     <div  className = 'radio-delete-div'>
                         <div className = 'radio-search-option-div'>
                             <div className = 'radio-input form-check'> Quick search<input className= 'form-check-input' onChange = {this.onChangeRadioSearch} checked ={this.state.radio_search_option === 'quick' } type ='radio' value='quick' name="radio_search_option"></input></div>
@@ -985,16 +985,6 @@ render(){
 
             </div>
            
-
-
-            
-            {/* {vals["modal_generic"] === true? (<GenericModal
-                show={this.state.modal_generic}
-                
-                onHide={()=>{
-                    this.setState({"modal_generic":false})
-                }}
-            />) :null} */}
 
             {vals["modal_extrainfo"] === true?vals[vals['extra_info_num']]['product_id'] !== ''?
                    ( <Modal
@@ -1092,6 +1082,7 @@ const mapStateToProps = (state) => ({
     products : state.search.products,
     products_deep: state.search.products_deep,
     last_orderid:state.search.last_orderid,
+    last_ordercode:state.search.last_ordercode,
     loi:state.search.loi,
     orderCreating:state.search.orderCreating,
     loading_serials:state.search.loading_serials,

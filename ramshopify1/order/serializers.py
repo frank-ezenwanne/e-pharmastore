@@ -7,7 +7,7 @@ class OrderProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderProduct
         # fields = ("generic_name","brand_name","presentation","quantity_ordered","total_cost")
-        exclude = ("buyer","ordered","generic_name","brand_description")
+        exclude = ("buyer","ordered")
 
 
 
