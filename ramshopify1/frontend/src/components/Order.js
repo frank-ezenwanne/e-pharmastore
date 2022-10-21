@@ -33,7 +33,7 @@ class Order extends Component{
                     raw_cost:'',
                     full_pack_quantity:'',
                     unit_quantity:0,
-                    cost:0,
+                    cost:'',
                     total:0,
                     quantity_ordered:"",
                     checked_del:false,
@@ -67,7 +67,7 @@ componentDidMount(){
 
 componentDidUpdate(prevProps){
    
-    const {loi,updates,order_gen_products,loading_serials,last_order_status,...rest} = this.props
+    const {loi,updates,order_gen_products,loading_serials,last_order_status,delete_serials,...rest} = this.props
         if (!_.isEqual(prevProps.loi,loi)){ //might use orderId later
             let last_elem_serial
             let last_elem_count 
@@ -107,7 +107,7 @@ componentDidUpdate(prevProps){
                                 raw_cost:'',
                                 full_pack_quantity:'',
                                 unit_quantity:0,
-                                cost:0,
+                                cost:'',
                                 total:0,
                                 quantity_ordered:'',
                                 brand_description_slug:'',
@@ -162,6 +162,38 @@ componentDidUpdate(prevProps){
             this.props.get_last_order()
         }
 
+        if(JSON.stringify(prevProps.delete_serials) !== JSON.stringify(delete_serials)){
+            console.log(delete_serials)
+            if (delete_serials.length > 0){  
+                let id_list = [...this.state.id_list]
+                let new_state = {...this.state}
+                let idlist_index
+                // let countlist_index
+                delete_serials.forEach((elem)=>{//loop begins
+                    idlist_index = id_list.indexOf(elem)
+                    if(idlist_index !== -1){ //if the state index in id_list is present in all_checked i.e has been checked
+                        id_list.splice(idlist_index,1)//now..removing the actual serialand data..splice will delete the checked elem from id_list
+                        delete new_state[elem]
+                    }   
+                })//loop ends
+                
+                    let count_list = []
+                    let i = 0
+                    for(let serial_elem of id_list){
+                        i+=1
+                        new_state[serial_elem].count = i
+                        count_list.push(i)
+                   
+                    }   
+                    
+                    
+                    this.setState({...this.state,id_list,count_list,confirm_del_checkbox_display:'none',delete_button_color : 'btn-danger',
+                    delete_button_status : 'Remove items',
+                    })
+
+                }
+        }
+
         if(JSON.stringify(prevProps.order_gen_products) !== JSON.stringify(order_gen_products) ){//add if statem to check for emptiness
             const obj={}
             let id_list
@@ -211,7 +243,7 @@ componentDidUpdate(prevProps){
                 raw_cost:'',
                 full_pack_quantity:'',
                 unit_quantity:0,
-                cost:0,
+                cost:'',
                 total:0,
                 quantity_ordered:'',
                 brand_description_slug:'',
@@ -219,7 +251,6 @@ componentDidUpdate(prevProps){
                 count:last_elem_count
             } },()=>{
                 for(let product of Object.keys(obj)){
-                    console.log(obj,'obj')
                 this.props.send_orderproduct(obj[product].product_id,obj[product].unit,
                     obj[product].selected_unit,obj[product].cost,obj[product].raw_cost,obj[product].quantity_ordered,
                     obj[product].full_pack_quantity,obj[product].unit_quantity,obj[product].total,obj[product].extra_info,
@@ -255,7 +286,7 @@ static getDerivedStateFromProps(props,state){
                     raw_cost:'',
                     full_pack_quantity:'',
                     unit_quantity:0,
-                    cost:0,
+                    cost:'',
                     total:0,
                     quantity_ordered:"",
                     checked_del:false,
@@ -474,9 +505,10 @@ quantity_change = (e) =>{
     let val = e.target.value
     if(this.state[c_name]["brand_description"]){
         let cost
-        let val = e.target.value
-        if(val <= 0){
-            val = 0
+        let val = parseInt(e.target.value)
+        if(val < 1 || !val){
+            val=0
+        
         }
     
         
@@ -555,69 +587,75 @@ quantity_change = (e) =>{
 
 
 onMainGenericModal = (e) =>{ 
+    //function to get things ready for the generic modal
     if(!this.state.ordered){
         const productid_list = []
-        for (let id of this.state.id_list){
+        for (let id of this.state.id_list){ //prepares an array of all the product_ids for comparison in the modal
             productid_list.push(this.state[id].product_id)   
         }
             this.setState({...this.state,"modal_maingeneric":true,productid_list:productid_list},()=>{
-                if(e.target.value){
+                if(e.target.value){//sets modal state , idlist and uses the clicked generic name to search for brands 
                     this.props.getGenProducts(e.target.value)
                 }    
             }) 
-    }   
- 
+        }  
 }
 
-onChangeRadioSearch = (e) =>{
+onChangeRadioSearch = (e) =>{//setstate for radio search option, also clears first letters
     this.setState({...this.state,'radio_search_option':e.target.value,group_letters:'',first_letter:''}),
     ()=>{
-        this.props.clear_brand_desc()}
+        this.props.clear_brand_desc()} //clears current brand description input!
 }
 
-OnChangeCheckBox = (e)=>{
-    if(!this.state.ordered){
-        const c_name = e.target.classList[0]
-        if(this.state[c_name].checked_del === true ){
+OnChangeCheckBox = (e)=>{ //arrow function for the delete checkbox status
+    if(!this.state.ordered){ //works if order is not yet sent!!
+        const c_name = e.target.classList[0] //id is stored as classname and so is retrieved here
+        if(this.state[c_name].checked_del === true ){//basic switch..true to false and vice versa
             this.setState({...this.state,[c_name]:{
-                ...this.state[c_name],checked_del:false
+                ...this.state[c_name],checked_del:false //sets to false if true
             }})
         }
         else{
             this.setState({...this.state,[c_name]:{
-                ...this.state[c_name],checked_del:true
+                ...this.state[c_name],checked_del:true//sets to true if false
             }})
         }
     }
 }
 
 
-confirmDeleterow = (e) =>{
-if(!this.state.ordered){
-    const all_checked=[]
-    const posted=[]
+confirmDeleterow = (e) =>{ //handles row deletion
+if(!this.state.ordered){ //only works if order is not sent!!
+    const all_checked=[] //array for all checked rows
+    const posted=[] //array for only saved rows
+    const not_posted=[] // array for unsaved rows
+
     for(const id of this.state.id_list){
         if(this.state[id].checked_del && this.state[id].id){
-            posted.push(parseInt(this.state[id].id))
+            posted.push(id) //collect serials for backend deletion for posted only
+        }
+
+        if(this.state[id].checked_del && !this.state[id].id){
+            not_posted.push(id) // collect serials for frontend deletion for not posted only
         }
         if (this.state[id].checked_del){
-            all_checked.push(id)
+            all_checked.push(id) //collect serials for frontend deletion for all checked
         }
     }
 
-    if (all_checked.length === 0){
+    if (all_checked.length === 0){//tell us no box as selected if there is no id in list!
         alert('no box was selected!!')
     }
 
-    else if (all_checked.length > 0 || posted.length > 0){
+    else if (all_checked.length > 0 || posted.length > 0 ){
         if (confirm('E-Pharmastore:\nAre you sure you want to delete the selected item(s)?')){    
             let id_list = [...this.state.id_list]
             // let count_list = [...this.state.count_list]
-            if (all_checked.length > 0){  
+            if (not_posted.length > 0){  
                 let new_state = {...this.state}
                 let idlist_index
                 // let countlist_index
-                all_checked.forEach((elem)=>{//loop begins
+                not_posted.forEach((elem)=>{//loop begins
                     idlist_index = id_list.indexOf(elem)
                     if(idlist_index !== -1){ //if the state index in id_list is present in all_checked i.e has been checked
                         id_list.splice(idlist_index,1)//now..removing the actual serialand data..splice will delete the checked elem from id_list
@@ -637,14 +675,23 @@ if(!this.state.ordered){
                     
                     this.setState({...this.state,id_list,count_list,confirm_del_checkbox_display:'none',delete_button_color : 'btn-danger',
                     delete_button_status : 'Remove items',
-                })
+                    },()=>{
+                        if (posted.length > 0){
+                            this.props.delOrderProducts(this.props.last_orderid,posted)
+                        }
+                    })
 
+                 }
+
+            else{
+                if (posted.length > 0){
+                    this.props.delOrderProducts(this.props.last_orderid,posted)
                 }
+            }
+                
             
 
-            if (posted.length > 0){
-                this.props.delOrderProducts(this.props.last_orderid,posted)
-            }
+
 
         }
     }
@@ -727,7 +774,7 @@ map_stuff = (num) =>{
     <Fragment key={num}>
         <div className="product-div form-class">
         <div className='brand-minus-section'>
-            {this.state[num].brand_description?this.state[num].product_id? 
+            {this.state[num].cost?this.state[num].product_id? 
                  <input onChange = {this.OnChangeCheckBox} 
                     checked ={this.state[num]['checked_del'] || ''} 
                     style = {{display:this.state.confirm_del_checkbox_display}}
@@ -839,7 +886,7 @@ map_stuff = (num) =>{
                 type="number"
                 name="quantity"
                 onChange={this.quantity_change}  
-                value = {this.state[num]["quantity_ordered"] ||''}
+                value = {this.state[num]["quantity_ordered"]||''}
                 style = {this.quantity_style}
             />
         </div> 
@@ -850,7 +897,7 @@ map_stuff = (num) =>{
                 className={num + ' ' + 'form-control'}
                 type="number"
                 name="cost"
-                value = {this.state[num]["cost"] ||''}
+                value = {this.state[num]["cost"] === 0?0:this.state[num]['cost']>0?this.state[num]['cost']:''}
                 style = {this.cost_style}
             />
         </div> 
@@ -1093,7 +1140,8 @@ const mapStateToProps = (state) => ({
     all_loaded_serials:state.search.all_loaded_serials,
     order_copy_created:state.search.order_copy_created,
     order_gen_products:state.search.order_gen_products,
-    updates:state.search.updates
+    updates:state.search.updates,
+    delete_serials:state.search.delete_serials,
 })
 
 const redux_funcs = {

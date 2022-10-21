@@ -1,0 +1,28 @@
+Content-Type: multipart/mixed; boundary="===============1235091377=="
+MIME-Version: 1.0
+Subject: Hello
+From: efrank938@gmail.com
+To: frankdevspace@gmail.com
+Date: Mon, 17 Oct 2022 08:12:01 -0000
+Message-ID: <166599432132.14844.8223764329079802092@Frank>
+
+--===============1235091377==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+The Order from ZenCorp to Ramsgate
+--===============1235091377==
+Content-Type: text/csv; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="order.csv"
+
+brand_description,generic_name,selected_unit,quantity_ordered,cost,total
+XALATAN EYE DROPS  2.5ML,Latanoprost,BOTTLE,1,5080.0,5080.0
+DAONIL AVENTIS TABS  X 100,Glibenclamide,FULL PACK,2,2650.0,5300.0
+SABRESTEN CREAM  20G,Clotrimazole,TUBE,6,630.0,3780.0
+
+--===============1235091377==--
+
+-------------------------------------------------------------------------------

@@ -14,6 +14,7 @@ from django.utils import timezone
 import csv
 from io import StringIO
 from django.core.mail import EmailMessage
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 class CreateOrder(APIView):
@@ -125,7 +126,7 @@ class OrderProductView(APIView):  # finish up with database gen id
             return Response({'error': 'Order not found'}, status=status.HTTP_404_NOT_FOUND)
         del_list = delete_request.validated_data['del_list']
         for id in del_list:
-            order_product = OrderProduct.objects.filter(id=id).first()
+            order_product = OrderProduct.objects.filter(serial=id,order_id=order).first()
             if order_product and order_product.buyer == request.user and order_product in order.order_products.all():
                 order.order_products.remove(order_product)
                 order_product.delete()
@@ -179,17 +180,14 @@ class GetGenericNames(APIView):
         generic_serializer = GenericSerializer(data=request.data)
         generic_serializer.is_valid(raise_exception=True)
         search_phrase = generic_serializer.validated_data["generic_name"]
-        print(search_phrase)
         options = Generic_Alphabetic.objects.filter(
             generic_name__istartswith=search_phrase)
-        print(options)
         options = GenericSerializer(options, many=True)
         return Response({"generic_name_options": options.data})
 
 
 class GetLastOrder(APIView):
     permission_classes = [IsAuthenticated]
-
     def get(self, request, *args, **kwargs):
         user = self.request.user
         last_order = Order.objects.filter(
@@ -302,9 +300,7 @@ class GetLastOrder(APIView):
             obj['saved'] = True
             obj['brand_description'] = loi.product_id.brand_description
             obj['generic_name'] = loi.product_id.generic_name
-            obj['unit'] = loi.unit
-            # print(loi.unit,90999,loi.brand_description)
-            # print(loi.selected_unit,90999,loi.brand_description)
+            obj['total'] = float(loi.total)
 
             last_order_items[loi.serial] = obj
         sorted_loi = {}
@@ -313,7 +309,6 @@ class GetLastOrder(APIView):
             id += 1
             last_order_items[key]['count'] = id
             sorted_loi[key] = last_order_items[key]
-        print(updates)
         return Response({"loi": sorted_loi,
                         "last_orderid": last_order.id,'last_ordercode':last_order.order_code, "last_order_status": last_order.ordered, 'updates': updates})
 
@@ -321,11 +316,30 @@ class GetLastOrder(APIView):
 class GetCustomerOrders(APIView):
     permission_classes = [IsAuthenticated, ]
 
-    def get(self, request, *args, **kwargs):
-        orders = Order.objects.filter(
-            buyer=request.user).order_by('-open_date')
+    def post(self, request, *args, **kwargs):
+        orders = Order.objects.filter(buyer=request.user).order_by('-open_date')
+        paginator = Paginator(orders,6)
+        print(request.data)
+        page = request.data.get('page_num',9)
+        try:
+            orders = paginator.page(page)
+        except PageNotAnInteger:
+            orders = paginator.page(1) #go to 1st page
+            page=1
+        except EmptyPage: #check paginator.num_pages later
+            orders = paginator.page(paginator.num_pages) #if blank page go to the last avail page 
+            page=paginator.num_pages
+        except:
+            orders = paginator.page(1)
+            page=1
         serialized = OrderSerializer(orders, many=True)
-        return Response({"customer_orders": serialized.data})
+        page_range = list(paginator.page_range)
+        if orders.has_other_pages:
+            has_other_pages = True
+        else:
+            has_other_pages = False
+        return Response({"customer_orders": {'orders_data':serialized.data,'num_pages':orders.paginator.num_pages,
+             'page_range':page_range,'has_other_pages':has_other_pages,'current_page':page}})
 
 
 class MakeLastOrder(APIView):

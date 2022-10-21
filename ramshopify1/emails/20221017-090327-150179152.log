@@ -1,0 +1,28 @@
+Content-Type: multipart/mixed; boundary="===============1735824850=="
+MIME-Version: 1.0
+Subject: Hello
+From: efrank938@gmail.com
+To: frankdevspace@gmail.com
+Date: Mon, 17 Oct 2022 08:03:27 -0000
+Message-ID: <166599380723.14844.11210530993382389061@Frank>
+
+--===============1735824850==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+The Order from ZenCorp to Ramsgate
+--===============1735824850==
+Content-Type: text/csv; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="order.csv"
+
+brand_description,generic_name,selected_unit,quantity_ordered,cost,total
+HAEMARON SYR  200ML,,BOTTLE,9,255.0,2295.0
+LABDIC RELIEF TABS  X 200,,FULL PACK,9,3675.0,33075.0
+DABAFLOX TABS 200MG,,PACK,3,420.0,1260.0
+
+--===============1735824850==--
+
+-------------------------------------------------------------------------------

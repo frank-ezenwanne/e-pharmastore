@@ -33,7 +33,6 @@ class CustomerPage extends Component{
     }
 
     map_orders = (order,id) =>{
-        const {email,customer_orders,...rest} = this.props
         return(
             <Fragment key={id}>
                 <div className="order-svg-container">
@@ -62,18 +61,45 @@ class CustomerPage extends Component{
     }
 
     render(){
-
-      
        if(this.state.move){
            return <Navigate to = '/order'/>
        }
+       const {num_pages,has_other_pages,page_range,orders_data,current_page,...rest} = this.props.customer_orders
+       const page_arr = []
+       let selected_page
+       for(let page of page_range){
+           if(page !== 1 && page !== num_pages ){
+               if(page === current_page){
+                  selected_page = page
+               }
+                if (page > current_page-6 && page < current_page + 6){
+                    page_arr.push(page)
+                }
+                
+           }
+
+       }
+       const paginated = (
+            <div align='center' className="paginator-block">
+                <span onClick={()=>{this.props.get_customer_orders(1)}} className={current_page === 1? "selected-paginate":"paginate"}>First</span>
+                {page_arr.map((page_num,id)=>{return(
+                    <span onClick={()=>{this.props.get_customer_orders(page_num)}} key={id} className={page_num === selected_page? 'selected-paginate': 'paginate'}>{page_num}</span>    
+                )})}
+                <span onClick={()=>{this.props.get_customer_orders(num_pages)}} className={current_page === num_pages? "selected-paginate":"paginate"}>Last</span>
+            </div>
+       )
+
         return (
             <div className="customer-page">
                 <div style={this.new_order_button} className = "btn btn-success" onClick={this.props.create_order}>New Order</div>
                 <div className="customer-order-grid">
-                    {this.props.customer_orders ? this.props.customer_orders.map(this.map_orders):null}
+                    {orders_data? orders_data.map(this.map_orders):null}
                 </div>
-            </div>
+
+                <div className="pagination-section">
+                    {has_other_pages && paginated }
+                </div>
+            </div>    
         )
     }
 }

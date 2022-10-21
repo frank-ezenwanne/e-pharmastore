@@ -3,7 +3,7 @@ import {BRANDS_RETRIEVED} from './types'
 import {ORDER_CREATED,CHANGE_CREATED_FALSE,LAST_ORDER_FETCHED,
     ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDER_PRODUCT_NOT_CREATED,
     GENERIC_PRODUCTS_RETRIEVED,CLEAR_GENERIC_PRODUCTS,ORDERS_RETRIEVED,
-    ORDER_MADE_LAST,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC,ORDER_PRODUCTS_DELETED,ORDER_DELETED,
+    ORDER_MADE_LAST,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC,ORDER_PRODUCTS_DELETED,ORDER_PRODUCTS_NOT_DELETED,ORDER_DELETED,
     RESET_ORDER_DELETED_MOVE,ORDER_COPY_CREATED,GENERIC_NAMES_RETRIEVED,CLEAR_GENERIC_OPTIONS_INPUT,PREPARE_GENERIC_PRODUCTS
   
 } from '../actions/types'
@@ -181,7 +181,7 @@ export const search_generic_names = (generic_name) => (dispatch,getState) =>{
     )
 }
 
-export const get_customer_orders = () => (dispatch,getState) =>{
+export const get_customer_orders = (page_num = 1) => (dispatch,getState) =>{
     const config={
         headers:{
             "Content-Type":"application/json"
@@ -194,9 +194,10 @@ export const get_customer_orders = () => (dispatch,getState) =>{
         config.headers["Authorization"] = `Token ${token}`
     }
 
+    const body = JSON.stringify({page_num})
 
     axios
-    .get("api/get_customer_orders",config)
+    .post("api/get_customer_orders",body,config)
     .then((res)=>{
         console.log("orders retrieved")
         dispatch({
@@ -298,13 +299,17 @@ export const delOrderProducts = (order_id,del_list) => (dispatch,getState) =>{
         console.log("deleted_items")
         dispatch({
             type:ORDER_PRODUCTS_DELETED,
-            payload:res.data
+            payload:{data:res.data,delete_serials:del_list}
         })
     })
 
     .catch(
         (err) => {
             console.log(err.response)
+            dispatch({
+                type:ORDER_PRODUCTS_NOT_DELETED,
+                payload:{delete_serials:del_list}
+            })
         }
     )
 

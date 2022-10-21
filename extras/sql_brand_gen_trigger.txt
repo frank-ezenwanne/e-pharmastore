@@ -1,4 +1,6 @@
 
+#BRAND_GENERIC_COMBO...YOU'LL HAVE TO ENCAPSULATE IN A FUNCTION
+
     DECLARE coln_brand varchar(1) := trim(NEW.first_letter_brand);
     DECLARE coln_generic varchar(1) := trim(NEW.first_letter_generic);
     BEGIN 
@@ -56,4 +58,24 @@ CREATE OR REPLACE FUNCTION generic_letter() RETURNS TRIGGER AS $table$
     $table$ LANGUAGE plpgsql;
     
  CREATE OR REPLACE TRIGGER tble AFTER INSERT ON order_product FOR EACH ROW EXECUTE PROCEDURE generic_letter()
+
+
+
+
+#UPDATED_GENERIC_NO_first_letter
+
+CREATE OR REPLACE FUNCTION generic_letter() RETURNS TRIGGER AS $table$
+    BEGIN 
+        IF 
+            NEW.generic_name IS NOT NULL  AND NEW.generic_name NOT IN (select generic_name FROM order_generic_alphabetic )
+              THEN 
+            INSERT INTO order_generic_alphabetic(generic_name) VALUES(NEW.generic_name);
+   
+        END IF;
+        RETURN NEW ;
+    END;
+    $table$ LANGUAGE plpgsql;
+    
+ CREATE OR REPLACE TRIGGER tble AFTER INSERT ON order_product FOR EACH ROW EXECUTE PROCEDURE generic_letter()
+    
     
