@@ -65,14 +65,14 @@ class CustomerPage extends Component{
            return <Navigate to = '/order'/>
        }
        const {num_pages,has_other_pages,page_range,orders_data,current_page,...rest} = this.props.customer_orders
-       const page_arr = []
+       const page_arr = [] //array for pages in between 1st and last page
        let selected_page
-       for(let page of page_range){
-           if(page !== 1 && page !== num_pages ){
-               if(page === current_page){
-                  selected_page = page
+       for(let page of page_range){ //for all pages in the avail range
+           if(page !== 1 && page !== num_pages ){ //provided itz not 1st and not last page bcos those are handled separate
+               if(page === current_page){ //if the page no in loop is equal to d current page in view 
+                  selected_page = page //make it the selected page
                }
-                if (page > current_page-6 && page < current_page + 6){
+                if (page > current_page-6 && page < current_page + 6){//if the page num in loop in range of 6, collect it
                     page_arr.push(page)
                 }
                 
@@ -81,12 +81,13 @@ class CustomerPage extends Component{
        }
        const paginated = (
             <div align='center' className="paginator-block">
-                <span onClick={()=>{this.props.get_customer_orders(1)}} className={current_page === 1? "selected-paginate":"paginate"}>First</span>
+                <span onClick={()=>{this.props.get_customer_orders(1)}} className={current_page === 1? "selected-paginate":"paginate"}>First</span> 
                 {page_arr.map((page_num,id)=>{return(
                     <span onClick={()=>{this.props.get_customer_orders(page_num)}} key={id} className={page_num === selected_page? 'selected-paginate': 'paginate'}>{page_num}</span>    
                 )})}
                 <span onClick={()=>{this.props.get_customer_orders(num_pages)}} className={current_page === num_pages? "selected-paginate":"paginate"}>Last</span>
-            </div>
+             </div>
+                {/* first and last lines are 4 pages 1 nd last...page_arr shows d remaining pages*/}
        )
 
         return (
