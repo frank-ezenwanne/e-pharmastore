@@ -2,17 +2,22 @@ import {
     REGISTER_SUCCESS,
     LOGIN_SUCCESS,
     USER_LOADED,
-    LOGOUT_SUCCESS
+    LOGOUT_SUCCESS,
+    TOKEN_VERIFIED,
+    NEW_EMAIL_SET,
+    EMAIL_CHANGED
 }
 from '../actions/types'
 
 const initialState = {
     token:localStorage.getItem("token"),
-    user:null,
+    user:{email:'',company_name:''},
     email:null,
     company_name:null,
     isAuthenticated:false,
-    justregistered:false
+    justregistered:false,
+    justverified:false,
+    "new_email_confirmed":{'status':'','new_email':false}
 }
 
 export default function(state=initialState,action){
@@ -22,7 +27,7 @@ export default function(state=initialState,action){
             console.log(action.payload.user,998)
             return {
                 ...state,
-                ...action.payload.user,
+                user:action.payload.user,
                 isAuthenticated:true,
                 isLoading:false,
                 justregistered:false,
@@ -32,19 +37,23 @@ export default function(state=initialState,action){
             }
 
         case REGISTER_SUCCESS:
-            return {...state,
-                    justregistered:true,
+            return{
+                ...state,
+                justregistered:true
             }
+        case TOKEN_VERIFIED:
+            return {
+                    ...state,
+                    justverified:true
+                }
 
         case USER_LOADED:
             console.log(action.payload,900)
             return {
                 ...state,
-                ...action.payload,
+                user:action.payload,
                 isAuthenticated:true,
                 justregistered:false
-
-
             }
 
         case LOGOUT_SUCCESS:

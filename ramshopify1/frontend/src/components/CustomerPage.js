@@ -6,8 +6,11 @@ import Cart from '../../svg/cart.svg'
 import Moment from 'react-moment'
 
 class CustomerPage extends Component{
-    state={
-        move:false
+    constructor(props){
+        super(props);
+        this.state = {
+            move:false
+        }
     }
 
     pending_style ={
@@ -87,7 +90,7 @@ class CustomerPage extends Component{
                 )})}
                 <span onClick={()=>{this.props.get_customer_orders(num_pages)}} className={current_page === num_pages? "selected-paginate":"paginate"}>Last</span>
              </div>
-                {/* first and last lines are 4 pages 1 nd last...page_arr shows d remaining pages*/}
+                // first and last lines are 4 pages 1 nd last...page_arr shows d remaining pages
        )
 
         return (

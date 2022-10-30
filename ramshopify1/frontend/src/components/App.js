@@ -9,10 +9,14 @@ import Register from "./Register";
 import Order from "./Order"
 import Nav from "./Nav"
 import Footer from './Footer'
+import VerifyToken from "./VerifyToken";
+import EmailChange from "./EmailChange";
 import Alerts from  './Alerts'
 import CustomerPage from "./CustomerPage"
 import { Provider as AlertProvider } from 'react-alert';
 import AlertTemplate from 'react-alert-template-basic';
+import EmailChangeSent from "./EmailChangeSent";
+import EmailChangeConfirm from "./EmailChangeConfirm";
 
 
 const alertOptions = {
@@ -43,6 +47,11 @@ class App extends Component{
                                 <Route path = "register" element = {<Register/>}/>
                                 <Route path = "order" element = {<Order/>}/>
                                 <Route path = "customerpage" element = {<CustomerPage/>}/>
+                                <Route path = "verifytoken" element = {<VerifyToken/>}/>
+                                <Route path = "emailchange" element = {<EmailChange/>}/>
+                                <Route path = "emailchange_sent" element = {<EmailChangeSent/>}/>
+                                {/* <Route path = "emailchange_confirm" element = {<EmailChangeConfirm/>}/> */}
+                                <Route path = "email-change/:token" element = {<EmailChangeConfirm/>}/>
                             </Routes>
                         </div>
                     </section>

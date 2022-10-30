@@ -7,6 +7,7 @@ import Building from '../../svg/building.svg'
 
 
 function Nav(props){
+	console.log(props.email,90)
     const [linecolor,setLinesColor] = useState("")
     const transbar_linenav = useRef()
     const transbar_sidebar = useRef()
@@ -110,7 +111,7 @@ function Nav(props){
 
 const mapStateToProps = (state) => ({
 	isAuthenticated : state.auth.isAuthenticated,
-	email:state.auth.email,
+	email:state.auth.user.email,
 	company_name:state.auth.company_name
 })
 

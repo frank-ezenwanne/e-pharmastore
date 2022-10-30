@@ -315,6 +315,7 @@ display:flex;
 }
 
 .paginate{
+	cursor: pointer;
     color:rgb(210,210,210);
     text-decoration: none;
     border:0.05rem solid gray;
@@ -329,6 +330,7 @@ display:flex;
     color:#4B0082;
 }
 .selected-paginate{
+	cursor: pointer;
     color:#4B0082;
     text-decoration: none;
     border:0.05rem solid gray;

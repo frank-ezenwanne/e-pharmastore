@@ -6,9 +6,12 @@ import {login} from "../actions/auth.js"
 
 
 class Login extends Component{
-    state = {
-        email:"",
-        password:""
+    constructor(props){
+        super(props);
+        this.state = {
+            email:"",
+            password:""
+        }
     }
 
     static propTypes = {
@@ -18,9 +21,7 @@ class Login extends Component{
     }
 
     
-
    
-
     onchange = (e) => {
         this.setState({
             [e.target.name] : e.target.value
@@ -39,12 +40,12 @@ class Login extends Component{
            return <Navigate to = "/customerpage" />
          }
        const {email, password } = this.state
-       const justregdiv = (<div align="center" id="message">Your account has been 
-       successfully created..You can now login</div>)
+       const justverified_div = (<div align="center" id="message">Your account has been 
+       successfully activated..You can now login</div>)
 
         return (
         <div className = "login-block">
-            {this.props.justregistered && justregdiv }
+            {this.props.justverified && justverified_div }
             <h3 className = 'login-heading'> LOGIN </h3>
             <form onSubmit = {this.onsubmit} >
                 <div className = 'form-field'>
@@ -82,7 +83,8 @@ class Login extends Component{
 
 const mapStateToProps = (state) => ({
     justregistered:state.auth.justregistered,
-    isAuthenticated : state.auth.isAuthenticated
+    isAuthenticated : state.auth.isAuthenticated,
+    justverified:state.auth.justverified
 })
 
 export default connect(mapStateToProps,{login})(Login)

@@ -54,13 +54,14 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
         max_length=255,
         unique=True,
     )
-    token = models.UUIDField(null=True, blank=True)
+    inactive_email = models.EmailField(null=True,blank=True,)
+    token = models.CharField(null=True, blank=True,max_length=10)
     company_name = models.CharField(max_length=100,unique=True)
-    is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
-    address = models.CharField(max_length=255)
-    country = models.CharField(max_length=150)
+    address = models.TextField(null=True,blank=True)
+    country = models.CharField(max_length=150,null=True,blank=True)
     phone_no = models.CharField(null=True, blank=True, max_length=20)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
 
@@ -74,7 +75,7 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
     def set_token(self):
-        token = uuid.uuid64()
+        token = uuid.uuid4().hex[:8]
         self.token = token
         self.save()
 

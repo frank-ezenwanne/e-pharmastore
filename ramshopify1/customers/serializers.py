@@ -26,7 +26,20 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField()
 
     def validate(self,data):
+        print(data)
         user = authenticate(**data)
         if user and user.is_active:
-            return user
+            return user,'active'
+        elif user and user.is_active == False:
+            return user,'inactive'
         raise serializers.ValidationError("Incorrect credentials")
+
+
+class VerifyTokenSerializer(serializers.Serializer):
+    token = serializers.CharField()
+    email = serializers.EmailField()
+
+class ChangeEmailSerializer(serializers.Serializer):
+    old_email = serializers.EmailField()
+    new_email = serializers.EmailField()
+    password = serializers.CharField()

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {LOGIN_SUCCESS,LOGOUT_SUCCESS,REGISTER_SUCCESS,USER_LOADED} from "./types"
+import {LOGIN_SUCCESS,LOGOUT_SUCCESS,REGISTER_SUCCESS,USER_LOADED,NEW_EMAIL_SET,EMAIL_CHANGED} from "./types"
 
 
 export const register=(company_name,password,email)=>(dispatch)=>{
@@ -100,5 +100,80 @@ export const logout = () => (dispatch,getState) => {
         console.log(err.response)
     })
 
+}
+
+export const verifytoken = (email,token)=>(dispatch)=>{
+    const config={
+        headers:{
+            "Content-Type":"application/json"
+        }
+    }
+
+    const body = JSON.stringify({email,token})
+    axios
+        .post('api/verifytoken',body,config)
+        .then(()=>{
+            console.log('verify token success')
+            dispatch({
+                type:TOKEN_VERIFIED
+            })
+        })
+
+        .catch(
+            (err) => {
+                console.log(err)
+            }
+        )
+    
+}
+
+
+export const change_email = (old_email,new_email,password)=>(dispatch)=>{
+    const config={
+        headers:{
+            "Content-Type":"application/json"
+        }
+    }
+
+    const body = JSON.stringify({email,token})
+    axios
+        .post('api/change_email',body,config)
+        .then(()=>{
+            console.log('set email success')
+            dispatch({
+                type:NEW_EMAIL_SET
+            })
+        })
+
+        .catch(
+            (err) => {
+                console.log(err)
+            }
+        )
+    
+}
+
+export const email_token_change = (token) =>(dispatch)=>{
+    const config={
+        headers:{
+            "Content-Type":"application/json"
+        }
+    }
+
+    config.headers["Authorization"] = `Token ${token}`
+    axios
+        .post('api/email-change',null,config)
+        .then(()=>{
+            console.log('changed email success')
+            dispatch({
+                type:EMAIL_CHANGED
+            })
+        })
+        
+        .catch(
+            (err) => {
+                console.log(err)
+            }
+        )
 }
 

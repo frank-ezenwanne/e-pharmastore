@@ -5,13 +5,17 @@ import PropTypes from "prop-types"
 import { Navigate } from "react-router-dom"
 
 class Register extends Component {
-    state = {
-        company_name: "",
-        email: "",
-        password: "",
-        password2: "",
-       
+    constructor(props){
+        super(props);
+        this.state = {
+            company_name: "",
+            email: "",
+            password: "",
+            password2: "",
+           
+        }
     }
+ 
 
     static propTypes = {
         register: PropTypes.func.isRequired,
@@ -39,11 +43,24 @@ class Register extends Component {
     }
 
     render() {
-        if (this.props.justregistered) {
-            return <Navigate to = "/login"/>
-        }
         if (this.props.isAuthenticated) {
             return <Navigate to="/" />
+        }
+
+        if (this.props.justverified) {
+            return <Navigate to = "/login"/>
+        }
+
+        if (this.props.justregistered) {
+            return <Navigate to = '/verifytoken'/>
+        }
+    
+        if(this.props.token_sent === 'success'){
+            return <Navigate to = '/verifytoken'/>
+        }
+
+        if(this.props.token_sent === 'failed'){
+            return <Navigate to = '/emailsetting'/>
         }
        
         const { company_name, email, password, password2 } = this.state
