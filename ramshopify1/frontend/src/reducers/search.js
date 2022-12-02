@@ -1,7 +1,7 @@
 import {BRANDS_RETRIEVED} from '../actions/types'
 import {ORDER_CREATED,CHANGE_CREATED_FALSE,
     LAST_ORDER_FETCHED,
-    ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDERS_RETRIEVED,CLEAR_GENERIC_OPTIONS_INPUT,PREPARE_GENERIC_PRODUCTS,
+    ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,CLEAR_GENERIC_OPTIONS_INPUT,PREPARE_GENERIC_PRODUCTS,
     ORDER_PRODUCT_NOT_CREATED,GENERIC_PRODUCTS_RETRIEVED,ORDER_MADE_LAST,ORDER_COPY_CREATED,GENERIC_NAMES_RETRIEVED,
     CLEAR_GENERIC_PRODUCTS,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC,ORDER_DELETED,ORDER_PRODUCTS_DELETED,ORDER_PRODUCTS_NOT_DELETED,
     RESET_ORDER_DELETED_MOVE,EMAIL_SENT
@@ -23,7 +23,7 @@ const initialState = {
     loading_serials:{},
     delete_serials:{},
     generic_products: null,
-    customer_orders:{num_pages:'',has_other_pages:'',page_range:[],orders_data:'',current_page:''},
+
     selected_order_made_last:false,
     last_order_status:false,
     all_loaded_serials:{},
@@ -101,13 +101,7 @@ export default function (state = initialState,action){
                 generics:"",
             }
 
-        case ORDERS_RETRIEVED:
-            console.log(action.payload,'pay')
-          return{
-              ...state,
-              ...action.payload
-             
-          }  
+    
 
         case ORDER_MADE_LAST:
             return{

@@ -54,10 +54,12 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
         max_length=255,
         unique=True,
     )
-    inactive_email = models.EmailField(null=True,blank=True,)
+    inactive_email = models.EmailField(null=True,blank=True)
     token = models.CharField(null=True, blank=True,max_length=10)
+    token_request_no = 10
     company_name = models.CharField(max_length=100,unique=True)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    user_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
     address = models.TextField(null=True,blank=True)

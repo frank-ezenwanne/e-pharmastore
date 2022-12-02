@@ -2,7 +2,7 @@ import React,{Component} from "react"
 import {Link,Navigate} from 'react-router-dom'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
-import {verifytoken,resend_token} from "../actions/auth.js"
+import {emailchange_nonverf} from "../actions/auth.js"
 
 
 class VerifyToken extends Component{
@@ -10,7 +10,7 @@ class VerifyToken extends Component{
     constructor(props){
         super(props);
         this.state = {
-            token:"",
+            email:"",
         }
     }
    
@@ -25,14 +25,8 @@ class VerifyToken extends Component{
     onsubmit = (e) => {
         e.preventDefault()
         const {token} = this.state
-        this.props.verifytoken(this.props.user.email,token)
+        this.props.emailchange_nonverf(this.props.user.email)
     }
-
-    resend_token = (e)=>{
-        e.preventDefault()
-        this.props.resend_token(this.props.user.email)
-    }
-    
 
 
     render(){
@@ -47,27 +41,22 @@ class VerifyToken extends Component{
        const {token } = this.state
         return (
         <div className = "login-block">
-        {this.props.token_resent?<div>New Token Sent!</div>:null}
-       <div align="center" id="message">Enter Token sent to {this.props.user.email} </div>
-            <h3 className = 'login-heading'> Account Activation </h3>
+
+            <h3 className = 'login-heading'> ENTER A NEW EMAIL!</h3>
+            <div align="center" id="message">This will be your new email </div>
             <form onSubmit = {this.onsubmit} >
                 <div className = 'form-field'>
                     <input className = 'user-field' 
-                    type ='text' 
-                    name ='token'
-                     placeholder=' Token from email'
+                    type ='email' 
+                    name ='email'
+                     placeholder=' Enter new email'
                      onChange={this.onchange}
-                     value = {token}
+                     value = {email}
                       /><br/>   
                 </div>
 
-                <button  type = "submit" className = 'form-button'>Activate</button>
+                <button  type = "submit" className = 'form-button'>Submit</button>
 
-                <div id ="login-bottom-options">
-                    <div className="reg-link"><Link to ="/emailchange"> Change Email? </Link> </div>
-                    <div onClick={this.resend_token} className="reg-link"> Re-request Token?</div>
-
-                </div>
             </form>
 	    </div>
         )
@@ -76,10 +65,7 @@ class VerifyToken extends Component{
 
 const mapStateToProps = (state) => ({
     user: state.auth.user,
-    justregistered:state.auth.justregistered,
-    justverified:state.auth.justverified,
     isAuthenticated : state.auth.isAuthenticated,
-    token_resent:state.auth.token_resent
 })
 
-export default connect(mapStateToProps,{verifytoken,resend_token})(VerifyToken)
+export default connect(mapStateToProps,{emailchange_nonverf})(VerifyToken)

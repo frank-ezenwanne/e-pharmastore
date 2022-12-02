@@ -36,8 +36,12 @@ class Login extends Component{
 
 
     render(){
+        console.log(this.props.user_active)
             if(this.props.isAuthenticated){
            return <Navigate to = "/customerpage" />
+         }
+         if(this.props.user_active === false){ //false means logged in but not fully active unlike no_value which means not logged in at all
+             return <Navigate to = '/verifytoken' />
          }
        const {email, password } = this.state
        const justverified_div = (<div align="center" id="message">Your account has been 
@@ -84,7 +88,8 @@ class Login extends Component{
 const mapStateToProps = (state) => ({
     justregistered:state.auth.justregistered,
     isAuthenticated : state.auth.isAuthenticated,
-    justverified:state.auth.justverified
+    justverified:state.auth.justverified,
+    user_active:state.auth.user_active
 })
 
 export default connect(mapStateToProps,{login})(Login)

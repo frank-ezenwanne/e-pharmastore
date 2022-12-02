@@ -51,7 +51,7 @@ class App extends Component{
                                 <Route path = "emailchange" element = {<EmailChange/>}/>
                                 <Route path = "emailchange_sent" element = {<EmailChangeSent/>}/>
                                 {/* <Route path = "emailchange_confirm" element = {<EmailChangeConfirm/>}/> */}
-                                <Route path = "email-change/:token" element = {<EmailChangeConfirm/>}/>
+                                <Route path = "emailchange/:token" element = {<EmailChangeConfirm/>}/>
                             </Routes>
                         </div>
                     </section>

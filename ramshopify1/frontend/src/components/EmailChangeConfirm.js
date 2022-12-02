@@ -1,12 +1,13 @@
 import React, { useEffect,Fragment } from 'react'
 import {Link,useParams} from 'react-router-dom'
 import {email_token_change} from "../actions/auth.js"
+import {connect} from 'react-redux'
 
 function EmailChangeConfirm(props){
     const {token} = useParams()
     useEffect (
         ()=>{
-            props.email_token_change()
+            props.email_token_change(token)
         },[]
     )
 
@@ -21,7 +22,13 @@ function EmailChangeConfirm(props){
                 props.new_email_confirmed.status === false?not_auth:null
                 }
             </div>
-            
+
         </Fragment>
     )
 }
+const mapStateToProps = (state)=>({
+    user:state.auth.user,
+    new_email_confirmed:state.auth.new_email_confirmed
+})
+
+export default connect(mapStateToProps,{email_token_change})(EmailChangeConfirm)

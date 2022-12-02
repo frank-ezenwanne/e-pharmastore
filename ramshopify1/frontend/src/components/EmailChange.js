@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Navigate} from 'react-router-dom'
+import {Link,Navigate} from 'react-router-dom'
 import {change_email} from "../actions/auth.js"
 import {connect} from 'react-redux'
 
@@ -26,7 +26,15 @@ class EmailChange extends Component{
     }
 
     render(){
-
+        if(this.props.new_email_set){
+            if(this.props.user_active===true){
+                return <Navigate to = '/emailchange_sent'/>
+            }
+            else if(this.props.user_active===false){
+                return <Navigate to = '/verifytoken' />
+            }
+        }
+        const {old_email,new_email,password} = this.state
         return(
             <div className = "login-block">
             <h3 className = 'login-heading'> EMAIL CHANGE </h3>
@@ -75,4 +83,9 @@ class EmailChange extends Component{
     }
 }
 
-export default connect(null,{change_email})(EmailChange)
+const mapStateToProps = (state) => ({
+user_active : state.auth.user_active,
+new_email_set:state.auth.new_email_set
+})
+
+export default connect(mapStateToProps,{change_email})(EmailChange)

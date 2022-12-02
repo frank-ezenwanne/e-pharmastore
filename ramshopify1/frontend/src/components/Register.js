@@ -47,7 +47,7 @@ class Register extends Component {
             return <Navigate to="/" />
         }
 
-        if (this.props.justverified) {
+        if (this.props.justverified ===true ) {
             return <Navigate to = "/login"/>
         }
 

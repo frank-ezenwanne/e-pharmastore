@@ -1,6 +1,6 @@
 import axios from 'axios'
-import {LOGIN_SUCCESS,LOGOUT_SUCCESS,REGISTER_SUCCESS,USER_LOADED,NEW_EMAIL_SET,EMAIL_CHANGED} from "./types"
-
+import {LOGIN_SUCCESS,LOGOUT_SUCCESS,REGISTER_SUCCESS,USER_LOADED,TOKEN_RESENT,NEW_EMAIL_SET,TOKEN_VERIFIED,EMAIL_CHANGED} from "./types"
+import {createMessage, returnErrors} from './message_error'
 
 export const register=(company_name,password,email)=>(dispatch)=>{
     const config={
@@ -42,11 +42,14 @@ export const login = (email, password) => (dispatch) => {
                 type:LOGIN_SUCCESS,
                 payload:res.data
             })
+            dispatch(createMessage('Login Successful'))
+
         })
 
         .catch(
             (err) => {
-                console.log(err.response)
+                console.log(err.response.data)
+                dispatch(returnErrors(err.response.data,err.response.status))
             }
         )
 }
@@ -103,6 +106,7 @@ export const logout = () => (dispatch,getState) => {
 }
 
 export const verifytoken = (email,token)=>(dispatch)=>{
+    console.log(email,token,890)
     const config={
         headers:{
             "Content-Type":"application/json"
@@ -115,7 +119,34 @@ export const verifytoken = (email,token)=>(dispatch)=>{
         .then(()=>{
             console.log('verify token success')
             dispatch({
-                type:TOKEN_VERIFIED
+                type:TOKEN_VERIFIED,
+            })
+        })
+
+        .catch(
+            (err) => {
+                console.log(err)
+            }
+        )
+    
+}
+
+export const resend_token = (email)=>(dispatch)=>{
+
+    const config={
+        headers:{
+            "Content-Type":"application/json"
+        }
+    }
+    console.log(email,992)
+    const body = JSON.stringify({email})
+    
+    axios
+        .post('api/resendtoken',body,config)
+        .then(()=>{
+            console.log('resend token success')
+            dispatch({
+                type:TOKEN_RESENT
             })
         })
 
@@ -135,16 +166,17 @@ export const change_email = (old_email,new_email,password)=>(dispatch)=>{
         }
     }
 
-    const body = JSON.stringify({email,token})
+    const body = JSON.stringify({old_email,new_email,password}) //check axios format 
     axios
         .post('api/change_email',body,config)
-        .then(()=>{
+        .then((res)=>{
             console.log('set email success')
             dispatch({
-                type:NEW_EMAIL_SET
+                type:NEW_EMAIL_SET,
+                payload:res.data
             })
+    
         })
-
         .catch(
             (err) => {
                 console.log(err)
@@ -153,7 +185,7 @@ export const change_email = (old_email,new_email,password)=>(dispatch)=>{
     
 }
 
-export const email_token_change = (token) =>(dispatch)=>{
+export const email_token_change = (token) =>(dispatch)=>{//handles auth token passed to new email
     const config={
         headers:{
             "Content-Type":"application/json"
@@ -161,13 +193,23 @@ export const email_token_change = (token) =>(dispatch)=>{
     }
 
     config.headers["Authorization"] = `Token ${token}`
+    const hname = window.location.origin
+    console.log(hname,985)
     axios
-        .post('api/email-change',null,config)
-        .then(()=>{
+        .post( hname + '/api/token_change_email',null,config)
+        .then((res)=>{
             console.log('changed email success')
             dispatch({
-                type:EMAIL_CHANGED
+                type:EMAIL_CHANGED,
+                payload:res.data
             })
+            axios
+                .post(hname + '/api/auth/logoutall',null,config)
+                .catch(
+                    (err) => {
+                        console.log(err)
+                    }
+                )
         })
         
         .catch(

@@ -7,7 +7,7 @@ import Building from '../../svg/building.svg'
 
 
 function Nav(props){
-	console.log(props.email,90)
+	console.log(props.isAuthenticated,90)
     const [linecolor,setLinesColor] = useState("")
     const transbar_linenav = useRef()
     const transbar_sidebar = useRef()
@@ -109,11 +109,13 @@ function Nav(props){
 
 
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state) => {
+	console.log('changed')
+	return {
 	isAuthenticated : state.auth.isAuthenticated,
 	email:state.auth.user.email,
-	company_name:state.auth.company_name
-})
+	company_name:state.auth.user.company_name}
+}
 
 export default connect(mapStateToProps,{logout})(Nav)
 

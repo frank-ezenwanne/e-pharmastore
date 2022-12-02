@@ -67,8 +67,8 @@ class CustomerPage extends Component{
        if(this.state.move){
            return <Navigate to = '/order'/>
        }
-       const {num_pages,has_other_pages,page_range,orders_data,current_page,...rest} = this.props.customer_orders
-       const page_arr = [] //array for pages in between 1st and last page
+       let {has_other_pages,page_range,orders_data,current_page,num_pages} = this.props.customer_orders
+       let page_arr = [] //array for pages in between 1st and last page
        let selected_page
        for(let page of page_range){ //for all pages in the avail range
            if(page !== 1 && page !== num_pages ){ //provided itz not 1st and not last page bcos those are handled separate
@@ -109,9 +109,9 @@ class CustomerPage extends Component{
 }
 
 const mapStateToProps = (state)=>({
-    email: state.auth.email,
+    email: state.auth.user.email,
     order_just_created : state.search.order_just_created,
-    customer_orders:state.search.customer_orders,
+    customer_orders:state.customer_orders.customer_orders,
     selected_order_made_last:state.search.selected_order_made_last
 })
 

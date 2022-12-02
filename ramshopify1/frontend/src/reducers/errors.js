@@ -6,8 +6,10 @@ const initialState = {
 }
 
 export default function errors(state=initialState, action){
+    console.log(233)
     switch (action.type){
         case GET_ERRORS:
+            console.log(209)
             return {
                 msg: action.payload.msg,
                 status: action.payload.status,
