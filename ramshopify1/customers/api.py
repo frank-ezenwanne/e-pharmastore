@@ -145,7 +145,7 @@ class ChangeEmailRequest(APIView):
                     try: 
                         message.send()
                     except: 
-                        return Response({'token_sent':'failed','email_set':'failed'})
+                        return Response({'token_sent':'failed','email_set':'failed'},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
                     return Response({'email_set':'success','user_active':True})
                 else:

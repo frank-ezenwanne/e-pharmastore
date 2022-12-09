@@ -10,7 +10,6 @@ export class Alerts extends Component{
       }
 
     componentDidUpdate(prevProps){
-        console.log(87,'comp')
         const {alert,message,error,email_sent_status} = this.props
         if(message !== prevProps.message){
             if(message.email_sent){
@@ -21,7 +20,7 @@ export class Alerts extends Component{
             }
 
             if(message.msg){
-                alert.success(message.order_copied)
+                alert.success(message.msg)
             }
         }
 
@@ -30,19 +29,16 @@ export class Alerts extends Component{
         }
 
         if(error !== prevProps.error){
-            console.log(90877)
-            if(error.msg.email_send_error){
-                alert.error(error.msg.email_send_error)
+            if(Array.isArray(error.msg)  === 'false'){ //checks if error.msg is a direct array...if not 
+                const name = Object.keys(error.msg)[0]
+                alert.error(error.msg[name].join())
             }
-
-            if(error.msg.non_field_errors){
-                
-                alert.error(error.msg.non_field_errors.join())
-            }
-
-            
-        }
+             else{
+                    alert.error(error.msg.join())
+                }
+         }
     }
+
 
     render(){
 

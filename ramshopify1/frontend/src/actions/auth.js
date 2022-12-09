@@ -17,11 +17,12 @@ export const register=(company_name,password,email)=>(dispatch)=>{
             dispatch({
                 type:REGISTER_SUCCESS,
                 payload:res.data
-            });
+            })
+            dispatch(createMessage({msg:'Account Created Successfully!'}))
         })
 
         .catch((err) => {
-            console.log(err.response);
+            dispatch(returnErrors(err.response.data,err.response.status))
         })
 }
 
@@ -37,18 +38,16 @@ export const login = (email, password) => (dispatch) => {
     axios
         .post("api/auth/login",body,config)
         .then((res)=>{
-            console.log("logged in")
             dispatch({
                 type:LOGIN_SUCCESS,
                 payload:res.data
             })
-            dispatch(createMessage('Login Successful'))
+            dispatch(createMessage({msg:'Login Successful'}))
 
         })
 
         .catch(
             (err) => {
-                console.log(err.response.data)
                 dispatch(returnErrors(err.response.data,err.response.status))
             }
         )
@@ -72,11 +71,12 @@ export const loaduser = () => (dispatch,getState) => {
                 type:USER_LOADED,
                 payload:res.data
             })
-            console.log(res.data)
         })
 
         .catch((err) =>{
-            console.log(err.response)
+            if(token){
+                dispatch(returnErrors(['Your session has expired. Please Login again'],err.response.status))
+            }         
         })
 }
 
@@ -97,16 +97,17 @@ export const logout = () => (dispatch,getState) => {
         dispatch({
             type:LOGOUT_SUCCESS,
         })
+
+        dispatch(createMessage({msg:'Logout Successful'}))
     })
 
     .catch((err)=>{
-        console.log(err.response)
+        dispatch(returnErrors(err.response.data,err.response.status))
     })
 
 }
 
 export const verifytoken = (email,token)=>(dispatch)=>{
-    console.log(email,token,890)
     const config={
         headers:{
             "Content-Type":"application/json"
@@ -117,15 +118,16 @@ export const verifytoken = (email,token)=>(dispatch)=>{
     axios
         .post('api/verifytoken',body,config)
         .then(()=>{
-            console.log('verify token success')
             dispatch({
                 type:TOKEN_VERIFIED,
             })
+
+            dispatch(createMessage({msg:'Token Verified'}))
         })
 
         .catch(
             (err) => {
-                console.log(err)
+                dispatch(returnErrors(err.response.data,err.response.status))
             }
         )
     
@@ -138,21 +140,21 @@ export const resend_token = (email)=>(dispatch)=>{
             "Content-Type":"application/json"
         }
     }
-    console.log(email,992)
     const body = JSON.stringify({email})
     
     axios
         .post('api/resendtoken',body,config)
         .then(()=>{
-            console.log('resend token success')
             dispatch({
                 type:TOKEN_RESENT
             })
+
+            dispatch(createMessage({msg:'Token Resent!'}))
         })
 
         .catch(
             (err) => {
-                console.log(err)
+                dispatch(returnErrors(err.response.data,err.response.status))
             }
         )
     
@@ -170,7 +172,7 @@ export const change_email = (old_email,new_email,password)=>(dispatch)=>{
     axios
         .post('api/change_email',body,config)
         .then((res)=>{
-            console.log('set email success')
+            dispatch(createMessage({msg:'Email Set..Please Verify!'}))
             dispatch({
                 type:NEW_EMAIL_SET,
                 payload:res.data
@@ -179,7 +181,7 @@ export const change_email = (old_email,new_email,password)=>(dispatch)=>{
         })
         .catch(
             (err) => {
-                console.log(err)
+                dispatch(returnErrors(err.response.data,err.response.status))
             }
         )
     
@@ -194,27 +196,26 @@ export const email_token_change = (token) =>(dispatch)=>{//handles auth token pa
 
     config.headers["Authorization"] = `Token ${token}`
     const hname = window.location.origin
-    console.log(hname,985)
     axios
         .post( hname + '/api/token_change_email',null,config)
         .then((res)=>{
-            console.log('changed email success')
             dispatch({
                 type:EMAIL_CHANGED,
                 payload:res.data
             })
+            dispatch(createMessage({msg:'New Email Verified!'}))
             axios
                 .post(hname + '/api/auth/logoutall',null,config)
                 .catch(
                     (err) => {
-                        console.log(err)
+                        dispatch(returnErrors(err.response.data,err.response.status))
                     }
                 )
         })
         
         .catch(
             (err) => {
-                console.log(err)
+                dispatch(returnErrors(err.response.data,err.response.status))
             }
         )
 }

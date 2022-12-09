@@ -370,7 +370,7 @@ export const send_email = (id) => (dispatch,getState) =>{
 
     .catch(
         (err) => {
-            dispatch(email_error_handler(err.response.data,err.response.status))
+            dispatch(email_error_handler(['Error...email not sent'],err.response.status))
         }
     )
 
