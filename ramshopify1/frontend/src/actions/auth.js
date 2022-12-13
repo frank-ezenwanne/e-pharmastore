@@ -2,14 +2,14 @@ import axios from 'axios'
 import {LOGIN_SUCCESS,LOGOUT_SUCCESS,REGISTER_SUCCESS,USER_LOADED,TOKEN_RESENT,NEW_EMAIL_SET,TOKEN_VERIFIED,EMAIL_CHANGED} from "./types"
 import {createMessage, returnErrors} from './message_error'
 
-export const register=(company_name,password,email)=>(dispatch)=>{
+export const register=(reg_data)=>(dispatch)=>{
     const config={
         headers:{
             "Content-Type":"application/json"
         }
     }
 
-    const body = JSON.stringify({company_name,password,email})
+    const body = JSON.stringify(reg_data)
 
     axios
         .post("api/auth/register",body,config)

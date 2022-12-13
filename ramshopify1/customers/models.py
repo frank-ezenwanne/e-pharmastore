@@ -49,6 +49,18 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractBaseUser,PermissionsMixin):
+    HOSPITAL = 'HOS'
+    CLINIC_HEALTHCENTRE = 'CLHE'
+    PHARMACY = 'PHM'
+    CHEMIST_SUPERSTORE = 'CHSU'
+
+    ESTABLISHMENT_CHOICES=[
+        (HOSPITAL,'Hospital'),
+        (CLINIC_HEALTHCENTRE,'Clinic/Health Centre'),
+        (PHARMACY,'Pharmacy'),
+        (CHEMIST_SUPERSTORE,'Chemist/Superstore')
+            ]
+
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -62,10 +74,10 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
     user_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
-    address = models.TextField(null=True,blank=True)
-    country = models.CharField(max_length=150,null=True,blank=True)
+    address = models.TextField(null=True,blank=True) #remove null address and phone
     phone_no = models.CharField(null=True, blank=True, max_length=20)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    establishment = models.CharField(max_length=7,choices=ESTABLISHMENT_CHOICES)
 
     objects = CustomUserManager()
 

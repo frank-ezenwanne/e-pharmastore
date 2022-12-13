@@ -1,0 +1,29 @@
+Content-Type: multipart/mixed; boundary="===============0342531325=="
+MIME-Version: 1.0
+Subject: Hello
+From: efrank938@gmail.com
+To: frankdevspace@gmail.com
+Date: Sun, 11 Dec 2022 22:09:16 -0000
+Message-ID: <167079655628.12092.4763847134184116186@Frank>
+
+--===============0342531325==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+The Order from ZenCorp to Ramsgate
+--===============0342531325==
+Content-Type: text/csv; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="order.csv"
+
+brand_description,generic_name,selected_unit,quantity_ordered,cost,total
+DAONIL AVENTIS TABS  X 100,Glibenclamide,FULL PACK,2,2650.0,5300.0
+ACECLOFENAC (MULTICOY) TABS  X 100,Aceclofenac,BLISTER,6,92.0,552.0
+SABRESTEN CREAM  20G,Clotrimazole,TUBE,8,630.0,5040.0
+XALATAN EYE DROPS  2.5ML,Latanoprost,BOTTLE,1,5080.0,5080.0
+
+--===============0342531325==--
+
+-------------------------------------------------------------------------------

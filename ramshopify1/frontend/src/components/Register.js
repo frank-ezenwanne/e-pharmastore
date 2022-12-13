@@ -12,7 +12,9 @@ class Register extends Component {
             email: "",
             password: "",
             password2: "",
-           
+            address : "", 
+            phone_number : "",
+            establishment :"" 
         }
     }
  
@@ -29,16 +31,29 @@ class Register extends Component {
         })
     }
 
+
     onsubmit = (e) => {
         e.preventDefault()
-        const {email,company_name, password, password2 } = this.state
+        const {email,company_name, password, password2, address, phone_number, establishment} = this.state
+        if(establishment === 'SELECT'){
+            alert('Establishment not selected')
+            return
+        }
         if (password === password2) {
             const newUser = {
                 password,
                 email,
-                company_name
+                company_name,
+                address, 
+                phone_number,
+                establishment 
             }
-            this.props.register(company_name, password, email)
+      
+            this.props.register(newUser)
+        }
+
+        else{
+            alert('Passwords do not match!')
         }
     }
 
@@ -63,7 +78,7 @@ class Register extends Component {
             return <Navigate to = '/emailsetting'/>
         }
        
-        const { company_name, email, password, password2 } = this.state
+        const { company_name, email, password, password2, address, phone_number, establishment } = this.state
         return (
             <div className="register-div">
                 <h3 className='register-heading'> Join Us </h3>
@@ -106,6 +121,42 @@ class Register extends Component {
                             onChange={this.onchange}
                             value={password2}
                         /><br />
+                    </div>
+                    <div className='form-field'>
+                        <textarea className='address-field rounded'
+                            type='text'
+                            name='address'
+                            placeholder=' Company Address'
+                            onChange={this.onchange}
+                            value={address}>
+                         </textarea> <br />
+                    </div>
+                    <div className='form-field'>
+                        <input className='phone-field'
+                            type='number'
+                            name='phone_number'
+                            placeholder=' Official phone no'
+                            onChange={this.onchange}
+                            value={phone_number}
+                        /><br />
+                    </div>
+            
+                    <div className='form-field'>
+                        {/* <input className='establishment-field'
+                            type='text'
+                            name='establishment'
+                            placeholder=' Type of Establishment'
+                            onChange={this.onchange}
+                            value={establishment}
+                        /><br /> */}
+
+                        <select className='establishment-field' name = 'establishment' onChange={this.onchange} value = {this.state.establishment}>
+                            <option value="SELECT">SELECT</option>
+                            <option value="HOS">Hospital</option>
+                            <option value="CLHE">Clinic/Health Centre</option>
+                            <option value="PHM">Pharmacy</option>
+                            <option value="CHSU">Chemist/Superstore</option>
+                        </select>
                     </div>
 
                     <button id="submit" type="submit" className='form-button'>Register</button>
