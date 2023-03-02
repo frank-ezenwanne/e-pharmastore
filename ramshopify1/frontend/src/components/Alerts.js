@@ -29,16 +29,18 @@ export class Alerts extends Component{
         }
 
         if(error !== prevProps.error){
-            if(Array.isArray(error.msg)  === 'false'){ //checks if error.msg is a direct array...if not 
-                const name = Object.keys(error.msg)[0]
-                alert.error(error.msg[name].join())
+            if(error.msg.email_send_error){
+                alert.error(error.msg.email_send_error)
             }
-             else{
-                    alert.error(error.msg.join())
-                }
-         }
-    }
 
+            if(error.msg.non_field_errors){
+                
+                alert.error(error.msg.non_field_errors.join())
+            }
+
+            
+        }
+    }
 
     render(){
 

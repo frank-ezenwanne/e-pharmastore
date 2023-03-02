@@ -112,16 +112,12 @@ export const get_last_order = () => (dispatch,getState) =>{
 }
 
 
-
-
 export const change_created_status = () => (dispatch)=>{
         dispatch({
             type:CHANGE_CREATED_FALSE
         })  
 
 }
-
-
 
 
 export const search_brand = (brand_description,radio_option,serial) => (dispatch) =>{
@@ -247,11 +243,6 @@ export const get_selected_order = (id) => (dispatch,getState) =>{
 }
 
 
-
-
-
-
-
 export const getGenProducts = (generic_name) => (dispatch) =>{
     const config={
         headers:{
@@ -370,7 +361,7 @@ export const send_email = (id) => (dispatch,getState) =>{
 
     .catch(
         (err) => {
-            dispatch(email_error_handler(['Error...email not sent'],err.response.status))
+            dispatch(email_error_handler(err.response.data,err.response.status))
         }
     )
 

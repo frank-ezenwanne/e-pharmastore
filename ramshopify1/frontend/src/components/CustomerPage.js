@@ -67,6 +67,9 @@ class CustomerPage extends Component{
        if(this.state.move){
            return <Navigate to = '/order'/>
        }
+       if(!this.props.isAuthenticated){
+           return <Navigate to = '/login'/>
+       }
        let {has_other_pages,page_range,orders_data,current_page,num_pages} = this.props.customer_orders
        let page_arr = [] //array for pages in between 1st and last page
        let selected_page
@@ -110,6 +113,7 @@ class CustomerPage extends Component{
 
 const mapStateToProps = (state)=>({
     email: state.auth.user.email,
+    isAuthenticated : state.auth.isAuthenticated,
     order_just_created : state.search.order_just_created,
     customer_orders:state.customer_orders.customer_orders,
     selected_order_made_last:state.search.selected_order_made_last

@@ -81,14 +81,17 @@ function Nav(props){
 					{props.isAuthenticated?<Fragment>
 					<div className = "side-bar-combo">
 						<span className = "side-bar-email">{props.email}</span>
+						<span className="lower-side-bar "><Link style = {{textDecoration:'none',color:'white'}} to ='/aboutus'>About Us</Link></span>
 						<span className = "lower-side-bar"><Link style = {{textDecoration:'none',color:'white'}} to ='/customerpage'>View My Orders</Link></span>
-						<span className = "lower-side-bar">Logout</span>
+						<span onClick = {()=>{props.logout()}} className = "cursor-pointer lower-side-bar">Logout</span>
 					</div>
 					</Fragment>:
 					<Fragment>
 					<div className = "side-bar-combo">
-						<span className = "side-bar-email">Login</span>
-						<span className = "lower-side-bar">Register</span>
+						<span className="lower-side-bar"><Link style = {{textDecoration:'none',color:'white'}} to ='/aboutus'>About Us</Link></span>
+						<span className = "lower-side-bar"><Link style = {{textDecoration:'none',color:'white'}} to ='/login'>Login</Link></span>
+						<span className = "lower-side-bar"><Link style = {{textDecoration:'none',color:'white'}} to ='/register'>Register</Link></span>
+						
 					</div>
 					</Fragment>
 					 }
@@ -110,7 +113,6 @@ function Nav(props){
 
 
 const mapStateToProps = (state) => {
-	console.log('changed')
 	return {
 	isAuthenticated : state.auth.isAuthenticated,
 	email:state.auth.user.email,

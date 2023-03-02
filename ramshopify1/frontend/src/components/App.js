@@ -6,6 +6,7 @@ import {loaduser} from '../actions/auth'
 import Home from "./Home"
 import Login from "./Login"
 import Register from "./Register";
+import AboutUs from "./AboutUs";
 import Order from "./Order"
 import Nav from "./Nav"
 import Footer from './Footer'
@@ -45,6 +46,7 @@ class App extends Component{
                                 <Route path = "/" element = {<Home/>}/>
                                 <Route path = "login" element = {<Login/>}/>
                                 <Route path = "register" element = {<Register/>}/>
+                                <Route path = "aboutus" element = {<AboutUs/>}/>
                                 <Route path = "order" element = {<Order/>}/>
                                 <Route path = "customerpage" element = {<CustomerPage/>}/>
                                 <Route path = "verifytoken" element = {<VerifyToken/>}/>

@@ -368,12 +368,13 @@ class SendCSVEmail(APIView):
             order_products = order.order_products.all()
             csv_file = StringIO()  # creates writing pad for the csvwriter
             writer = csv.writer(csv_file)
-            writer.writerow(['brand_description', 'generic_name',
+            writer.writerow(['serial','brand_description', 'generic_name',
                             'selected_unit', 'quantity_ordered', 'cost', 'total'])
             order_fields=[]
             for op in order_products: #assign the field vals to var as tupules manually instead of using values_list due to fetching vals from another table
-                brand_des,gen,sel_unit,quant,cost,total = op.product_id.brand_description,op.product_id.generic_name,op.selected_unit,op.quantity_ordered,op.cost,op.total
-                order_fields.append((brand_des,gen,sel_unit,quant,cost,total))
+                serial,brand_des,gen,sel_unit,quant,cost,total = op.serial,op.product_id.brand_description,op.product_id.generic_name,op.selected_unit,op.quantity_ordered,op.cost,op.total
+                order_fields.append((serial,brand_des,gen,sel_unit,quant,cost,total))
+            order_fields = sorted(order_fields,key=lambda x:x[0])
             for row in order_fields:
                 writer.writerow(row)
             message = EmailMessage(

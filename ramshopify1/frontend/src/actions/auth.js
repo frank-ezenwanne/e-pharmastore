@@ -2,14 +2,14 @@ import axios from 'axios'
 import {LOGIN_SUCCESS,LOGOUT_SUCCESS,REGISTER_SUCCESS,USER_LOADED,TOKEN_RESENT,NEW_EMAIL_SET,TOKEN_VERIFIED,EMAIL_CHANGED} from "./types"
 import {createMessage, returnErrors} from './message_error'
 
-export const register=(reg_data)=>(dispatch)=>{
+export const register=(company_name,password,email)=>(dispatch)=>{
     const config={
         headers:{
             "Content-Type":"application/json"
         }
     }
 
-    const body = JSON.stringify(reg_data)
+    const body = JSON.stringify({company_name,password,email})
 
     axios
         .post("api/auth/register",body,config)
@@ -74,9 +74,7 @@ export const loaduser = () => (dispatch,getState) => {
         })
 
         .catch((err) =>{
-            if(token){
-                dispatch(returnErrors(['Your session has expired. Please Login again'],err.response.status))
-            }         
+            dispatch(returnErrors(err.response.data,err.response.status))
         })
 }
 

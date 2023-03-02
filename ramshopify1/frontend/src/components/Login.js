@@ -36,7 +36,6 @@ class Login extends Component{
 
 
     render(){
-        console.log(this.props.user_active)
             if(this.props.isAuthenticated){
            return <Navigate to = "/customerpage" />
          }
@@ -72,7 +71,10 @@ class Login extends Component{
                       /><br/>
                 </div>
 
-                <button  type = "submit" className = 'form-button'>Login</button>
+                <div className='w-50' align='center'>
+                    <button  type = "submit" className = 'btn btn-sm btn-dark '>Login</button>
+                </div>
+                
 
                 <div id ="login-bottom-options">
                     <div className="reg-link"> Not yet a member? <Link to ="/register">Join Us</Link> 

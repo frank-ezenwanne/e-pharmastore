@@ -1,0 +1,29 @@
+Content-Type: multipart/mixed; boundary="===============0812056649=="
+MIME-Version: 1.0
+Subject: Hello
+From: efrank938@gmail.com
+To: frankdevspace@gmail.com
+Date: Fri, 10 Feb 2023 00:28:34 -0000
+Message-ID: <167598891424.13328.1680886669640204942@Frank>
+
+--===============0812056649==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+The Order from ZenCorp to Ramsgate
+--===============0812056649==
+Content-Type: text/csv; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="order.csv"
+
+serial,brand_description,generic_name,selected_unit,quantity_ordered,cost,total
+1,FLUCONAZOLE (EMZOR) SUSP 50MG 100ML,,BOTTLE,6,640.0,3840.0
+2,VITAMIN C (EMZOR WHITE) TABS  X 1000,,JAR,254,1550.0,393700.0
+3,PARA 1000 CAPLET X 10,,PACK,17,250.0,4250.0
+4,EMZOLYN EXPECTORANT SYR  100ML {ADULT},Diphenhydramine,BOTTLE,150,280.0,42000.0
+
+--===============0812056649==--
+
+-------------------------------------------------------------------------------

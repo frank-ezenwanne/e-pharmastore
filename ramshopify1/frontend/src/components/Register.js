@@ -12,9 +12,7 @@ class Register extends Component {
             email: "",
             password: "",
             password2: "",
-            address : "", 
-            phone_number : "",
-            establishment :"" 
+           
         }
     }
  
@@ -31,29 +29,19 @@ class Register extends Component {
         })
     }
 
-
     onsubmit = (e) => {
         e.preventDefault()
-        const {email,company_name, password, password2, address, phone_number, establishment} = this.state
-        if(establishment === 'SELECT'){
-            alert('Establishment not selected')
-            return
-        }
+        const {email,company_name, password, password2 } = this.state
         if (password === password2) {
             const newUser = {
                 password,
                 email,
                 company_name,
-                address, 
-                phone_number,
-                establishment 
+                address,
+                phone_no, 
+                establishment
             }
-      
-            this.props.register(newUser)
-        }
-
-        else{
-            alert('Passwords do not match!')
+            this.props.register(company_name, password, email, address, phone_no, establishment)
         }
     }
 
@@ -78,16 +66,16 @@ class Register extends Component {
             return <Navigate to = '/emailsetting'/>
         }
        
-        const { company_name, email, password, password2, address, phone_number, establishment } = this.state
+        const { company_name, email, password, password2, address, phone_no, establishment } = this.state
         return (
             <div className="register-div">
-                <h3 className='register-heading'> Join Us </h3>
+                <h3 className='register-heading'> Register as a customer </h3>
                 <form onSubmit={this.onsubmit}>
                     <div className='form-field'>
                         <input className='user-field'
                             type='text'
                             name='company_name'
-                            placeholder=' company_name'
+                            placeholder=' Company name'
                             onChange={this.onchange}
                             value={company_name}
                         /><br />
@@ -122,40 +110,33 @@ class Register extends Component {
                             value={password2}
                         /><br />
                     </div>
+
                     <div className='form-field'>
-                        <textarea className='address-field rounded'
+                        <input className='user-field'
                             type='text'
                             name='address'
                             placeholder=' Company Address'
                             onChange={this.onchange}
-                            value={address}>
-                         </textarea> <br />
-                    </div>
-                    <div className='form-field'>
-                        <input className='phone-field'
-                            type='number'
-                            name='phone_number'
-                            placeholder=' Official phone no'
-                            onChange={this.onchange}
-                            value={phone_number}
+                            value={address}
                         /><br />
                     </div>
-            
-                    <div className='form-field'>
-                        {/* <input className='establishment-field'
-                            type='text'
-                            name='establishment'
-                            placeholder=' Type of Establishment'
-                            onChange={this.onchange}
-                            value={establishment}
-                        /><br /> */}
 
-                        <select className='establishment-field' name = 'establishment' onChange={this.onchange} value = {this.state.establishment}>
-                            <option value="SELECT">SELECT</option>
-                            <option value="HOS">Hospital</option>
-                            <option value="CLHE">Clinic/Health Centre</option>
-                            <option value="PHM">Pharmacy</option>
-                            <option value="CHSU">Chemist/Superstore</option>
+                    <div className='form-field'>
+                        <input className='user-field'
+                            type='number'
+                            name='phone_no'
+                            placeholder=' Company phone'
+                            onChange={this.onchange}
+                            value={phone_no}
+                        /><br />
+                    </div>
+
+                    <div className='form-field'>
+                        <select onChange={this.onchange} name = 'establishment' value = {establishment}>
+                            <option value = 'HOS'>Hospital</option>
+                            <option value = 'CLHE'>Clinic/Health Centre</option>
+                            <option value = 'PHM'>Pharmacy</option>
+                            <option value = 'CHSU'>Chemist/Superstore</option>
                         </select>
                     </div>
 
