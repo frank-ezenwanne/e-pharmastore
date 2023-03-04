@@ -1,0 +1,28 @@
+Content-Type: multipart/mixed; boundary="===============0185420838=="
+MIME-Version: 1.0
+Subject: Hello
+From: efrank938@gmail.com
+To: frankdevspace@gmail.com
+Date: Sat, 04 Mar 2023 09:08:58 -0000
+Message-ID: <167792093802.568.17253518798406197739@Frank>
+
+--===============0185420838==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+The Order from ZenCorp to Ramsgate
+--===============0185420838==
+Content-Type: text/csv; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="order.csv"
+
+RAMS070,,,,,,
+serial,brand_description,generic_name,selected_unit,quantity_ordered,cost,total
+1,LABET TABS 200MG X 30,Labetalol,FULL PACK,1,4500.0,4500.0
+,,,,,,4500.0
+
+--===============0185420838==--
+
+-------------------------------------------------------------------------------

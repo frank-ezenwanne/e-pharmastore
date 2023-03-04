@@ -82,6 +82,24 @@ class RegisterAPI(APIView):
                 'token_sent':'success'
             })
 
+class UpdateProfile(APIView):
+    def get_serializer_context(self):
+        """
+        Extra context provided to the serializer class.
+        """
+        return {
+            'request': self.request,
+            'format': self.format_kwarg,
+            'view': self
+        }
+    serializer_class = RegisterSerializer
+
+    def post(self,request,*args,**kwargs):
+        user = RegisterSerializer(data=request.data)
+        user.is_valid(raise_exception=True)
+        instance=user.save()
+
+
 class ResendToken(APIView):
     def post(self,request,*args,**kwargs):
         serializer = EmailSerializer(data=request.data)

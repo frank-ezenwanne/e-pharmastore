@@ -189,129 +189,131 @@ class GetGenericNames(APIView):
 class GetLastOrder(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
-        user = self.request.user
-        last_order = Order.objects.filter(
-            buyer=request.user).order_by('last_updated').last()
-        if not last_order:
-            last_order = Order.objects.create(buyer=request.user)
-            return Response({"last_orderid": last_order.id})
-        last_order_items = {}
-        last_order_status = last_order.ordered
-        updates = {
-            'unit': {},
-            'unit_name': {},
-            'cost': {},
-        }
-        for loi in last_order.order_products.all():
-            if last_order_status == False:
+        try:
+            user = self.request.user
+            last_order = Order.objects.filter(
+                buyer=request.user).order_by('last_updated').last()
+            if not last_order:
+                last_order = Order.objects.create(buyer=request.user)
+                return Response({"last_orderid": last_order.id})
+            last_order_items = {}
+            last_order_status = last_order.ordered
+            updates = {
+                'unit': {},
+                'unit_name': {},
+                'cost': {},
+            }
+            for loi in last_order.order_products.all():
+                if last_order_status == False:
 
-                if (int(loi.full_pack_quantity) != int(loi.product_id.full_pack_quantity) or
-                        loi.unit_quantity != loi.product_id.unit_quantity or loi.unit != loi.product_id.unit):
+                    if (int(loi.full_pack_quantity) != int(loi.product_id.full_pack_quantity) or
+                            loi.unit_quantity != loi.product_id.unit_quantity or loi.unit != loi.product_id.unit):
 
-                    if int(loi.full_pack_quantity) != int(loi.product_id.full_pack_quantity):
+                        if int(loi.full_pack_quantity) != int(loi.product_id.full_pack_quantity):
 
-                        # orderproduct unit should merge into 1 as product fpq is now 1
-                        if int(loi.product_id.full_pack_quantity) == 1:
-                            loi.full_pack_quantity = 1
-                            loi.unit_quantity = loi.product_id.unit_quantity
-                            if loi.selected_unit != 'FULL PACK':  # special case to set cost for non-full pack selected
-                                # set to itz already selected full pack cost for comparison later
-                                loi.cost = loi.raw_cost
-                                loi.total = loi.raw_cost
-                            loi.selected_unit = loi.product_id.unit
-                            if loi.product_id.brand_description not in updates['unit']:
-                                updates['unit'][loi.product_id.brand_description] = "This product is now defined with a single unit"
+                            # orderproduct unit should merge into 1 as product fpq is now 1
+                            if int(loi.product_id.full_pack_quantity) == 1:
+                                loi.full_pack_quantity = 1
+                                loi.unit_quantity = loi.product_id.unit_quantity
+                                if loi.selected_unit != 'FULL PACK':  # special case to set cost for non-full pack selected
+                                    # set to itz already selected full pack cost for comparison later
+                                    loi.cost = loi.raw_cost
+                                    loi.total = loi.raw_cost
+                                loi.selected_unit = loi.product_id.unit
+                                if loi.product_id.brand_description not in updates['unit']:
+                                    updates['unit'][loi.product_id.brand_description] = "This product is now defined with a single unit"
 
-                        # orderproduct unit should now split
-                        elif int(loi.full_pack_quantity) == 1:
-                            loi.full_pack_quantity = int(
-                                loi.product_id.full_pack_quantity)
-                            loi.unit_quantity = loi.product_id.unit_quantity
-                            loi.selected_unit = 'FULL PACK'
-                            if loi.product_id.brand_description not in updates['unit']:
-                                updates['unit'][loi.product_id.brand_description] = "This product is now defined with multiple units "
-                        else:
-                            loi.full_pack_quantity = int(
-                                loi.product_id.full_pack_quantity)
+                            # orderproduct unit should now split
+                            elif int(loi.full_pack_quantity) == 1:
+                                loi.full_pack_quantity = int(
+                                    loi.product_id.full_pack_quantity)
+                                loi.unit_quantity = loi.product_id.unit_quantity
+                                loi.selected_unit = 'FULL PACK'
+                                if loi.product_id.brand_description not in updates['unit']:
+                                    updates['unit'][loi.product_id.brand_description] = "This product is now defined with multiple units "
+                            else:
+                                loi.full_pack_quantity = int(
+                                    loi.product_id.full_pack_quantity)
+                                loi.unit_quantity = loi.product_id.unit_quantity
+                                if loi.product_id.brand_description not in updates['unit']:
+                                    updates['unit'][loi.product_id.brand_description] = "This product has its pack size defintion updated"
+
+                        elif loi.unit_quantity != loi.product_id.unit_quantity:
                             loi.unit_quantity = loi.product_id.unit_quantity
                             if loi.product_id.brand_description not in updates['unit']:
                                 updates['unit'][loi.product_id.brand_description] = "This product has its pack size defintion updated"
 
-                    elif loi.unit_quantity != loi.product_id.unit_quantity:
-                        loi.unit_quantity = loi.product_id.unit_quantity
-                        if loi.product_id.brand_description not in updates['unit']:
-                            updates['unit'][loi.product_id.brand_description] = "This product has its pack size defintion updated"
+                        if loi.unit != loi.product_id.unit:
+                            loi.unit = loi.product_id.unit
+                            if loi.product_id.brand_description not in updates['unit_name']:
+                                updates['unit_name'][loi.product_id.brand_description] = "This product has its unit name updated"
+                        loi.save()
 
-                    if loi.unit != loi.product_id.unit:
-                        loi.unit = loi.product_id.unit
-                        if loi.product_id.brand_description not in updates['unit_name']:
-                            updates['unit_name'][loi.product_id.brand_description] = "This product has its unit name updated"
-                    loi.save()
-
-                if loi.raw_cost != loi.product_id.raw_cost:
-                    loi.raw_cost = loi.product_id.raw_cost
-                    if int(loi.full_pack_quantity) > 1:
-                        if loi.selected_unit != 'FULL PACK':
-                            try:
-                                int(loi.unit_quantity)
-                                ratio = int(loi.full_pack_quantity) / \
+                    if loi.raw_cost != loi.product_id.raw_cost:
+                        loi.raw_cost = loi.product_id.raw_cost
+                        if int(loi.full_pack_quantity) > 1:
+                            if loi.selected_unit != 'FULL PACK':
+                                try:
                                     int(loi.unit_quantity)
-                            except ValueError:
-                                ratio = int(loi.full_pack_quantity)
-                            old_cost = copy.copy(loi.cost)
-                            loi.cost = loi.product_id.raw_cost/ratio  # raw_cost/ratio
-                            loi.raw_cost = loi.product_id.raw_cost
-                            loi.total = float(loi.cost) * \
-                                int(loi.quantity_ordered)
-                            loi.save()
-                            if loi.product_id.brand_description not in updates['cost'] and abs(float(loi.cost) - float(old_cost)) > 0.1:
-                                updates['cost'][loi.product_id.brand_description] = {
-                                    'selected_unit': loi.selected_unit, 'old_cost': old_cost, 'new_cost': loi.cost}
+                                    ratio = int(loi.full_pack_quantity) / \
+                                        int(loi.unit_quantity)
+                                except ValueError:
+                                    ratio = int(loi.full_pack_quantity)
+                                old_cost = copy.copy(loi.cost)
+                                loi.cost = loi.product_id.raw_cost/ratio  # raw_cost/ratio
+                                loi.raw_cost = loi.product_id.raw_cost
+                                loi.total = float(loi.cost) * \
+                                    int(loi.quantity_ordered)
+                                loi.save()
+                                if loi.product_id.brand_description not in updates['cost'] and abs(float(loi.cost) - float(old_cost)) > 0.1:
+                                    updates['cost'][loi.product_id.brand_description] = {
+                                        'selected_unit': loi.selected_unit, 'old_cost': old_cost, 'new_cost': loi.cost}
 
-                        else:
+                            else:
+                                old_cost = copy.copy(loi.cost)
+                                loi.cost = loi.product_id.raw_cost
+                                loi.raw_cost = loi.product_id.raw_cost
+                                loi.total = float(loi.cost) * \
+                                    int(loi.quantity_ordered)
+                                loi.save()
+                                if loi.product_id.brand_description not in updates['cost'] and abs(float(loi.cost) - float(old_cost)) > 0.1:
+                                    updates['cost'][loi.product_id.brand_description] = {
+                                        'selected_unit': loi.selected_unit, 'old_cost': old_cost, 'new_cost': loi.cost}
+
+                        elif int(loi.full_pack_quantity) == 1:
                             old_cost = copy.copy(loi.cost)
                             loi.cost = loi.product_id.raw_cost
                             loi.raw_cost = loi.product_id.raw_cost
-                            loi.total = float(loi.cost) * \
-                                int(loi.quantity_ordered)
+                            loi.total = float(loi.cost) * int(loi.quantity_ordered)
                             loi.save()
                             if loi.product_id.brand_description not in updates['cost'] and abs(float(loi.cost) - float(old_cost)) > 0.1:
                                 updates['cost'][loi.product_id.brand_description] = {
                                     'selected_unit': loi.selected_unit, 'old_cost': old_cost, 'new_cost': loi.cost}
 
-                    elif int(loi.full_pack_quantity) == 1:
-                        old_cost = copy.copy(loi.cost)
-                        loi.cost = loi.product_id.raw_cost
-                        loi.raw_cost = loi.product_id.raw_cost
-                        loi.total = float(loi.cost) * int(loi.quantity_ordered)
-                        loi.save()
-                        if loi.product_id.brand_description not in updates['cost'] and abs(float(loi.cost) - float(old_cost)) > 0.1:
-                            updates['cost'][loi.product_id.brand_description] = {
-                                'selected_unit': loi.selected_unit, 'old_cost': old_cost, 'new_cost': loi.cost}
+                obj = {}
+                update_list = ('id', "selected_unit", "cost", "raw_cost", "quantity_ordered", 'unit',
+                            "full_pack_quantity", "unit_quantity", "serial", 'extra_info', "total")
+                for field in update_list:
+                    # get attributes of loi dynamically
+                    obj[field] = getattr(loi, field)
+                # extract and send id bcoz object isn't JSON serializable
+                obj["product_id"] = loi.product_id.id
+                obj['saved'] = True
+                obj['brand_description'] = loi.product_id.brand_description
+                obj['generic_name'] = loi.product_id.generic_name
+                obj['total'] = float(loi.total)
 
-            obj = {}
-            update_list = ('id', "selected_unit", "cost", "raw_cost", "quantity_ordered", 'unit',
-                           "full_pack_quantity", "unit_quantity", "serial", 'extra_info', "total")
-            for field in update_list:
-                # get attributes of loi dynamically
-                obj[field] = getattr(loi, field)
-            # extract and send id bcoz object isn't JSON serializable
-            obj["product_id"] = loi.product_id.id
-            obj['saved'] = True
-            obj['brand_description'] = loi.product_id.brand_description
-            obj['generic_name'] = loi.product_id.generic_name
-            obj['total'] = float(loi.total)
-
-            last_order_items[loi.serial] = obj
-        sorted_loi = {}
-        id = 0
-        for key in sorted(last_order_items):
-            id += 1
-            last_order_items[key]['count'] = id
-            sorted_loi[key] = last_order_items[key]
-        return Response({"loi": sorted_loi,
-                        "last_orderid": last_order.id,'last_ordercode':last_order.order_code, "last_order_status": last_order.ordered, 'updates': updates})
-
+                last_order_items[loi.serial] = obj
+            sorted_loi = {}
+            id = 0
+            for key in sorted(last_order_items):
+                id += 1
+                last_order_items[key]['count'] = id
+                sorted_loi[key] = last_order_items[key]
+            return Response({"loi": sorted_loi,
+                            "last_orderid": last_order.id,'last_ordercode':last_order.order_code, "last_order_status": last_order.ordered, 'updates': updates})
+        except Exception as e:
+            return Response({'error':e})
 
 class GetCustomerOrders(APIView):
     permission_classes = [IsAuthenticated, ]
@@ -360,39 +362,47 @@ class SendCSVEmail(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        order_id_request = GetIdSerializer(data=request.data)
-        order_id_request.is_valid(raise_exception=True)
-        order_id = order_id_request.validated_data['id']
-        order = Order.objects.filter(id=int(order_id)).first()
-        if order and order.buyer == request.user:
-            order_products = order.order_products.all()
-            csv_file = StringIO()  # creates writing pad for the csvwriter
-            writer = csv.writer(csv_file)
-            writer.writerow(['serial','brand_description', 'generic_name',
-                            'selected_unit', 'quantity_ordered', 'cost', 'total'])
-            order_fields=[]
-            for op in order_products: #assign the field vals to var as tupules manually instead of using values_list due to fetching vals from another table
-                serial,brand_des,gen,sel_unit,quant,cost,total = op.serial,op.product_id.brand_description,op.product_id.generic_name,op.selected_unit,op.quantity_ordered,op.cost,op.total
-                order_fields.append((serial,brand_des,gen,sel_unit,quant,cost,total))
-            order_fields = sorted(order_fields,key=lambda x:x[0])
-            for row in order_fields:
-                writer.writerow(row)
-            message = EmailMessage(
-                "Hello", f"The Order from {order.buyer.company_name} to Ramsgate", 'efrank938@gmail.com', [order.buyer.email])
-            message.attach('order.csv', csv_file.getvalue(), 'text/csv')
-            try:
-                message.send()
-            except:
-                return Response({'email_send_error': 'Email Error in Sending Order!'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        try:
+            order_id_request = GetIdSerializer(data=request.data)
+            order_id_request.is_valid(raise_exception=True)
+            order_id = order_id_request.validated_data['id']
+            order = Order.objects.filter(id=int(order_id)).first()
+            if order and order.buyer == request.user:
+                order_products = order.order_products.all()
+                csv_file = StringIO()  # creates writing pad for the csvwriter
+                writer = csv.writer(csv_file)
+                writer.writerow([order.order_code,'','','','','',''])
+                writer.writerow(['serial','brand_description', 'generic_name',
+                                'selected_unit', 'quantity_ordered', 'cost', 'total'])
+                order_fields=[]
+                overall_cost = 0
+                for op in order_products: #assign the field vals to var as tupules manually instead of using values_list due to fetching vals from another table
+                    overall_cost += op.total
+                    serial,brand_des,gen,sel_unit,quant,cost,total = op.serial,op.product_id.brand_description,op.product_id.generic_name,op.selected_unit,op.quantity_ordered,op.cost,op.total
+                    order_fields.append((serial,brand_des,gen,sel_unit,quant,cost,total))
+                order_fields = sorted(order_fields,key=lambda x:x[0])
+                for row in order_fields:
+                    writer.writerow(row)
+                writer.writerow(['','','','','','',overall_cost])
+                
+                message = EmailMessage(
+                    "Hello", f"The Order from {order.buyer.company_name} to Ramsgate", 'efrank938@gmail.com', [order.buyer.email])
+                message.attach('order.csv', csv_file.getvalue(), 'text/csv')
+                try:
+                    message.send()
+                except:
+                    return Response({'email_send_error': 'Email Error in Sending Order!'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-            for op in order.order_products.all():
-                op.ordered = True
-                op.save()
-            order.ordered = True
-            order.save()
+                for op in order.order_products.all():
+                    op.ordered = True
+                    op.save()
+                order.ordered = True
+                order.save()
 
-            return Response({'email_sent': 'Email Sent!'})
-        return Response({"error": "This orderId does not exist"}, status=status.HTTP_404_NOT_FOUND)
+                return Response({'email_sent': 'Email Sent!'})
+            return Response({"error": "This orderId does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        except:
+            return Response({'error':'Error encountered in sending mail'},status = status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class CreateUpdateDefProduct(APIView):

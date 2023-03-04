@@ -26,6 +26,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         return user
 
+class UpdateProfile(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ('company_name','address', 'phone_no', 'establishment')
+
+
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
