@@ -35,7 +35,7 @@ class Home extends Component{
             <div id = 'home-back-img-div'>
                 <img id='home-back-img' src = {DrugStoreImg}/>
                 <div id= 'home-img-heading'>
-                    <div id ='home-img-top-heading'> RAMSGATE PHARMACY WHOLESALES</div>
+                    <div id ='home-img-top-heading'> RAMSGATE PHARMACY </div>
                     <div id ='home-img-bottom-heading'> To Restore Confidence</div>
                 </div>
                 <div style= {{left:this.props.isAuthenticated?'0%':'45%'}} className = 'home-img-button-div'>

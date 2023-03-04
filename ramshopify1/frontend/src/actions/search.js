@@ -28,11 +28,13 @@ export const create_order = () => (dispatch,getState) =>{
             type:ORDER_CREATED,
             payload:res.data
         })
+        dispatch(createMessage({'msg':'Order created successfully'}))
         
     })
 
     .catch((err) =>{
         console.log(err.response)
+        dispatch(returnErrors(err.response.data,err.response.status))
     })
 }
 
@@ -71,11 +73,11 @@ export const send_orderproduct = (product_id,unit,
         })
     
         .catch((err) =>{
-            console.log(err.response)
             dispatch({
                 type:ORDER_PRODUCT_NOT_CREATED,
                 payload:{[serial]:"error"}
             })
+            dispatch(returnErrors(err.response.data,err.response.status))
         })
 
 }
@@ -102,11 +104,13 @@ export const get_last_order = () => (dispatch,getState) =>{
             type:LAST_ORDER_FETCHED,
             payload:res.data
         })
+        dispatch(createMessage({'msg':'Last order fetched successfully'}))
         
     })
 
     .catch((err) =>{
         console.log(err.response)
+        dispatch(returnErrors(err.response.data,err.response.status))
     })
 
 }
@@ -142,6 +146,8 @@ export const search_brand = (brand_description,radio_option,serial) => (dispatch
     .catch(
         (err) => {
             console.log(err.response)
+            dispatch(returnErrors(err.response.data,err.response.status))
+            
         }
     )
 }
@@ -163,7 +169,6 @@ export const search_generic_names = (generic_name) => (dispatch,getState) =>{
     axios
     .post("api/get_generic_options",body,config)
     .then((res)=>{
-        console.log("retrieved")
         dispatch({
             type:GENERIC_NAMES_RETRIEVED,
             payload:res.data
@@ -173,6 +178,7 @@ export const search_generic_names = (generic_name) => (dispatch,getState) =>{
     .catch(
         (err) => {
             console.log(err.response)
+            dispatch(returnErrors(err.response.data,err.response.status))
         }
     )
 }
@@ -200,11 +206,13 @@ export const get_customer_orders = (page_num = 1) => (dispatch,getState) =>{
             type:ORDERS_RETRIEVED,
             payload:res.data
         })
+        dispatch(createMessage({'msg':'Orders fetched successfully'}))
     })
 
     .catch(
         (err) => {
             console.log(err.response)
+            dispatch(returnErrors(err.response.data,err.response.status))
         }
     )
 }
@@ -228,16 +236,18 @@ export const get_selected_order = (id) => (dispatch,getState) =>{
     axios
     .post("api/get_selected_order",body,config)
     .then((res)=>{
-        console.log("selected order made lt")
         dispatch({
             type:ORDER_MADE_LAST,
             payload:res.data
         })
+        dispatch(createMessage({'msg':'Selected order retrieved su}ccessfully'}))
     })
+    
 
     .catch(
         (err) => {
             console.log(err.response)
+            dispatch(returnErrors(err.response.data,err.response.status))
         }
     )
 }
@@ -255,7 +265,6 @@ export const getGenProducts = (generic_name) => (dispatch) =>{
     axios
     .post("api/get_generic_products",body,config)
     .then((res)=>{
-        console.log("retrieved")
         dispatch({
             type:GENERIC_PRODUCTS_RETRIEVED,
             payload:{data:res.data,generic_name_prop:generic_name}
@@ -265,6 +274,7 @@ export const getGenProducts = (generic_name) => (dispatch) =>{
     .catch(
         (err) => {
             console.log(err.response)
+            dispatch(returnErrors(err.response.data,err.response.status))
         }
     )
 
@@ -287,11 +297,11 @@ export const delOrderProducts = (order_id,del_list) => (dispatch,getState) =>{
     axios
     .post("api/delete_orderproduct",body,config)
     .then((res)=>{
-        console.log("deleted_items")
         dispatch({
             type:ORDER_PRODUCTS_DELETED,
             payload:{data:res.data,delete_serials:del_list}
         })
+        dispatch(createMessage({'msg':'Product Deleted successfully'}))
     })
 
     .catch(
@@ -301,6 +311,7 @@ export const delOrderProducts = (order_id,del_list) => (dispatch,getState) =>{
                 type:ORDER_PRODUCTS_NOT_DELETED,
                 payload:{delete_serials:del_list}
             })
+            dispatch(returnErrors(err.response.data,err.response.status))
         }
     )
 
@@ -327,11 +338,13 @@ export const delete_order = (id) => (dispatch,getState) =>{
             type:ORDER_DELETED,
             payload:res.data
         })
+        dispatch(createMessage({'msg':'Order Deleted successfully'}))
     })
 
     .catch(
         (err) => {
             console.log(err.response)
+            dispatch(returnErrors(err.response.data,err.response.status))
         }
     )
 
@@ -384,7 +397,6 @@ export const copy_order = (id) => (dispatch,getState) =>{
     .post("api/CreateOrderWithTemplate",body,config)
     
     .then((res)=>{
-        console.log("successfully created copy order")
         dispatch({
             type:ORDER_COPY_CREATED,
         })
@@ -394,6 +406,7 @@ export const copy_order = (id) => (dispatch,getState) =>{
     .catch(
         (err) => {
             console.log(err)
+            dispatch(returnErrors(err.response.data,err.response.status))
         }
     )
 

@@ -18,7 +18,7 @@ class Footer extends Component{
 
     render(){
         return(
-            <footer>
+            <footer style= {{fontSize:'80%'}}>
                 <section id ='footer-upper'>
                     <div id ='upper-left-footer'>
                         {this.props.isAuthenticated?

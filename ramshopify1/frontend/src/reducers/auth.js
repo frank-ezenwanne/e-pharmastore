@@ -2,11 +2,13 @@ import {
     REGISTER_SUCCESS,
     LOGIN_SUCCESS,
     USER_LOADED,
+    LOADING,
+    LOADED,
     LOGOUT_SUCCESS,
     TOKEN_VERIFIED,
     NEW_EMAIL_SET,
     EMAIL_CHANGED,
-    TOKEN_RESENT
+    TOKEN_RESENT,
 }
 from '../actions/types'
 
@@ -19,7 +21,8 @@ const initialState = {
     new_email_confirmed:{'status':false,'new_email':false},
     user_active:'not_logged_in',
     token_resent:false,
-    new_email_set:false
+    new_email_set:false,
+    isLoading:false
 }
 
 export default function(state=initialState,action){
@@ -47,6 +50,18 @@ export default function(state=initialState,action){
                 token:localStorage.getItem("token") //check login ability after token expiry without havin to rfresh
                 
             }
+
+        case LOADING:
+            return{
+                ...state,
+                isLoading:true
+            }
+        
+        case LOADED:
+                return{
+                    ...state,
+                    isLoading:false
+                }
 
         case REGISTER_SUCCESS:
             return{
@@ -80,7 +95,6 @@ export default function(state=initialState,action){
             }
 
         case USER_LOADED:
-            console.log(action.payload,900)
             return {
                 ...state,
                 user_active:true,
@@ -90,7 +104,6 @@ export default function(state=initialState,action){
             }
 
         case LOGOUT_SUCCESS:
-            console.log('logged out')
             localStorage.removeItem("token")
             return {
                 ...state,

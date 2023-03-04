@@ -42,13 +42,12 @@ function Nav(props){
      
 
     const guestlinks = (<span className= "nav-bar-others" ><Link to = "/login">Sign In</Link></span>)
-    const authlinks = <div className= "nav-bar-other-group"><img src={Building}/><span className= "nav-bar-other-inner">Welcome {props.company_name}</span>
-							<span onClick = {logout_func} className= "nav-bar-other-inner" >Logout</span></div>
+    const authlinks = <div className= "nav-bar-other-group"><img src={Building}/><span className= ""> Hi {props.company_name}</span>
+						</div>
 
     const lines = ["line1","line2","line3"]
-		// console.log(props.auth.user.username)
         return ( 
-			<div>
+			<div style= {{fontSize:'85%'}}>
 				<nav>
 					<div onClick = {transbar} onMouseOver={mouseOver} onMouseOut = {mouseOut} ref = {transbar_linenav} className = "line-nav">
                        {lines.map((line,key) =>{
@@ -83,7 +82,7 @@ function Nav(props){
 						<span className = "side-bar-email">{props.email}</span>
 						<span className="lower-side-bar "><Link style = {{textDecoration:'none',color:'white'}} to ='/aboutus'>About Us</Link></span>
 						<span className = "lower-side-bar"><Link style = {{textDecoration:'none',color:'white'}} to ='/customerpage'>View My Orders</Link></span>
-						<span onClick = {()=>{props.logout()}} className = "cursor-pointer lower-side-bar">Logout</span>
+						<span onClick = {()=>{props.logout()}} className = "text-white lower-side-bar">Logout</span>
 					</div>
 					</Fragment>:
 					<Fragment>

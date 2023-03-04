@@ -18,12 +18,19 @@ import { Provider as AlertProvider } from 'react-alert';
 import AlertTemplate from 'react-alert-template-basic';
 import EmailChangeSent from "./EmailChangeSent";
 import EmailChangeConfirm from "./EmailChangeConfirm";
+import PrivateRoute from "./PrivateRoute";
 
 
 const alertOptions = {
-    timeout: 5000,
+    timeout: 4000,
     position: 'top center',
-    offset:'70px'
+    offset:'70px',
+    containerStyle :{
+        fontSize:'75%',
+        marginLeft:'auto',
+        marginRight:'auto',
+        zIndex:'500'
+    }
   };
   
 
@@ -40,20 +47,22 @@ class App extends Component{
                 <AlertProvider template={AlertTemplate} {...alertOptions}>
                     <section id='top-body'>
                         <Nav/>
-                        <Alerts />
+                        <Alerts/>
                         <div id = "web-pages">
                             <Routes>
                                 <Route path = "/" element = {<Home/>}/>
                                 <Route path = "login" element = {<Login/>}/>
                                 <Route path = "register" element = {<Register/>}/>
                                 <Route path = "aboutus" element = {<AboutUs/>}/>
-                                <Route path = "order" element = {<Order/>}/>
-                                <Route path = "customerpage" element = {<CustomerPage/>}/>
-                                <Route path = "verifytoken" element = {<VerifyToken/>}/>
-                                <Route path = "emailchange" element = {<EmailChange/>}/>
-                                <Route path = "emailchange_sent" element = {<EmailChangeSent/>}/>
+                                <Route element = {<PrivateRoute/>}>
+                                    <Route path = "order" element = {<Order/>}/>
+                                    <Route path = "customerpage" element = {<CustomerPage/>}/>
+                                    <Route path = "verifytoken" element = {<VerifyToken/>}/>
+                                    <Route path = "emailchange" element = {<EmailChange/>}/>
+                                    <Route path = "emailchange_sent" element = {<EmailChangeSent/>}/>
+                                    <Route path = "emailchange/:token" element = {<EmailChangeConfirm/>}/>
+                                </Route>
                                 {/* <Route path = "emailchange_confirm" element = {<EmailChangeConfirm/>}/> */}
-                                <Route path = "emailchange/:token" element = {<EmailChangeConfirm/>}/>
                             </Routes>
                         </div>
                     </section>

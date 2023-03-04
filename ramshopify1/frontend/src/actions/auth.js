@@ -1,16 +1,19 @@
 import axios from 'axios'
-import {LOGIN_SUCCESS,LOGOUT_SUCCESS,REGISTER_SUCCESS,USER_LOADED,TOKEN_RESENT,NEW_EMAIL_SET,TOKEN_VERIFIED,EMAIL_CHANGED} from "./types"
+import {LOGIN_SUCCESS,LOADING,LOADED,LOGOUT_SUCCESS,REGISTER_SUCCESS,USER_LOADED,TOKEN_RESENT,NEW_EMAIL_SET,TOKEN_VERIFIED,EMAIL_CHANGED} from "./types"
 import {createMessage, returnErrors} from './message_error'
 
-export const register=(company_name,password,email)=>(dispatch)=>{
+export const register=(company_name,password,email,address, phone_no, establishment)=>(dispatch)=>{
     const config={
         headers:{
             "Content-Type":"application/json"
         }
     }
 
-    const body = JSON.stringify({company_name,password,email})
+    const body = JSON.stringify({company_name,password,email,address, phone_no, establishment})
 
+    dispatch({
+        type:LOADING
+    })
     axios
         .post("api/auth/register",body,config)
         .then((res)=>{
@@ -18,10 +21,16 @@ export const register=(company_name,password,email)=>(dispatch)=>{
                 type:REGISTER_SUCCESS,
                 payload:res.data
             })
+            dispatch({
+                type:LOADED
+            })
             dispatch(createMessage({msg:'Account Created Successfully!'}))
         })
 
         .catch((err) => {
+            dispatch({
+                type:LOADED
+            })
             dispatch(returnErrors(err.response.data,err.response.status))
         })
 }
@@ -35,6 +44,9 @@ export const login = (email, password) => (dispatch) => {
 
     const body = JSON.stringify({email, password})
 
+    dispatch({
+        type:LOADING
+    })
     axios
         .post("api/auth/login",body,config)
         .then((res)=>{
@@ -42,12 +54,18 @@ export const login = (email, password) => (dispatch) => {
                 type:LOGIN_SUCCESS,
                 payload:res.data
             })
+            dispatch({
+                type:LOADED
+            })
             dispatch(createMessage({msg:'Login Successful'}))
 
         })
 
         .catch(
             (err) => {
+                dispatch({
+                    type:LOADED
+                })
                 dispatch(returnErrors(err.response.data,err.response.status))
             }
         )
@@ -74,7 +92,10 @@ export const loaduser = () => (dispatch,getState) => {
         })
 
         .catch((err) =>{
-            dispatch(returnErrors(err.response.data,err.response.status))
+            console.log('user not authorised!!')
+            dispatch({
+                type:LOGOUT_SUCCESS
+            })
         })
 }
 
@@ -90,18 +111,18 @@ export const logout = () => (dispatch,getState) => {
     }
 
     axios
-    .post("api/auth/logout",null,config)
-    .then((res) => {
-        dispatch({
-            type:LOGOUT_SUCCESS,
+        .post("api/auth/logout",null,config)
+        .then((res) => {
+            dispatch({
+                type:LOGOUT_SUCCESS,
+            })
+
+            dispatch(createMessage({msg:'Logout Successful'}))
         })
 
-        dispatch(createMessage({msg:'Logout Successful'}))
-    })
-
-    .catch((err)=>{
-        dispatch(returnErrors(err.response.data,err.response.status))
-    })
+        .catch((err)=>{
+            dispatch(returnErrors(err.response.data,err.response.status))
+        })
 
 }
 

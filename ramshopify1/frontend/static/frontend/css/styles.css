@@ -201,6 +201,11 @@ min-width:25rem;
 z-index:3;
 }
 
+.order-form-adjust {
+	max-width:100vw !important;
+	overflow-x:scroll
+}
+
 #form-container-main{
 	width:55rem;
 	margin-left:2vw;
@@ -210,7 +215,7 @@ z-index:3;
 	padding-left:5rem;
 	padding-bottom:15rem;
 	height:25rem;
-	overflow-x:hidden;
+	overflow-x: scroll;
 	overflow-y:scroll;
 	
 }
@@ -510,7 +515,6 @@ margin-right:-2rem;
 
 .radio-delete-div{
 	width:inherit;
-	display: flex;
 	margin-top:1rem;
 	margin-bottom:1rem;
 	
@@ -574,7 +578,9 @@ margin-right:-2rem;
 }
 
 
-
+.clickable{
+	cursor:pointer
+}
 
 nav  a{
 	font-size:100%;
@@ -601,7 +607,8 @@ color:white
 }
 
 .nav-bar-other-inner{
-	margin-left:1.5rem
+	margin-left:1.5rem;
+	
 }
 
 #content{
@@ -798,8 +805,8 @@ transition: transform 0.3s, background-color 0.3s;
 	
 }
 .side-bar-email{
-
-	max-width:inherit;
+	word-wrap:break-word;
+	max-width:35vw;
 	display:inline-block;
 	margin-left:0.5rem;
 	color:rgb(226,226,226);
@@ -812,6 +819,7 @@ transition: transform 0.3s, background-color 0.3s;
 	margin-top:2rem;
 	text-decoration:none !important;
 	max-width:100%;
+	cursor:pointer !important
 }
 
 .lower-side-bar:hover{
@@ -881,6 +889,8 @@ justify-content:space-around;
 
 #web-pages{
 margin-top:4rem;
+max-width:100vw;
+overflow-x: scroll;
 }
 
 
@@ -893,11 +903,11 @@ main{
 
 .register-div{
 	background-color: #023020;
-	margin:auto;
-	position:relative;
-	width:40%;
+	margin-left: auto;
+	margin-right: auto;
+	width:40rem;
 	padding:0rem 2rem 2rem 2rem;
-	padding-left:10%;
+	max-width:90%;
 	border-radius:3rem;
 }
 
@@ -907,15 +917,13 @@ main{
 }
 
 .login-block{
-	height:40%;
-	margin:auto;
-	margin-top:8rem;
-	width:45%;
-
-	padding:2rem;
-	padding-left:10%;
-	border-radius:0.5rem;
-	background-color:  #023020;
+	background-color: #023020;
+	margin-left: auto;
+	margin-right: auto;
+	width:20rem;
+	padding:1rem;
+	max-width:90%;
+	border-radius:3rem;
 
 }
 
@@ -923,7 +931,6 @@ main{
 	color:red;
 	font-weight:bolder;
 	width:4rem;
-	word-break:;
 }
 .form-field{
 	margin-top:2rem;
@@ -963,7 +970,7 @@ text-shadow:0rem 0.2rem #2F4F4F;
 margin-right:3rem;
 word-break:all;
 margin-top:0.5rem;
-font-size:80%;
+font-size:110%;
 color:white;
 
  }
@@ -981,7 +988,7 @@ color:white;
 }
 
 #login-bottom-options{
-font-size:75%;
+font-size:85%;
 width:80%;
 margin:5% auto auto 4rem;
 display:flex;
@@ -1237,20 +1244,17 @@ border-top-right-radius:5%;
 	color:white;
 }
 
-
-
-
-
-
-
 /*Responsive CSS*/
 
 @media only screen and (max-width:850px){
-
+}
 
 
 @media only screen and (max-width:600px){
 
+.login-block{
+	margin-top:6rem;
+}
 
 
 #nav-items-section{
@@ -1309,34 +1313,37 @@ width:55%;
 }
 
 .register-div{
-	font-size:75%;
+	
 }
 
 #login-bottom-options{
 	width:30%;
 }
 
-}
+
 
 @media only screen and (max-width:450px){
-
-.user-profile-div{
-	width:80%;
-}
-
-.side-bar{
-	width:80vw;
-}
-
-.location-div-upper{
-	width:90%;
-	margin-left:auto;
-	margin-right:auto;
-	background-color:#212121;
-	border-top-left-radius:5%;
-	border-top-right-radius:5%;
+	.login-block{
+		width:90vw !important;
+		margin-top:6rem;
 	}
-	
+	.user-profile-div{
+		width:80%;
+	}
+
+	.side-bar{
+		width:80vw;
+	}
+
+	.location-div-upper{
+		width:90%;
+		margin-left:auto;
+		margin-right:auto;
+		background-color:#212121;
+		border-top-left-radius:5%;
+		border-top-right-radius:5%;
+		}
+		
 	.location-div-lower{
 		width:90%;
 		margin-left:auto;

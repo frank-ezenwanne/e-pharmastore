@@ -34,9 +34,25 @@ export class Alerts extends Component{
             }
 
             if(error.msg.non_field_errors){
-                
                 alert.error(error.msg.non_field_errors.join())
             }
+            else{
+                if(error.msg){
+                   try{
+                        for (let key of Object.keys(error.msg)){
+                            if(typeof(error.msg[key]) === 'object'){
+                                alert.error(`${key} : ${error.msg[key].join()} `)
+                            }else{
+                                alert.error(error.msg[key])
+                            }
+                            
+                        }
+                   }catch(err){
+                       alert.error(err)
+                   }
+            }
+
+        }
 
             
         }
@@ -44,7 +60,8 @@ export class Alerts extends Component{
 
     render(){
 
-        return <Fragment/>
+        return (<div style= {{fontSize:'50% !important'}}><Fragment/></div>)
+
     }
 
 }

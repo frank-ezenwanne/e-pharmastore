@@ -13,11 +13,17 @@ class UserSerializer(serializers.ModelSerializer):
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('password','email',"company_name")
+        fields = ('password','email','company_name','address', 'phone_no', 'establishment')
         extra_kwargs = {'password':{'write_only':True}}
 
     def create(self,validated_data):
-        user = CustomUser.objects.create_user(password=validated_data["password"],company_name=validated_data["company_name"],email=validated_data["email"])
+        user = CustomUser.objects.create_user(password=validated_data["password"],
+        company_name=validated_data["company_name"],
+        email=validated_data["email"],
+        address = validated_data['address'],
+        phone_no = validated_data['phone_no'],
+        establishment = validated_data['establishment']
+        )
         return user
 
 

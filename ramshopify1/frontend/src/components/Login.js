@@ -47,7 +47,7 @@ class Login extends Component{
        successfully activated..You can now login</div>)
 
         return (
-        <div className = "login-block">
+        <div className = "login-block ">
             {this.props.justverified && justverified_div }
             <h3 className = 'login-heading'> LOGIN </h3>
             <form onSubmit = {this.onsubmit} >
@@ -77,7 +77,7 @@ class Login extends Component{
                 
 
                 <div id ="login-bottom-options">
-                    <div className="reg-link"> Not yet a member? <Link to ="/register">Join Us</Link> 
+                    <div className="reg-link"> Not yet a customer? <Link to ="/register">Register</Link> 
                     </div>
 
                 </div>

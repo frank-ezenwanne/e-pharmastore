@@ -8,10 +8,13 @@ class Register extends Component {
     constructor(props){
         super(props);
         this.state = {
-            company_name: "",
-            email: "",
-            password: "",
-            password2: "",
+            company_name: '',
+            email: '',
+            password: '',
+            password2: '',
+            address:'',
+            phone_no:'', 
+            establishment:''
            
         }
     }
@@ -31,7 +34,7 @@ class Register extends Component {
 
     onsubmit = (e) => {
         e.preventDefault()
-        const {email,company_name, password, password2 } = this.state
+        const {email,company_name, password, password2,address, phone_no, establishment } = this.state
         if (password === password2) {
             const newUser = {
                 password,
@@ -68,11 +71,14 @@ class Register extends Component {
        
         const { company_name, email, password, password2, address, phone_no, establishment } = this.state
         return (
-            <div className="register-div">
+            <div className=" pt-4 register-div">
                 <h3 className='register-heading'> Register as a customer </h3>
                 <form onSubmit={this.onsubmit}>
                     <div className='form-field'>
-                        <input className='user-field'
+                    <div>
+                        <label className = 'text-white' htmlFor="company_name">Company name</label>
+                    </div>
+                        <input id='company_name' className='user-field'
                             type='text'
                             name='company_name'
                             placeholder=' Company name'
@@ -82,7 +88,10 @@ class Register extends Component {
                     </div>
 
                     <div className='form-field'>
-                        <input className='email-field'
+                        <div>
+                            <label className = 'text-white' htmlFor="email">Email</label>
+                        </div>
+                        <input id ='email' className='email-field'
                             type='email'
                             name='email'
                             placeholder=' Email'
@@ -92,7 +101,10 @@ class Register extends Component {
                     </div>
 
                     <div className='form-field'>
-                        <input className='pass1-field'
+                        <div>
+                            <label className = 'text-white' htmlFor="pass1">Password</label>
+                        </div>
+                        <input id='pass1' className='pass1-field'
                             type='password'
                             name='password'
                             placeholder=' Password'
@@ -102,7 +114,10 @@ class Register extends Component {
                     </div>
 
                     <div className='form-field'>
-                        <input className='pass2-field'
+                        <div>
+                            <label className = 'text-white' htmlFor="pass2">Confirm Password</label>
+                        </div>
+                        <input id='pass2' className='pass2-field'
                             type='password'
                             name='password2'
                             placeholder=' Retype Password'
@@ -112,7 +127,10 @@ class Register extends Component {
                     </div>
 
                     <div className='form-field'>
-                        <input className='user-field'
+                         <div>
+                            <label className = 'text-white' htmlFor="address">Address</label>
+                         </div>
+                        <input id='address' className='user-field'
                             type='text'
                             name='address'
                             placeholder=' Company Address'
@@ -122,7 +140,10 @@ class Register extends Component {
                     </div>
 
                     <div className='form-field'>
-                        <input className='user-field'
+                        <div>
+                            <label className = 'text-white' htmlFor="phone_no">Mobile number</label>
+                         </div>
+                        <input id='phone_no' className='user-field'
                             type='number'
                             name='phone_no'
                             placeholder=' Company phone'
@@ -132,7 +153,11 @@ class Register extends Component {
                     </div>
 
                     <div className='form-field'>
-                        <select onChange={this.onchange} name = 'establishment' value = {establishment}>
+                         <div>
+                            <label className = 'text-white' htmlFor="phone_no">Establishment</label>
+                         </div>
+                        <select id='establish'  onChange={this.onchange} name = 'establishment' value = {establishment}>
+                            <option disabled value = ''>--SELECT--</option>
                             <option value = 'HOS'>Hospital</option>
                             <option value = 'CLHE'>Clinic/Health Centre</option>
                             <option value = 'PHM'>Pharmacy</option>
@@ -140,7 +165,7 @@ class Register extends Component {
                         </select>
                     </div>
 
-                    <button id="submit" type="submit" className='form-button'>Register</button>
+                    <button id="submit" type="submit" className='btn btn-sm btn-dark'>Register</button>
 
                 </form>
 

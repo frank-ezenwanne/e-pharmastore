@@ -38,7 +38,7 @@ class CustomerPage extends Component{
     map_orders = (order,id) =>{
         return(
             <Fragment key={id}>
-                <div className="order-svg-container">
+                <div style = {{fontSize:'90%'}} className=" col-12 col-sm-6 col-md-4 col-lg-3 order-svg-container">
                     <img className='img-fluid order-svg-style' src= {Cart}/>
                     <div onClick = {()=>this.props.get_selected_order(order.id)} className = "order-info">
                         <div className="order-info-item order-info-create-date mb-2">
@@ -67,9 +67,7 @@ class CustomerPage extends Component{
        if(this.state.move){
            return <Navigate to = '/order'/>
        }
-       if(!this.props.isAuthenticated){
-           return <Navigate to = '/login'/>
-       }
+
        let {has_other_pages,page_range,orders_data,current_page,num_pages} = this.props.customer_orders
        let page_arr = [] //array for pages in between 1st and last page
        let selected_page
@@ -98,9 +96,9 @@ class CustomerPage extends Component{
 
         return (
             <div className="customer-page">
-                <div style={this.new_order_button} className = "btn btn-success" onClick={this.props.create_order}>New Order</div>
-                <div className="customer-order-grid">
-                    {orders_data? orders_data.map(this.map_orders):null}
+                <div style={this.new_order_button} className = "mt-4 btn btn-success" onClick={this.props.create_order}>New Order</div>
+                <div className="row">
+                    {orders_data? orders_data.map(this.map_orders):<div>No order Yet !</div>}
                 </div>
 
                 <div className="pagination-section">

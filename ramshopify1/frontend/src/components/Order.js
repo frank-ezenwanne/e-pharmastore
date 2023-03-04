@@ -965,14 +965,14 @@ render(){
     return (
         <Fragment>
             <div style ={{fontWeight:'bolder'}} className="card" id="form-container-main">
-                <div className='header'>
+                <div className='header '>
                     <div className="order_id">Order Id : {this.props.last_ordercode? this.props.last_ordercode:null}</div>
-                    <div  className = 'radio-delete-div'>
+                    <div  className = 'radio-delete-div d-flex flex-column flex-md-row'>
                         <div className = 'radio-search-option-div'>
                             <div className = 'radio-input form-check'> Quick search<input className= 'form-check-input' onChange = {this.onChangeRadioSearch} checked ={this.state.radio_search_option === 'quick' } type ='radio' value='quick' name="radio_search_option"></input></div>
                             <div className = 'radio-input form-check'> Deep search<input className = 'form-check-input' onChange = {this.onChangeRadioSearch} checked ={this.state.radio_search_option === 'deep' } type ='radio' value='deep' name="radio_search_option"></input></div>
                         </div>
-                        <div className = 'delete-options-div'>
+                        <div className = 'mt-3 mt-md-0 delete-options-div'>
                             <div onClick = {this.confirmDeleterow} style = {{display:this.state.confirm_del_checkbox_display}} className = 'btn btn-danger confirm-delete'>Confirm</div>
                             <div onClick = {this.changeDeleteStatus} className = {'btn' +' ' + this.state.delete_button_color + ' ' +'delete-cancel'}> {this.state.delete_button_status} </div>
                             <div onClick = {()=>{
@@ -992,12 +992,12 @@ render(){
  
                 <form className="form-class1">
                         <div id = "table-grid-main" >
-                                <div className="grid-headings">Product</div>
-                                <div className="grid-headings">Generic</div>
-                                <div className="grid-headings">Unit</div>
-                                <div className="grid-headings">Quantity</div>
-                                <div className="grid-headings">Unit cost</div>
-                                <div className="grid-headings">Total</div>
+                                <div style={{marginTop:'2rem'}} className="grid-headings">Product</div>
+                                <div style={{marginTop:'2rem'}} className="grid-headings">Generic</div>
+                                <div style={{marginTop:'2rem'}} className="grid-headings">Unit</div>
+                                <div style={{marginTop:'2rem'}} className="grid-headings">Quantity</div>
+                                <div style={{marginTop:'2rem'}} className="grid-headings">Unit cost</div>
+                                <div style={{marginTop:'2rem'}} lassName="grid-headings">Total</div>
                             
                             {id_list.map(this.map_stuff)}
                         
