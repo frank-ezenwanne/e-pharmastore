@@ -2,10 +2,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics, permissions
 from knox.models import AuthToken
-from .serializers import LoginSerializer,RegisterSerializer,UserSerializer,VerifyTokenSerializer,EmailSerializer,ChangeEmailSerializer
+from .serializers import LoginSerializer,RegisterSerializer,UpdateProfileSerializer,UserSerializer,VerifyTokenSerializer,EmailSerializer,ChangeEmailSerializer
 from django.core.mail import EmailMessage
 from .models import CustomUser
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
 from django.urls import reverse
 import copy
@@ -18,7 +19,6 @@ class UserAPI(generics.RetrieveAPIView):
 
   def get_object(self):
     return self.request.user
-
 
 
 class LoginAPI(APIView):
@@ -70,7 +70,7 @@ class RegisterAPI(APIView):
         instance=user.save()
         instance.set_token()
         message = EmailMessage(
-                    "Hello", f'Your Token is {instance.token}', 'efrank938@gmail.com', [instance.email])
+                    "Hello", f'Your Token is {instance.token}', 'ramsgatepharm@gmail.com', [instance.email])
         try: 
             message.send()
         except: 
@@ -83,52 +83,62 @@ class RegisterAPI(APIView):
             })
 
 class UpdateProfile(APIView):
-    def get_serializer_context(self):
-        """
-        Extra context provided to the serializer class.
-        """
-        return {
-            'request': self.request,
-            'format': self.format_kwarg,
-            'view': self
-        }
-    serializer_class = RegisterSerializer
+    permission_classes = [IsAuthenticated,]
+    
+    def get(self,request,*args,**kwargs):
+        # user = CustomUser.objects.get(email = request.user.email)
+        details = UpdateProfileSerializer(request.user)
+        print('here') 
+        return Response({
+            'profile': details.data
+        })
 
     def post(self,request,*args,**kwargs):
-        user = RegisterSerializer(data=request.data)
-        user.is_valid(raise_exception=True)
-        instance=user.save()
+        new_details = UpdateProfileSerializer(data=request.data)
+        new_details.is_valid(raise_exception=True)
+        print(dir(new_details))
+        for key in new_details.get_fields():
+            if key != 'company_name':
+                setattr(request.user,key,new_details.validated_data[key])
+        if new_details.data['company_name'] != request.user.company_name :
+            new_company_name = new_details.validated_data['company_name'] 
+            if CustomUser.objects.filter(company_name = new_company_name).count() == 0:
+                request.user.company_name = new_company_name
+            else:
+                return Response ({
+                    'Error': 'Company name not available'
+                         },status = status.HTTP_400_BAD_REQUEST)
+        request.user.save()
+        new_details = UpdateProfileSerializer(request.user)
+        return Response({
+            'profile': new_details.data
+        })
+
 
 
 class ResendToken(APIView):
     def post(self,request,*args,**kwargs):
         serializer = EmailSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user=CustomUser.objects.filter(email=serializer.validated_data['email']).first()
-        if user.token_request_no > 0:
-            user.token_request_no -= 1
-            user.set_token() #calls save() already so above change is saved too
-            message = EmailMessage(
-                        "Hello", f'Your Token is {user.token}', 'efrank938@gmail.com', [user.email])
-            try: 
-                message.send()
-            except: 
-                return Response({
-                    'token_sent':'failed'
-                },status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        user=CustomUser.objects.filter(email=serializer.validated_data['email']).first()        
+        user.set_token() #calls save() already so above change is saved too
+        message = EmailMessage(
+                    "Hello", f'Your Token is {user.token}', 'ramsgatepharm@gmail.com', [user.email])
+        try: 
+            message.send()
+        except: 
             return Response({
-                    'token_sent':'success'
-                })
-        else:
-              return Response({
-                    'token_sent':'failed,exceeded token_request_num'
-                },status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                'token_sent':'failed'
+            },status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({
+                'token_sent':'success'
+            })
+  
 
 class VerifyToken(APIView):
     def post(self,request,*args,**kwargs):
         serializer = VerifyTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        print(serializer)
         token = serializer.validated_data['token']
         email = serializer.validated_data['email']
         user = CustomUser.objects.filter(email=email).first()
@@ -159,7 +169,7 @@ class ChangeEmailRequest(APIView):
                     user.save()
                     url = request.build_absolute_uri(reverse('emailchange',kwargs ={'token':AuthToken.objects.create(user)[1]}))
                     message = EmailMessage(
-                        "Hello", f'Click on this {url} to activate your new email', 'efrank938@gmail.com', [user.inactive_email])
+                        "Hello", f'Click on this {url} to activate your new email', 'ramsgatepharm@gmail.com', [user.inactive_email])
                     try: 
                         message.send()
                     except: 
@@ -169,24 +179,19 @@ class ChangeEmailRequest(APIView):
                 else:
                     user.email = new_email
                     user.save()
-                    if user.token_request_no > 0:
-                        user.token_request_no -= 1
-                        user.set_token() #calls save() already so above change is saved too
-                        message = EmailMessage(
-                                    "Hello", f'Your Token is {user.token}', 'efrank938@gmail.com', [user.email])
-                        try: 
-                            message.send()
-                        except: 
-                            return Response({
-                                'token_sent':'failed'
-                            },status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                    user.set_token() #calls save() already so above change is saved too
+                    message = EmailMessage(
+                                "Hello", f'Your Token is {user.token}', 'ramsgatepharm@gmail.com', [user.email])
+                    try: 
+                        message.send()
+                    except: 
                         return Response({
-                                'token_sent':'success','user_active':False,'user':{'email':user.email,'company_name':user.company_name}
-                            })
-                    else:
-                        return Response({
-                                'token_sent':'failed,exceeded token_request_num'
-                            },status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                            'token_sent':'failed'
+                        },status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                    return Response({
+                            'token_sent':'success','user_active':False,'user':{'email':user.email,'company_name':user.company_name}
+                        })
+                
 
             else:
                 return Response({'email_set':'user not found'},status=status.HTTP_404_NOT_FOUND)

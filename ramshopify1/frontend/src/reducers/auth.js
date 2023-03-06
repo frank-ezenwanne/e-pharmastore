@@ -1,5 +1,7 @@
 import {
     REGISTER_SUCCESS,
+    PROFILE_UPDATED,
+    PROFILE_RETRIEVED,
     LOGIN_SUCCESS,
     USER_LOADED,
     LOADING,
@@ -22,7 +24,11 @@ const initialState = {
     user_active:'not_logged_in',
     token_resent:false,
     new_email_set:false,
-    isLoading:false
+    isLoading:false,
+    profile:{company_name: '',
+    address:'',
+    phone_no:'', 
+    establishment:''}
 }
 
 export default function(state=initialState,action){
@@ -62,6 +68,13 @@ export default function(state=initialState,action){
                     ...state,
                     isLoading:false
                 }
+
+        case PROFILE_RETRIEVED:
+        case PROFILE_UPDATED:
+            return{
+                ...state,
+                profile:action.payload.profile
+            }
 
         case REGISTER_SUCCESS:
             return{

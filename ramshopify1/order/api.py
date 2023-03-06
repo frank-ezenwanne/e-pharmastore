@@ -386,7 +386,7 @@ class SendCSVEmail(APIView):
                 writer.writerow(['','','','','','',overall_cost])
                 
                 message = EmailMessage(
-                    "Hello", f"The Order from {order.buyer.company_name} to Ramsgate", 'efrank938@gmail.com', [order.buyer.email])
+                    "Hello", f"The Order from {order.buyer.company_name} to Ramsgate", 'ramsgatepharm@gmail.com', [order.buyer.email])
                 message.attach('order.csv', csv_file.getvalue(), 'text/csv')
                 try:
                     message.send()

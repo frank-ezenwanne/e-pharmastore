@@ -218,7 +218,7 @@ export const get_customer_orders = (page_num = 1) => (dispatch,getState) =>{
 }
 
 //get selected order
-export const get_selected_order = (id) => (dispatch,getState) =>{
+export const get_selected_order = (id) => (dispatch,getState) =>{ //doesn't actually get d order...just makes it last
     const config={
         headers:{
             "Content-Type":"application/json"
@@ -230,7 +230,6 @@ export const get_selected_order = (id) => (dispatch,getState) =>{
     if(token) {
         config.headers["Authorization"] = `Token ${token}`
     }
-
     const body = JSON.stringify({id})
 
     axios
@@ -240,7 +239,6 @@ export const get_selected_order = (id) => (dispatch,getState) =>{
             type:ORDER_MADE_LAST,
             payload:res.data
         })
-        dispatch(createMessage({'msg':'Selected order retrieved su}ccessfully'}))
     })
     
 

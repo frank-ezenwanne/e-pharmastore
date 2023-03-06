@@ -10,7 +10,7 @@ export default function MainGenericModal(props) {
   }
 
   const generic_modal_table = {
-  marginLeft:'5%'
+
 
   }
 

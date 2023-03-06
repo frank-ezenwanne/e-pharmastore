@@ -222,7 +222,6 @@ export default function (state = initialState,action){
             }
 
         case PREPARE_GENERIC_PRODUCTS:
-            console.log(action.payload,'pay')
             return{
                 ...state,
                 order_gen_products:action.payload

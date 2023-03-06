@@ -7,6 +7,7 @@ urlpatterns = [
     path("register",index),
     path("aboutus",index),
     path("order",index),
+    path("profile",index),
     path("customerpage",index),
     path("verifytoken",index),
     path("emailchange",index),

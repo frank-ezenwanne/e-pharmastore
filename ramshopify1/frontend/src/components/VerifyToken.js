@@ -36,23 +36,26 @@ class VerifyToken extends Component{
 
 
     render(){
-        if(this.props.isAuthenticated){
-           return <Navigate to = "/customerpage" />
-         }
-        if (this.props.justverified || !this.props.user.email) {
-            return <Navigate to = "/login"/>
-        }
+        // if(this.props.isAuthenticated){
+        //    return <Navigate to = "/customerpage" />
+        //  }
+        // if (this.props.justverified || !this.props.user.email) {
+        //     return <Navigate to = "/login"/>
+        // }
 
 
        const {token } = this.state
         return (
         <div className = "login-block">
-        {this.props.token_resent?<div>New Token Sent!</div>:null}
-       <div align="center" id="message">Enter Token sent to {this.props.user.email} </div>
-            <h3 className = 'login-heading'> Account Activation </h3>
+            <h3 className = 'text-white login-heading'> Account Activation </h3>
+            {this.props.token_resent?<div className = 'text-white'>New Token Sent!</div>:null}
             <form onSubmit = {this.onsubmit} >
                 <div className = 'form-field'>
+                    <div>
+                        <label className = 'text-white' htmlFor="token">Token from email {this.props.user.email}</label>
+                    </div>
                     <input className = 'user-field' 
+                    id='token'
                     type ='text' 
                     name ='token'
                      placeholder=' Token from email'
@@ -65,7 +68,7 @@ class VerifyToken extends Component{
 
                 <div id ="login-bottom-options">
                     <div className="reg-link"><Link to ="/emailchange"> Change Email? </Link> </div>
-                    <div onClick={this.resend_token} className="reg-link"> Re-request Token?</div>
+                    <div onClick={this.resend_token} className="clickable reg-link"> Re-request Token?</div>
 
                 </div>
             </form>

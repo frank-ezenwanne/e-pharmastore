@@ -64,10 +64,10 @@ class Order(models.Model):
     order_total = models.FloatField(default=0)
     last_updated = models.DateTimeField(auto_now=True)
 
-    def save(self,force_insert=True,*args,**kwargs):
-        super().save(*args,**kwargs)
-        self.order_code= 'RAMS0' + str(self.id)
-        return super().save(*args,**kwargs)
+    # def save(self,force_insert=True,*args,**kwargs):
+    #     super().save(*args,**kwargs)
+    #     self.order_code= 'RAMS0' + str(self.id)
+    #     return super().save(*args,**kwargs)
 
     def __str__(self):
         return f"{self.buyer.company_name}'s Order"

@@ -155,5 +155,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 # EMAIL_BACKEND = 'django_mailjet.backends.MailjetBackend'
 # MAILJET_API_KEY = 'cbbb1ce3b46b0975dc83f4f8d818f430'
 # MAILJET_API_SECRET = 'f4cb1f680fa04497e97bc871bf04f6ff'
-DEFAULT_FROM_EMAIL = "efrank938@gmail.com" 
+DEFAULT_FROM_EMAIL = "ramsgatepharm@gmail.com" 
 EMAIL_FILE_PATH = os.path.join(BASE_DIR,'emails')

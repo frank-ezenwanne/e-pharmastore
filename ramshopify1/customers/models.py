@@ -68,7 +68,6 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
     )
     inactive_email = models.EmailField(null=True,blank=True)
     token = models.CharField(null=True, blank=True,max_length=10)
-    token_request_no = 10
     company_name = models.CharField(max_length=100,unique=True)
     is_active = models.BooleanField(default=True)
     user_active = models.BooleanField(default=False)

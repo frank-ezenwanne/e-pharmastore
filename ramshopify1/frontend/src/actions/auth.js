@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {LOGIN_SUCCESS,LOADING,LOADED,LOGOUT_SUCCESS,REGISTER_SUCCESS,USER_LOADED,TOKEN_RESENT,NEW_EMAIL_SET,TOKEN_VERIFIED,EMAIL_CHANGED} from "./types"
+import {LOGIN_SUCCESS,LOADING,LOADED,LOGOUT_SUCCESS,REGISTER_SUCCESS,PROFILE_UPDATED,PROFILE_RETRIEVED,USER_LOADED,TOKEN_RESENT,NEW_EMAIL_SET,TOKEN_VERIFIED,EMAIL_CHANGED} from "./types"
 import {createMessage, returnErrors} from './message_error'
 
 export const register=(company_name,password,email,address, phone_no, establishment)=>(dispatch)=>{
@@ -25,6 +25,77 @@ export const register=(company_name,password,email,address, phone_no, establishm
                 type:LOADED
             })
             dispatch(createMessage({msg:'Account Created Successfully!'}))
+        })
+
+        .catch((err) => {
+            dispatch({
+                type:LOADED
+            })
+            dispatch(returnErrors(err.response.data,err.response.status))
+        })
+}
+
+export const getProfile =()=>(dispatch,getState)=>{
+    const config={
+        headers:{
+            "Content-Type":"application/json"
+        }
+    }
+    const token = getState().auth.token
+    if(token) {
+        config.headers["Authorization"] = `Token ${token}`
+    }
+
+    dispatch({
+        type:LOADING
+    })
+    axios
+        .get("api/auth/getProfile",config)
+        .then((res)=>{
+            dispatch({
+                type:PROFILE_RETRIEVED,
+                payload:res.data
+            })
+            dispatch({
+                type:LOADED
+            })
+            dispatch(createMessage({msg:'Profile retrieved successfully!'}))
+        })
+
+        .catch((err) => {
+            dispatch({
+                type:LOADED
+            })
+            dispatch(returnErrors(err.response.data,err.response.status))
+        })
+}
+
+export const updateProfile=(company_name,address, phone_no, establishment)=>(dispatch,getState)=>{
+    const config={
+        headers:{
+            "Content-Type":"application/json"
+        }
+    }
+    const token = getState().auth.token
+    if(token) {
+        config.headers["Authorization"] = `Token ${token}`
+    }
+
+    const body = JSON.stringify({company_name,address, phone_no, establishment})
+    dispatch({
+        type:LOADING
+    })
+    axios
+        .post("api/auth/updateProfile",body,config)
+        .then((res)=>{
+            dispatch({
+                type:PROFILE_UPDATED,
+                payload:res.data
+            })
+            dispatch({
+                type:LOADED
+            })
+            dispatch(createMessage({msg:'Profile updated Successfully!'}))
         })
 
         .catch((err) => {

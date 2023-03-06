@@ -10,6 +10,8 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('email','company_name')
 
 
+
+
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
@@ -26,10 +28,18 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         return user
 
-class UpdateProfile(serializers.ModelSerializer):
-    class Meta:
-        model = CustomUser
-        fields = ('company_name','address', 'phone_no', 'establishment')
+# class UpdateProfileSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = CustomUser
+#         fields = ('address', 'phone_no', 'establishment')
+
+class UpdateProfileSerializer(serializers.Serializer):
+    company_name = serializers.CharField()
+    address = serializers.CharField()
+    phone_no = serializers.CharField()
+    establishment = serializers.CharField()
+
+
 
 
 

@@ -12,7 +12,6 @@ export default function (state = initialState,action){
             } 
 
         default:
-            console.log('het')
             return state
     }
         

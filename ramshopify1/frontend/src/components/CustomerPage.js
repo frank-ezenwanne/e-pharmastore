@@ -97,8 +97,8 @@ class CustomerPage extends Component{
         return (
             <div className="customer-page">
                 <div style={this.new_order_button} className = "mt-4 btn btn-success" onClick={this.props.create_order}>New Order</div>
-                <div className="row">
-                    {orders_data? orders_data.map(this.map_orders):<div>No order Yet !</div>}
+                <div className="row w-100">
+                    {orders_data.length > 0? orders_data.map(this.map_orders):<div className='text-dark' align='center'>No order Yet !</div>}
                 </div>
 
                 <div className="pagination-section">

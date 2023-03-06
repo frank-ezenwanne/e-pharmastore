@@ -32,7 +32,7 @@ class Home extends Component{
             return <Navigate to = '/order'/>
         }
         return(
-            <div id = 'home-back-img-div'>
+            <div id = 'home-back-img-div w-100 overflow-none'>
                 <img id='home-back-img' src = {DrugStoreImg}/>
                 <div id= 'home-img-heading'>
                     <div id ='home-img-top-heading'> RAMSGATE PHARMACY </div>
@@ -45,7 +45,7 @@ class Home extends Component{
                             <div onClick = {()=>{this.props.create_order()}} className = 'btn btn-success'>New Order</div> 
                         </div>
                         :
-                        <div className = 'home-guest-button btn btn-success'> <Link to = '/login' style= {{textDecoration:'none',color:'white'}}>Log In/Register</Link></div>
+                        <div className = 'home-guest-button btn btn-success'> <Link to = '/aboutus' style= {{textDecoration:'none',color:'white'}}>Take a Look</Link></div>
                     }
                 </div>
             </div>

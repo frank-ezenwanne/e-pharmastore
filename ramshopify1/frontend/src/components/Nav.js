@@ -82,6 +82,7 @@ function Nav(props){
 						<span className = "side-bar-email">{props.email}</span>
 						<span className="lower-side-bar "><Link style = {{textDecoration:'none',color:'white'}} to ='/aboutus'>About Us</Link></span>
 						<span className = "lower-side-bar"><Link style = {{textDecoration:'none',color:'white'}} to ='/customerpage'>View My Orders</Link></span>
+						<span className = "lower-side-bar"><Link style = {{textDecoration:'none',color:'white'}} to ='/profile'>Profile</Link></span>
 						<span onClick = {()=>{props.logout()}} className = "text-white lower-side-bar">Logout</span>
 					</div>
 					</Fragment>:

@@ -6,6 +6,7 @@ import {loaduser} from '../actions/auth'
 import Home from "./Home"
 import Login from "./Login"
 import Register from "./Register";
+import Profile from './UpdateProfile'
 import AboutUs from "./AboutUs";
 import Order from "./Order"
 import Nav from "./Nav"
@@ -56,12 +57,13 @@ class App extends Component{
                                 <Route path = "aboutus" element = {<AboutUs/>}/>
                                 <Route element = {<PrivateRoute/>}>
                                     <Route path = "order" element = {<Order/>}/>
+                                    <Route path = "profile" element = {<Profile/>}/>
                                     <Route path = "customerpage" element = {<CustomerPage/>}/>
-                                    <Route path = "verifytoken" element = {<VerifyToken/>}/>
-                                    <Route path = "emailchange" element = {<EmailChange/>}/>
-                                    <Route path = "emailchange_sent" element = {<EmailChangeSent/>}/>
-                                    <Route path = "emailchange/:token" element = {<EmailChangeConfirm/>}/>
                                 </Route>
+                                <Route path = "verifytoken" element = {<VerifyToken/>}/>
+                                <Route path = "emailchange" element = {<EmailChange/>}/>
+                                <Route path = "emailchange_sent" element = {<EmailChangeSent/>}/>
+                                <Route path = "emailchange/:token" element = {<EmailChangeConfirm/>}/>
                                 {/* <Route path = "emailchange_confirm" element = {<EmailChangeConfirm/>}/> */}
                             </Routes>
                         </div>

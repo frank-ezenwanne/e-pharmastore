@@ -688,9 +688,6 @@ if(!this.state.ordered){ //only works if order is not sent!!
                     this.props.delOrderProducts(this.props.last_orderid,posted)
                 }
             }
-                
-            
-
 
 
         }
@@ -997,7 +994,7 @@ render(){
                                 <div style={{marginTop:'2rem'}} className="grid-headings">Unit</div>
                                 <div style={{marginTop:'2rem'}} className="grid-headings">Quantity</div>
                                 <div style={{marginTop:'2rem'}} className="grid-headings">Unit cost</div>
-                                <div style={{marginTop:'2rem'}} lassName="grid-headings">Total</div>
+                                <div style={{marginTop:'2rem'}} className="grid-headings">Total</div>
                             
                             {id_list.map(this.map_stuff)}
                         
@@ -1010,10 +1007,10 @@ render(){
             */}
             <div className="temp-send-order-total-div">
                 {this.state.ordered?
-                        <div onClick = {()=>{this.props.copy_order(this.props.last_orderid)}} title = 'Create identical order that you can edit' style = {{display:'block'}} className ='template-button btn btn-success'>
+                        <div onClick = {()=>{this.props.copy_order(this.props.last_orderid)}} title = 'Create identical order that you can edit' style = {{display:'block'}} className ='template-button btn-sm btn-success'>
                         Use as Template
                         </div> :
-                    <div onClick = {this.onMainGenericModal} title = 'Search By Generic' style = {{display:'block'}} className ='template-button btn btn-success'>
+                    <div onClick = {this.onMainGenericModal} title = 'Search By Generic' style = {{display:'block'}} className ='template-button btn-sm btn-success'>
                         Search By Generic
                     </div>  
                  }
@@ -1021,7 +1018,7 @@ render(){
                 {/* {{marginLeft:!this.state.ordered?'40rem':'27rem'}} */}
                <div className = 'send-order-total-div' style = {{marginLeft:'27rem'}}>
                     <div onClick = {()=>{this.confirm_order()}}
-                        className = {this.state.ordered? 'btn-warning send-order-button btn': 'btn-success send-order-button btn'}>
+                        className = {this.state.ordered? 'cursor-pointer btn-warning send-order-button btn-sm': 'cursor-pointer btn-success send-order-button btn-sm'}>
                     Send Order
                     </div>
 
