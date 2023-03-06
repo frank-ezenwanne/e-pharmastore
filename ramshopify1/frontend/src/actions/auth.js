@@ -310,3 +310,25 @@ export const email_token_change = (token) =>(dispatch)=>{//handles auth token pa
         )
 }
 
+export const PasswordReset = (email)=>(dispatch)=>{
+
+    const config={
+        headers:{
+            "Content-Type":"application/json"
+        }
+    }
+    const body = JSON.stringify({email})
+    
+    axios
+        .post('api/passwordResetLink',body,config)
+        .then((res)=>{
+            dispatch(createMessage({msg:'Token Resent!'}))
+            return true    
+        })
+        .catch(
+            (err) => {
+                dispatch(returnErrors(err.response.data,err.response.status))
+            }
+        )
+    
+}

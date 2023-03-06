@@ -23,7 +23,7 @@ class Login extends Component{
     
    
     onchange = (e) => {
-        this.setState({
+        this.setState({...this.state,
             [e.target.name] : e.target.value
         })
     }

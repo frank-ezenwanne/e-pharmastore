@@ -27,7 +27,7 @@ class Register extends Component {
 
 
     onchange = (e) => {
-        this.setState({
+        this.setState({...this.state,
             [e.target.name]: e.target.value
         })
     }
@@ -45,6 +45,8 @@ class Register extends Component {
                 establishment
             }
             this.props.register(company_name, password, email, address, phone_no, establishment)
+        }else{
+            alert('Passwords do not match')
         }
     }
 

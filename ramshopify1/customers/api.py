@@ -196,6 +196,32 @@ class ChangeEmailRequest(APIView):
             else:
                 return Response({'email_set':'user not found'},status=status.HTTP_404_NOT_FOUND)
 
+
+
+class SendPasswordResetLink(APIView):
+    def post(self,request,*args,**kwargs):
+            serializer = EmailSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            email = serializer.validated_data['email']    
+            user= CustomUser.objects.filter(email=email).first()
+            if user:
+                    url = request.build_absolute_uri(reverse('passwordreset',kwargs ={'token':AuthToken.objects.create(user)[1]}))
+                    message = EmailMessage(
+                        "Hello", f'Click on this {url} to reset your password', 'ramsgatepharm@gmail.com', [user.email])
+                    try: 
+                        message.send()
+                    except: 
+                        return Response({'pass_reset_link':'Reset link not sent'},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+                    return Response({'pass_reset_link':'success'})
+            else:
+                return Response({
+                        'pass_reset_link':'User not found'
+                    },status=status.HTTP_400_BAD_REQUEST)
+                
+
+
+
 class TokenChangeEmail(APIView):
     permission_classes = [
           permissions.IsAuthenticated, ]

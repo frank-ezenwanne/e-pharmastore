@@ -1,40 +1,31 @@
-import React, {Component} from 'react'
+import React, {Component, useState, useParams} from 'react'
 import {Link,Navigate} from 'react-router-dom'
-import {change_email} from "../actions/auth.js"
-import {connect} from 'react-redux'
 
-class EmailChange extends Component{
-    constructor(props){
-        super(props);
-        this.state = {
-            old_email:'',
-            new_email:'',
-            password:'',
-        }
-    }
+function PasswordChange(props){
+
+    const [credentials, setCredentials] = useState({
+        password:'',
+        password2:'',
+    })
+    const {token} = useParams()
 
     onchange = (e) => {
-        this.setState({...this.state,
+        setCredentials({...credentials,
             [e.target.name] : e.target.value
         })
     }
 
     onsubmit = (e) => {
         e.preventDefault()
-        const {old_email,new_email,password} = this.state
-        this.props.change_email(old_email,new_email,password)
+        const {password,password2} = this.state
+        if (password === password2) {
+            setNewPassword(token,password)
+        }else{
+            alert('Passwords do not match')
+        }
+        
     }
 
-    render(){
-        if(this.props.new_email_set){
-            if(this.props.user_active===true){
-                return <Navigate to = '/emailchange_sent'/>
-            }
-            else if(this.props.user_active===false){
-                return <Navigate to = '/verifytoken' />
-            }
-        }
-        const {old_email,new_email,password} = this.state
         return(
             <div className = "login-block">
             <h3 className = 'login-heading'> EMAIL CHANGE </h3>
