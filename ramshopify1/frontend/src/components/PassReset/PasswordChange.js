@@ -1,13 +1,16 @@
-import React, { useState, useParams} from 'react'
-import {Link,Navigate} from 'react-router-dom'
-import {setNewPassword} from '../../actions/search'
+import React, { useState} from 'react'
+import {Link,useNavigate,useParams} from 'react-router-dom'
+import {setNewPassword} from '../../actions/auth'
+import {connect} from 'react-redux'
 
 function PasswordChange(props){
 
+    const navigate = useNavigate()
     const [credentials, setCredentials] = useState({
         password:'',
         password2:'',
     })
+
 
     const {token} = useParams()
 
@@ -17,14 +20,16 @@ function PasswordChange(props){
         })
     }
 
-    onsubmit = (e) => {
+    onsubmit = async(e) => {
         e.preventDefault()
-        const {password,password2} = this.state
+        const {password,password2} = credentials
         if (password === password2) {
-            const resp = setNewPassword(token,password)
+            const resp = await props.setNewPassword(token,password)
+            console.log(resp.status,99844)
             if(resp.status === true){
-                return <Navigate to = '/login'/>
+                navigate("/login")
             }
+            
         }else{
             alert('Passwords do not match')
         }
@@ -33,50 +38,39 @@ function PasswordChange(props){
 
         return(
             <div className = "login-block">
-            <h3 className = 'login-heading'> EMAIL CHANGE </h3>
-            <form onSubmit = {this.onsubmit} >
+            <h4 className = 'login-heading'> ENTER NEW PASSWORD</h4>
+            <form onSubmit = {onsubmit} >
                 <div className = 'form-field'>
                     <input className = 'user-field' 
-                    type ='email' 
-                    name ='old_email'
-                     placeholder=' Old Email'
-                     onChange={this.onchange}
-                     value = {old_email}
+                    type ='password' 
+                    name ='password'
+                     placeholder=' Enter New Password'
+                     onChange={onchange}
+                     value = {credentials.password}
                       /><br/>   
                 </div>
 
                 <div className = 'form-field'>
                     <input className = 'user-field' 
-                    type ='email' 
-                    name ='new_email'
-                     placeholder=' New Email'
-                     onChange={this.onchange}
-                     value = {new_email}
+                    type ='password' 
+                    name ='password2'
+                     placeholder='Confirm Password'
+                     onChange={onchange}
+                     value = {credentials.password2}
                       /><br/>   
-                </div>
-
-                <div className = 'form-field'>
-                    <input className = 'pass1-field'
-                     type ='password' 
-                     name ='password' 
-                     placeholder=' Password'
-                     onChange={this.onchange}
-                     value = {password}
-                      /><br/>
                 </div>
 
                 <button  type = "submit" className = 'form-button'>Submit</button>
 
-                <div id ="login-bottom-options">
-                    <div className="reg-link"><Link to ="/login">Log In Instead</Link> 
-                    </div>
-
-                </div>
             </form>
 	    </div> 
   
         )
     }
 
+const mapStateToProps = (state) => ({
+    
+})
 
-export default PasswordChange
+
+export default connect(mapStateToProps,{setNewPassword})(PasswordChange)

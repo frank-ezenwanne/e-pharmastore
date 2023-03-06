@@ -13,4 +13,7 @@ urlpatterns = [
     path("emailchange",index),
     path("emailchange_sent",index),
     path("emailchange/<str:token>/",token_email,name='emailchange'),
+    path("password-change/<str:token>/",token_email,name='password-change'),
+    path("password-reset-done",index),
+    path("password-reset",index),
 ]

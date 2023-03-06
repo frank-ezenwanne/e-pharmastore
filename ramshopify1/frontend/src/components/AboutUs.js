@@ -27,7 +27,7 @@ class AboutUs extends Component{
                             <div>Ramsgate Pharmacy</div>
                             <img className = 'aboutuslogo' src={Logo}/>
                         </div>
-                        <div align='center' style={{fontSize:'90%',fontWeight:'bolder'}}>Restoring confidence..</div>
+                        <div align='center' style={{fontSize:'90%',fontWeight:'bolder'}}>To Restore confidence..</div>
                     </div>
                 </section>
 

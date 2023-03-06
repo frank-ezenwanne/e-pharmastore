@@ -962,14 +962,14 @@ render(){
     return (
         <Fragment>
             <div style ={{fontWeight:'bolder'}} className="card" id="form-container-main">
-                <div className='header '>
+                <div className='header overflow-auto ' style={{fontSize:'90%',maxWidth:'100%'}}>
                     <div className="order_id">Order Id : {this.props.last_ordercode? this.props.last_ordercode:null}</div>
                     <div  className = 'radio-delete-div d-flex flex-column flex-md-row'>
                         <div className = 'radio-search-option-div'>
                             <div className = 'radio-input form-check'> Quick search<input className= 'form-check-input' onChange = {this.onChangeRadioSearch} checked ={this.state.radio_search_option === 'quick' } type ='radio' value='quick' name="radio_search_option"></input></div>
                             <div className = 'radio-input form-check'> Deep search<input className = 'form-check-input' onChange = {this.onChangeRadioSearch} checked ={this.state.radio_search_option === 'deep' } type ='radio' value='deep' name="radio_search_option"></input></div>
                         </div>
-                        <div className = 'mt-3 mt-md-0 delete-options-div'>
+                        <div className = ' mt-3 mt-md-0 delete-options-div'>
                             <div onClick = {this.confirmDeleterow} style = {{display:this.state.confirm_del_checkbox_display}} className = 'btn btn-danger confirm-delete'>Confirm</div>
                             <div onClick = {this.changeDeleteStatus} className = {'btn' +' ' + this.state.delete_button_color + ' ' +'delete-cancel'}> {this.state.delete_button_status} </div>
                             <div onClick = {()=>{
@@ -1065,7 +1065,7 @@ render(){
             {
                vals['modal_deleteorder']?(<DeleteOrderModal
                    show={this.state.modal_deleteorder}
-                   last_orderid ={this.props.last_orderid}
+                   last_ordercode ={this.props.last_ordercode}
                    onHide={()=>{
                     this.setState({"modal_deleteorder":false})
                          }}
@@ -1079,7 +1079,7 @@ render(){
             {
                vals['modal_sendorder']?(<SendOrderModal
                    show={this.state.modal_sendorder}
-                   last_orderid ={this.props.last_orderid}
+                   last_ordercode ={this.props.last_ordercode}
                    onHide={()=>{
                     this.setState({"modal_sendorder":false})
                          }}

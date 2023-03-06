@@ -1,14 +1,19 @@
 import React,{Component} from "react"
 import {Link,Navigate} from 'react-router-dom'
-import {passwordResetLink} from '../../actions/search'
+import {passwordResetLink} from '../../actions/auth'
+import {connect} from 'react-redux'
 
 class PasswordReset extends Component{
     constructor(props){
         super(props);
         this.state = {
             email:"",
+            response:false
         }
+       
     }
+
+
 
     onchange = (e) => {
         this.setState({...this.state,
@@ -16,16 +21,19 @@ class PasswordReset extends Component{
         })
     }
 
-    onsubmit = (e) => {
+    onsubmit = async(e) => {
         e.preventDefault()
         const {email } = this.state
-        const resp = await passwordResetLink(email)
-        if(resp.status === true){
-            return <Navigate to = '/password-reset-done'/>
-        }
+        
+        const resp =  await this.props.passwordResetLink(email)
+        this.setState({...this.state,response:true})
+
     }
 
     render(){
+    if(this.state.response === true){
+        return <Navigate to = '/password-reset-done'/>
+    }
     const {email } = this.state
         return (
         <div className = "login-block ">
@@ -52,4 +60,9 @@ class PasswordReset extends Component{
     }
 }
 
-export default PasswordReset
+const mapStateToProps = (state) => ({
+    
+})
+
+
+export default connect(mapStateToProps,{passwordResetLink})(PasswordReset)

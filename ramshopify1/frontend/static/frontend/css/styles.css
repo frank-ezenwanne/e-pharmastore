@@ -526,12 +526,14 @@ margin-right:-2rem;
 	padding-bottom:1rem;
 	padding-right:10rem;
 	background-color: white;
+	scrollbar-width:'none'
 }
 
 .radio-delete-div{
 	width:inherit;
 	margin-top:1rem;
 	margin-bottom:1rem;
+	scrollbar-width:'none'
 	
 }
 
@@ -903,7 +905,7 @@ justify-content:space-around;
 
 
 #web-pages{
-margin-top:4rem;
+margin-top:6rem;
 width:100vw;
 width:100%;
 overflow-x:auto;
@@ -960,7 +962,9 @@ main{
 .user-field,.email-field,.pass1-field,.pass2-field{
 	border-radius:9.09rem;
 	height:1.5rem;
-	width:70%;
+	width:80%;
+	font-size: 120%;
+	font-family: 'monospace';
 }
 
 .form-button{

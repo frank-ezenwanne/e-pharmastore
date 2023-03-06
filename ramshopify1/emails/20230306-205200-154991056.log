@@ -1,0 +1,28 @@
+Content-Type: multipart/mixed; boundary="===============0141602347=="
+MIME-Version: 1.0
+Subject: Hello
+From: ramsgatepharm@gmail.com
+To: efrank272@gmail.com
+Date: Mon, 06 Mar 2023 19:52:00 -0000
+Message-ID: <167813232088.14064.1971408033099912353@Frank>
+
+--===============0141602347==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+The Order from Ramsgate45 to Ramsgate
+--===============0141602347==
+Content-Type: text/csv; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="order.csv"
+
+RAMS073,,,,,,
+serial,brand_description,generic_name,selected_unit,quantity_ordered,cost,total
+1,LABET TABS 200MG X 30,Labetalol,BLISTER,3,1500.0,4500.0
+,,,,,,4500.0
+
+--===============0141602347==--
+
+-------------------------------------------------------------------------------

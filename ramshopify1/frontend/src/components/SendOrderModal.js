@@ -19,7 +19,7 @@ export default function SendOrderModal(props) {
       </Modal.Header>
       <Modal.Body>
       <Fragment>
-        <div> Are you sure you want to send this Order with Id <span style={{color:'green'}}>  {props.last_orderid} ?</span></div><br/>
+        <div> Are you sure you want to send this Order with Id <span style={{color:'green'}}>  {props.last_ordercode} ?</span></div><br/>
          <div className = 'confirm-delete-buttons'>
          <div onClick = {props.send_email_code} align="center" className = 'del-btn btn btn-success'>
                 Yes, Send!

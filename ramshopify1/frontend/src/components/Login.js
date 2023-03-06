@@ -71,8 +71,9 @@ class Login extends Component{
                       /><br/>
                 </div>
 
-                <div className='w-50' align='center'>
+                <div className='d-flex justify-content-around align-items-baseline w-100' align='center'>
                     <button  type = "submit" className = 'btn btn-sm btn-dark '>Login</button>
+                    <div className="clickable  reg-link " style={{textDecoration :'none',fontSize:'85%'}}><Link to ="/password-reset">Forgot Password?</Link> </div>
                 </div>
                 
 

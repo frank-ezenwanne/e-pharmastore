@@ -296,9 +296,6 @@ export const email_token_change = (token) =>(dispatch)=>{//handles auth token pa
             dispatch(createMessage({msg:'New Email Verified!'}))
             axios
                 .post(hname + '/api/auth/logoutall',null,config)
-                .then(res=>{
-                    return {status:true} 
-                })
                 .catch(
                     (err) => {
                         dispatch(returnErrors(err.response.data,err.response.status))
@@ -309,35 +306,38 @@ export const email_token_change = (token) =>(dispatch)=>{//handles auth token pa
         .catch(
             (err) => {
                 dispatch(returnErrors(err.response.data,err.response.status))
-                return {status:false} 
             }
         )
 }
 
 
-export const passwordResetLink  = (email)=>(dispatch)=>{
-
+export const passwordResetLink  = (email)=>(dispatch)=>
+    new Promise(function(resolve, reject) {
     const config={
         headers:{
             "Content-Type":"application/json"
         }
     }
+    const body = JSON.stringify({email}) 
     
     axios
         .post('api/passwordResetLink',body,config)
         .then((res)=>{
             dispatch(createMessage({msg:'Link sent to email!'}))
-            return true    
+            return resolve({status:true})
+                
         })
         .catch(
             (err) => {
                 dispatch(returnErrors(err.response.data,err.response.status))
+                return reject ({status:false})
             }
         )
-    
-}
+    })
 
-export const setNewPassword= (token,password)=>(dispatch)=>{
+
+export const setNewPassword= (token,password)=>(dispatch)=>
+    new Promise(function(resolve,reject){
 
     const config={
         headers:{
@@ -350,16 +350,24 @@ export const setNewPassword= (token,password)=>(dispatch)=>{
 
     
     axios
-        .post(hname + 'api/auth/changePassword',body,config)
+        .post(hname + '/api/auth/changePassword',body,config)
         .then((res)=>{
             dispatch(createMessage({msg:'Password changed successfully!'}))
-            return {status:true}   
+                axios
+                .post(hname + '/api/auth/logoutall',null,config)
+                .catch(
+                    (err) => {
+                        dispatch(returnErrors(err.response.data,err.response.status))
+                    }
+                )
+                return resolve({status:true})
+            
         })
         .catch(
             (err) => {
                 dispatch(returnErrors(err.response.data,err.response.status))
-                return {status:false}
+                return reject ({status:false})
             }
         )
     
-}
+})

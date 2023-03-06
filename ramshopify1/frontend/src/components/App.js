@@ -20,6 +20,9 @@ import AlertTemplate from 'react-alert-template-basic';
 import EmailChangeSent from "./EmailChangeSent";
 import EmailChangeConfirm from "./EmailChangeConfirm";
 import PrivateRoute from "./PrivateRoute";
+import PasswordChange from './PassReset/PasswordChange'
+import PasswordReset from './PassReset/PasswordReset'
+import PasswordResetDone from './PassReset/PasswordResetDone'
 
 
 const alertOptions = {
@@ -61,6 +64,9 @@ class App extends Component{
                                     <Route path = "customerpage" element = {<CustomerPage/>}/>
                                 </Route>
                                 <Route path = "verifytoken" element = {<VerifyToken/>}/>
+                                <Route path = "password-reset" element = {<PasswordReset/>}/>
+                                <Route path = "password-reset-done" element = {<PasswordResetDone/>}/>
+                                <Route path = "password-change/:token" element = {<PasswordChange/>}/>
                                 <Route path = "emailchange" element = {<EmailChange/>}/>
                                 <Route path = "emailchange_sent" element = {<EmailChangeSent/>}/>
                                 <Route path = "emailchange/:token" element = {<EmailChangeConfirm/>}/>

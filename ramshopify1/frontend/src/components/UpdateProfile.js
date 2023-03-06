@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
 import { getProfile, updateProfile } from "../actions/auth.js"
 import PropTypes from "prop-types"
-import { Navigate } from "react-router-dom"
+import {Link, Navigate } from "react-router-dom"
 
 class UpdateProfile extends Component {
     constructor(props){
@@ -110,8 +110,14 @@ class UpdateProfile extends Component {
                             <option value = 'CHSU'>Chemist/Superstore</option>
                         </select>
                     </div>
-
-                    <button id="submit" type="submit" className='btn btn-sm btn-dark'>Update</button>
+                    <div className="d-flex justify-content-between w-100">
+                        <button id="submit" type="submit" className='btn btn-sm btn-dark'>Update</button>
+                        <div className=" ms-4 reg-link" style= {{fontSize:'70%'}}>Change<br/>
+                            <Link to ="/password-reset">Password </Link> /
+                            <Link to ="/emailchange"> Email</Link> 
+                        </div>
+                    </div>
+                   
 
                 </form>
 

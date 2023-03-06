@@ -205,7 +205,7 @@ class SendPasswordResetLink(APIView):
             email = serializer.validated_data['email']    
             user= CustomUser.objects.filter(email=email).first()
             if user:
-                    url = request.build_absolute_uri(reverse('passwordreset',kwargs ={'token':AuthToken.objects.create(user)[1]}))
+                    url = request.build_absolute_uri(reverse('password-change',kwargs ={'token':AuthToken.objects.create(user)[1]}))
                     message = EmailMessage(
                         "Hello", f'Click on this {url} to reset your password', 'ramsgatepharm@gmail.com', [user.email])
                     try: 
@@ -222,6 +222,7 @@ class SendPasswordResetLink(APIView):
 class ChangePasswordView(APIView):
     permission_classes = [IsAuthenticated,]
     def post(self,request,*args,**kwargs):
+        print(12224)
         serializer = PasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         password = serializer.validated_data['password']
