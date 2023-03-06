@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics, permissions
 from knox.models import AuthToken
-from .serializers import LoginSerializer,RegisterSerializer,UpdateProfileSerializer,UserSerializer,VerifyTokenSerializer,EmailSerializer,ChangeEmailSerializer
+from .serializers import LoginSerializer,RegisterSerializer,UpdateProfileSerializer,UserSerializer,VerifyTokenSerializer,EmailSerializer,ChangeEmailSerializer,PasswordSerializer
 from django.core.mail import EmailMessage
 from .models import CustomUser
 from rest_framework import status
@@ -218,7 +218,17 @@ class SendPasswordResetLink(APIView):
                 return Response({
                         'pass_reset_link':'User not found'
                     },status=status.HTTP_400_BAD_REQUEST)
-                
+
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated,]
+    def post(self,request,*args,**kwargs):
+        serializer = PasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        password = serializer.validated_data['password']
+        request.user.set_password(password)
+        request.user.save()
+        return Response({'password_change':'success'})
+
 
 
 

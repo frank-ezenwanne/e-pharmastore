@@ -287,7 +287,7 @@ export const email_token_change = (token) =>(dispatch)=>{//handles auth token pa
     config.headers["Authorization"] = `Token ${token}`
     const hname = window.location.origin
     axios
-        .post( hname + '/api/token_change_email',null,config)
+        .post( hname + '/api/token_change_email',null,config) //added hname here because though it is done autom, in dis case the url is opened up from the email and causes issues
         .then((res)=>{
             dispatch({
                 type:EMAIL_CHANGED,
@@ -296,6 +296,9 @@ export const email_token_change = (token) =>(dispatch)=>{//handles auth token pa
             dispatch(createMessage({msg:'New Email Verified!'}))
             axios
                 .post(hname + '/api/auth/logoutall',null,config)
+                .then(res=>{
+                    return {status:true} 
+                })
                 .catch(
                     (err) => {
                         dispatch(returnErrors(err.response.data,err.response.status))
@@ -306,28 +309,56 @@ export const email_token_change = (token) =>(dispatch)=>{//handles auth token pa
         .catch(
             (err) => {
                 dispatch(returnErrors(err.response.data,err.response.status))
+                return {status:false} 
             }
         )
 }
 
-export const PasswordReset = (email)=>(dispatch)=>{
+
+export const passwordResetLink  = (email)=>(dispatch)=>{
 
     const config={
         headers:{
             "Content-Type":"application/json"
         }
     }
-    const body = JSON.stringify({email})
     
     axios
         .post('api/passwordResetLink',body,config)
         .then((res)=>{
-            dispatch(createMessage({msg:'Token Resent!'}))
+            dispatch(createMessage({msg:'Link sent to email!'}))
             return true    
         })
         .catch(
             (err) => {
                 dispatch(returnErrors(err.response.data,err.response.status))
+            }
+        )
+    
+}
+
+export const setNewPassword= (token,password)=>(dispatch)=>{
+
+    const config={
+        headers:{
+            "Content-Type":"application/json"
+        }
+    }
+    config.headers["Authorization"] = `Token ${token}`
+    const hname = window.location.origin
+    const body = JSON.stringify({password})
+
+    
+    axios
+        .post(hname + 'api/auth/changePassword',body,config)
+        .then((res)=>{
+            dispatch(createMessage({msg:'Password changed successfully!'}))
+            return {status:true}   
+        })
+        .catch(
+            (err) => {
+                dispatch(returnErrors(err.response.data,err.response.status))
+                return {status:false}
             }
         )
     

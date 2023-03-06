@@ -1,5 +1,6 @@
-import React, {Component, useState, useParams} from 'react'
+import React, { useState, useParams} from 'react'
 import {Link,Navigate} from 'react-router-dom'
+import {setNewPassword} from '../../actions/search'
 
 function PasswordChange(props){
 
@@ -7,6 +8,7 @@ function PasswordChange(props){
         password:'',
         password2:'',
     })
+
     const {token} = useParams()
 
     onchange = (e) => {
@@ -19,7 +21,10 @@ function PasswordChange(props){
         e.preventDefault()
         const {password,password2} = this.state
         if (password === password2) {
-            setNewPassword(token,password)
+            const resp = setNewPassword(token,password)
+            if(resp.status === true){
+                return <Navigate to = '/login'/>
+            }
         }else{
             alert('Passwords do not match')
         }
@@ -72,11 +77,6 @@ function PasswordChange(props){
   
         )
     }
-}
 
-const mapStateToProps = (state) => ({
-user_active : state.auth.user_active,
-new_email_set:state.auth.new_email_set
-})
 
-export default connect(mapStateToProps,{change_email})(EmailChange)
+export default PasswordChange

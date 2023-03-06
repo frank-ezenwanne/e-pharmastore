@@ -1,6 +1,6 @@
 import React,{Component} from "react"
 import {Link,Navigate} from 'react-router-dom'
-import {resetPassword} from '../../actions/search'
+import {passwordResetLink} from '../../actions/search'
 
 class PasswordReset extends Component{
     constructor(props){
@@ -19,7 +19,10 @@ class PasswordReset extends Component{
     onsubmit = (e) => {
         e.preventDefault()
         const {email } = this.state
-        this.resetPassword(email)
+        const resp = await passwordResetLink(email)
+        if(resp.status === true){
+            return <Navigate to = '/password-reset-done'/>
+        }
     }
 
     render(){
