@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +24,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-2l0&opjk7$c_=besp#ph&_j4=fm^4m0k$!t%1xrkorx*awc*@&'
+SECRET_KEY = os.environ.get('RAMSGATE_SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG_VALUE",False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['ramsgatepharmacy.up.railway.app']
 
 
 # Application definition
@@ -91,7 +95,7 @@ DATABASES = {
 
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': 'zendb',
+        'NAME': 'zendb2',
 
         'USER': 'postgres',
 
@@ -104,6 +108,7 @@ DATABASES = {
     }
 }
 
+DATABASES['default'] = dj_database_url.parse(os.environ.get('RAMSGATE_DATABASE_URL'), conn_max_age=0)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -157,3 +162,7 @@ MAILJET_API_KEY = os.environ.get('RAMSGATE_MAILJET_API_KEY')
 MAILJET_API_SECRET = os.environ.get('RAMSGATE_MAILJET_API_SECRET')
 DEFAULT_FROM_EMAIL = "ramsgatepharm@gmail.com" 
 EMAIL_FILE_PATH = os.path.join(BASE_DIR,'emails')
+
+
+
+DATABASE_URL = 'postgresql://$postgres:$S0zo3yBU63bU5dBsvriQ@$containers-us-west-147.railway.app:$7141/$railway'

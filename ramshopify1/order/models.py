@@ -18,7 +18,7 @@ class Product(models.Model):
     company = models.CharField(max_length=150, null=True, blank=True)
     full_pack_quantity = models.CharField(max_length=10)
     unit_quantity = models.CharField(default=1, max_length=10)
-    disabled_status = models.BooleanField(default=False)
+    # disabled_status = models.BooleanField(default=False)
 
     def __str__(self):
         return self.brand_description
