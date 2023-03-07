@@ -1007,10 +1007,10 @@ render(){
             */}
             <div className="temp-send-order-total-div">
                 {this.state.ordered?
-                        <div onClick = {()=>{this.props.copy_order(this.props.last_orderid)}} title = 'Create identical order that you can edit' style = {{display:'block'}} className ='template-button btn-sm btn-success'>
+                        <div onClick = {()=>{this.props.copy_order(this.props.last_orderid)}} title = 'Create identical order that you can edit' style = {{display:'block'}} className ='clickable template-button btn-sm btn-success'>
                         Use as Template
                         </div> :
-                    <div onClick = {this.onMainGenericModal} title = 'Search By Generic' style = {{display:'block'}} className ='template-button btn-sm btn-success'>
+                    <div onClick = {this.onMainGenericModal} title = 'Search By Generic' style = {{display:'block'}} className ='clickable template-button btn-sm btn-success'>
                         Search By Generic
                     </div>  
                  }
@@ -1018,7 +1018,7 @@ render(){
                 {/* {{marginLeft:!this.state.ordered?'40rem':'27rem'}} */}
                <div className = 'send-order-total-div' style = {{marginLeft:'27rem'}}>
                     <div onClick = {()=>{this.confirm_order()}}
-                        className = {this.state.ordered? 'cursor-pointer btn-warning send-order-button btn-sm': 'cursor-pointer btn-success send-order-button btn-sm'}>
+                        className = {this.state.ordered? 'clickable btn-warning send-order-button btn-sm': 'clickable btn-success send-order-button btn-sm'}>
                     Send Order
                     </div>
 

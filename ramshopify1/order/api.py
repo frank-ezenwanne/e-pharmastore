@@ -371,22 +371,23 @@ class SendCSVEmail(APIView):
                 order_products = order.order_products.all()
                 csv_file = StringIO()  # creates writing pad for the csvwriter
                 writer = csv.writer(csv_file)
-                writer.writerow([order.buyer.company_name.upper(),'','','','','',order.order_code])
-                writer.writerow(['serial','brand_description', 'generic_name',
-                                'selected_unit', 'quantity_ordered', 'cost', 'total'])
+                writer.writerow([order.buyer.company_name.upper(),'','','','','','',order.order_code])
+                writer.writerow(['Serial','Brand Description','Extra Info', 'Generic Name',
+                                'Selected Unit', 'Quantity Ordered', 'Cost', 'Total'])
                 order_fields=[]
                 overall_cost = 0
                 for op in order_products: #assign the field vals to var as tupules manually instead of using values_list due to fetching vals from another table
                     overall_cost += op.total
-                    serial,brand_des,gen,sel_unit,quant,cost,total = op.serial,op.product_id.brand_description,op.product_id.generic_name,op.selected_unit,op.quantity_ordered,op.cost,op.total
-                    order_fields.append((serial,brand_des,gen,sel_unit,quant,cost,total))
-                order_fields = sorted(order_fields,key=lambda x:x[0])
+                    # serial,brand_des,extra,gen,sel_unit,quant,cost,total = op.serial,op.product_id.brand_description,op.extra_info,op.product_id.generic_name,op.selected_unit,op.quantity_ordered,op.cost,op.total
+                    order_fields.append((op.serial,op.product_id.brand_description,op.extra_info,op.product_id.generic_name,op.selected_unit,op.quantity_ordered,op.cost,op.total))
+                    # order_fields.append((serial,brand_des,gen,sel_unit,quant,cost,total))
+                order_fields = sorted(order_fields,key=lambda x:x[0]) #sort with serial number
                 for row in order_fields:
                     writer.writerow(row)
                 writer.writerow(['','','','','','',overall_cost])
                 
                 message = EmailMessage(
-                    "Hello", f"The Order from {order.buyer.company_name} to Ramsgate", 'ramsgatepharm@gmail.com', [order.buyer.email])
+                    "New Order Alert", f"An Order from {order.buyer.company_name} to Ramsgate", 'zedwebdeveloper@gmail.com', ['ramsgatepharm@gmail.com',order.buyer.email])
                 message.attach('order.csv', csv_file.getvalue(), 'text/csv')
                 try:
                     message.send()

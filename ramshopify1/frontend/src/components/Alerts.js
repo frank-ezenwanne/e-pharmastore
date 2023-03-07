@@ -15,11 +15,11 @@ export class Alerts extends Component{
             if(message.email_sent){
                 alert.success(message.email_sent)
             } 
-            if(message.order_copied){
+            if(message?.order_copied){
                 alert.success(message.order_copied)
             }
 
-            if(message.msg){
+            if(message?.msg){
                 alert.success(message.msg)
             }
         }
@@ -29,19 +29,19 @@ export class Alerts extends Component{
         }
 
         if(error !== prevProps.error){
-            if(error.msg.email_send_error){
-                alert.error(error.msg.email_send_error)
+            if(error.msg?.email_send_error){
+                alert.error(error?.msg?.email_send_error)
             }
 
-            if(error.msg.non_field_errors){
-                alert.error(error.msg.non_field_errors.join())
+            if(error.msg?.non_field_errors){
+                alert.error(error?.msg?.non_field_errors.join())
             }
             else{
                 if(error.msg){
                    try{
                         for (let key of Object.keys(error.msg)){
                             if(typeof(error.msg[key]) === 'object'){
-                                alert.error(`${key} : ${error.msg[key].join()} `)
+                                alert.error(`${key} : ${error?.msg[key].join()} `)
                             }else{
                                 alert.error(error.msg[key])
                             }
