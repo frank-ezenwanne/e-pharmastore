@@ -1,0 +1,27 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: Error Notification
+From: ramsgatepharm@gmail.com
+To: efrank272@gmail.com
+Date: Tue, 07 Mar 2023 12:02:10 -0000
+Message-ID: <167819053038.12112.2068496751035477695@Frank>
+
+Hey dev, This error occured in running the Ramsgate application frontend=20
+ ReferenceError: company_nam is not defined=20
+ {"componentStack":"\n    at UpdateProfile (webpack://ramshopify1/./ramshop=
+ify1/frontend/src/components/UpdateProfile.js?:60:5)\n    at ConnectFunctio=
+n (webpack://ramshopify1/./node_modules/react-redux/es/components/connect.j=
+s?:240:114)\n    at Outlet (webpack://ramshopify1/./node_modules/react-rout=
+er/index.js?:831:26)\n    at PrivateRoute (webpack://ramshopify1/./ramshopi=
+fy1/frontend/src/components/PrivateRoute.js?:14:78)\n    at Routes (webpack=
+://ramshopify1/./node_modules/react-router/index.js?:920:5)\n    at div\n  =
+  at section\n    at ErrorBoundary (webpack://ramshopify1/./ramshopify1/fro=
+ntend/src/components/ErrorBoundary.js?:50:5)\n    at Provider (webpack://ra=
+mshopify1/./node_modules/react-alert/dist/esm/react-alert.js?:339:23)\n    =
+at Provider (webpack://ramshopify1/./node_modules/react-redux/es/components=
+/Provider.js?:16:3)\n    at App (webpack://ramshopify1/./ramshopify1/fronte=
+nd/src/components/App.js?:100:5)\n    at Router (webpack://ramshopify1/./no=
+de_modules/react-router/index.js?:854:15)\n    at BrowserRouter (webpack://=
+ramshopify1/./node_modules/react-router-dom/index.js?:119:5)"}
+-------------------------------------------------------------------------------

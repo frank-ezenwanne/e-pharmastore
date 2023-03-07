@@ -1,0 +1,31 @@
+Content-Type: multipart/mixed; boundary="===============0440954856=="
+MIME-Version: 1.0
+Subject: Hello
+From: ramsgatepharm@gmail.com
+To: frankdevspace@gmail.com
+Date: Tue, 07 Mar 2023 12:44:36 -0000
+Message-ID: <167819307612.17160.12058756387446420945@Frank>
+
+--===============0440954856==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+The Order from ZenCorp43 to Ramsgate
+--===============0440954856==
+Content-Type: text/csv; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="order.csv"
+
+ZENCORP43,,,,,,RAMS075
+serial,brand_description,generic_name,selected_unit,quantity_ordered,cost,total
+1,LABET TABS 200MG X 30,Labetalol,FULL PACK,1,4500.0,4500.0
+2,VALIUM 5MG TAB X 12,Diazepam,FULL PACK,1,760.0,760.0
+3,SABRESTEN (VAGINAL) CREAM 30G,,TUBE,2,380.0,760.0
+4,ACECLOFENAC (MULTICOY) TABS  X 100,Aceclofenac,FULL PACK,1,920.0,920.0
+,,,,,,6940.0
+
+--===============0440954856==--
+
+-------------------------------------------------------------------------------

@@ -72,3 +72,7 @@ class EmailSerializer(serializers.Serializer):
 
 class PasswordSerializer(serializers.Serializer):
     password = serializers.CharField()
+
+class ErrorSerializer(serializers.Serializer):
+    error = serializers.CharField()
+    errorInfo = serializers.CharField()

@@ -73,8 +73,8 @@ class Register extends Component {
        
         const { company_name, email, password, password2, address, phone_no, establishment } = this.state
         return (
-            <div className=" pt-4 register-div">
-                <h3 className='register-heading'> Register as a customer </h3>
+            <div className=" pt-2 register-div">
+                <h3 className='register-heading'> Customer Registration </h3>
                 <form onSubmit={this.onsubmit}>
                     <div className='form-field'>
                     <div>
@@ -130,7 +130,7 @@ class Register extends Component {
 
                     <div className='form-field'>
                          <div>
-                            <label className = 'text-white' htmlFor="address">Address</label>
+                            <label className = 'text-white' htmlFor="address">Address (Business Premises)</label>
                          </div>
                         <input id='address' className='user-field'
                             type='text'

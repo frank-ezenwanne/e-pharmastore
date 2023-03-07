@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics, permissions
 from knox.models import AuthToken
-from .serializers import LoginSerializer,RegisterSerializer,UpdateProfileSerializer,UserSerializer,VerifyTokenSerializer,EmailSerializer,ChangeEmailSerializer,PasswordSerializer
+from .serializers import LoginSerializer,RegisterSerializer,UpdateProfileSerializer,UserSerializer,VerifyTokenSerializer,EmailSerializer,ChangeEmailSerializer,PasswordSerializer,ErrorSerializer
 from django.core.mail import EmailMessage
 from .models import CustomUser
 from rest_framework import status
@@ -123,7 +123,7 @@ class ResendToken(APIView):
         user=CustomUser.objects.filter(email=serializer.validated_data['email']).first()        
         user.set_token() #calls save() already so above change is saved too
         message = EmailMessage(
-                    "Hello", f'Your Token is {user.token}', 'ramsgatepharm@gmail.com', [user.email])
+                    "Token activation", f'Your Token is {user.token}', 'ramsgatepharm@gmail.com', [user.email])
         try: 
             message.send()
         except: 
@@ -169,7 +169,7 @@ class ChangeEmailRequest(APIView):
                     user.save()
                     url = request.build_absolute_uri(reverse('emailchange',kwargs ={'token':AuthToken.objects.create(user)[1]}))
                     message = EmailMessage(
-                        "Hello", f'Click on this {url} to activate your new email', 'ramsgatepharm@gmail.com', [user.inactive_email])
+                        "Email activation", f'Click on this {url} to activate your new email', 'ramsgatepharm@gmail.com', [user.inactive_email])
                     try: 
                         message.send()
                     except: 
@@ -181,7 +181,7 @@ class ChangeEmailRequest(APIView):
                     user.save()
                     user.set_token() #calls save() already so above change is saved too
                     message = EmailMessage(
-                                "Hello", f'Your Token is {user.token}', 'ramsgatepharm@gmail.com', [user.email])
+                                "Token activation", f'Your Token is {user.token}', 'ramsgatepharm@gmail.com', [user.email])
                     try: 
                         message.send()
                     except: 
@@ -222,7 +222,6 @@ class SendPasswordResetLink(APIView):
 class ChangePasswordView(APIView):
     permission_classes = [IsAuthenticated,]
     def post(self,request,*args,**kwargs):
-        print(12224)
         serializer = PasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         password = serializer.validated_data['password']
@@ -246,3 +245,15 @@ class TokenChangeEmail(APIView):
             return Response({"new_email_confirmed":{'status':'not_changed','new_email':False}})
 
    
+class NotifyDev(APIView):
+     def post(self,request,*args,**kwargs):
+        error = request.data['error']
+        errorInfo = request.data['errorInfo']
+        message = EmailMessage(
+            "Error Notification", f'Hey dev, This error occured in running the Ramsgate application frontend \n {error} \n {errorInfo}', 'ramsgatepharm@gmail.com', ['efrank272@gmail.com'])
+        try: 
+            message.send()
+        except: 
+            return Response({'frontend_error':'Frontend error message not sent'},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({'frontend_error':'Frontend error message sent'})

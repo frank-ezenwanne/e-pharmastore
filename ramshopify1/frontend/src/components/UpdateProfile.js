@@ -1,8 +1,8 @@
-import React, { Component, Fragment } from "react"
+import React, { Component } from "react"
 import { connect } from "react-redux"
 import { getProfile, updateProfile } from "../actions/auth.js"
 import PropTypes from "prop-types"
-import {Link, Navigate } from "react-router-dom"
+import {Link } from "react-router-dom"
 
 class UpdateProfile extends Component {
     constructor(props){

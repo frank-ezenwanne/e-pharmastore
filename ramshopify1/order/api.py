@@ -371,7 +371,7 @@ class SendCSVEmail(APIView):
                 order_products = order.order_products.all()
                 csv_file = StringIO()  # creates writing pad for the csvwriter
                 writer = csv.writer(csv_file)
-                writer.writerow([order.order_code,'','','','','',''])
+                writer.writerow([order.buyer.company_name.upper(),'','','','','',order.order_code])
                 writer.writerow(['serial','brand_description', 'generic_name',
                                 'selected_unit', 'quantity_ordered', 'cost', 'total'])
                 order_fields=[]

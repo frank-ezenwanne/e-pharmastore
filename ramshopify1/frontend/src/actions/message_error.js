@@ -1,4 +1,4 @@
-import { CREATE_MESSAGE, GET_ERRORS,EMAIL_SEND_ERROR,EMAIL_SENT } from "./types"
+import { CREATE_MESSAGE, GET_ERRORS,EMAIL_SEND_ERROR,EMAIL_SENT} from "./types"
 
 export const createMessage = (msg) =>{
     return {
@@ -27,3 +27,5 @@ export const email_error_handler = (msg,status) =>{
         payload:{msg,status}
     }
 }
+
+

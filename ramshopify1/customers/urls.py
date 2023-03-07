@@ -1,6 +1,6 @@
 from django.urls import path,include
 from knox import views as knox_views
-from .api import LoginAPI, RegisterAPI, UpdateProfile, UserAPI,VerifyToken,SendPasswordResetLink,ChangePasswordView, ChangeEmailRequest,TokenChangeEmail,ResendToken
+from .api import LoginAPI, RegisterAPI, UpdateProfile, UserAPI,VerifyToken,SendPasswordResetLink,ChangePasswordView, ChangeEmailRequest,TokenChangeEmail,ResendToken,NotifyDev
 
 urlpatterns =[
     path("api/auth",include("knox.urls")),
@@ -17,5 +17,6 @@ urlpatterns =[
     path("api/auth/changePassword",ChangePasswordView.as_view()),
     path("api/auth/logout",knox_views.LogoutView.as_view()),
     path("api/auth/logoutall",knox_views.LogoutAllView.as_view()),
+    path("api/notifyDev",NotifyDev.as_view()),
    
 ]

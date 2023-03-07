@@ -3,7 +3,6 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser,PermissionsMixin,User
 )
 
- 
 from django.utils import timezone
 from django.core.mail import send_mail
 import uuid

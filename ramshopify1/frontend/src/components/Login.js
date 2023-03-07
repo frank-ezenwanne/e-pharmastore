@@ -43,13 +43,13 @@ class Login extends Component{
              return <Navigate to = '/verifytoken' />
          }
        const {email, password } = this.state
-       const justverified_div = (<div align="center" id="message">Your account has been 
+       const justverified_div = (<div className='mb-3 text-white' align="center" id="message">Your account has been 
        successfully activated..You can now login</div>)
 
         return (
         <div className = "login-block ">
             {this.props.justverified && justverified_div }
-            <h3 className = 'login-heading'> LOGIN </h3>
+            <h4 className = 'login-heading'> CUSTOMER LOGIN </h4>
             <form onSubmit = {this.onsubmit} >
                 <div className = 'form-field'>
                     <input className = 'user-field' 

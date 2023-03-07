@@ -4,6 +4,7 @@ import { Route, Routes} from 'react-router-dom'
 import store from '../store'
 import {loaduser} from '../actions/auth'
 import Home from "./Home"
+import ErrorBoundary from "./ErrorBoundary"
 import Login from "./Login"
 import Register from "./Register";
 import Profile from './UpdateProfile'
@@ -49,34 +50,36 @@ class App extends Component{
         return(
             <Provider store = {store}>
                 <AlertProvider template={AlertTemplate} {...alertOptions}>
-                    <section id='top-body'>
-                        <Nav/>
-                        <Alerts/>
-                        <div id = "web-pages">
-                            <Routes>
-                                <Route path = "/" element = {<Home/>}/>
-                                <Route path = "login" element = {<Login/>}/>
-                                <Route path = "register" element = {<Register/>}/>
-                                <Route path = "aboutus" element = {<AboutUs/>}/>
-                                <Route element = {<PrivateRoute/>}>
-                                    <Route path = "order" element = {<Order/>}/>
-                                    <Route path = "profile" element = {<Profile/>}/>
-                                    <Route path = "customerpage" element = {<CustomerPage/>}/>
-                                </Route>
-                                <Route path = "verifytoken" element = {<VerifyToken/>}/>
-                                <Route path = "password-reset" element = {<PasswordReset/>}/>
-                                <Route path = "password-reset-done" element = {<PasswordResetDone/>}/>
-                                <Route path = "password-change/:token" element = {<PasswordChange/>}/>
-                                <Route path = "emailchange" element = {<EmailChange/>}/>
-                                <Route path = "emailchange_sent" element = {<EmailChangeSent/>}/>
-                                <Route path = "emailchange/:token" element = {<EmailChangeConfirm/>}/>
-                                {/* <Route path = "emailchange_confirm" element = {<EmailChangeConfirm/>}/> */}
-                            </Routes>
-                        </div>
-                    </section>
-                    <section id='bottom-body'>
-                        <Footer/>
-                    </section>
+                    <ErrorBoundary>
+                        <section id='top-body'>
+                            <Nav/>
+                            <Alerts/>
+                            <div id = "web-pages">
+                                <Routes>
+                                    <Route path = "/" element = {<Home/>}/>
+                                    <Route path = "login" element = {<Login/>}/>
+                                    <Route path = "register" element = {<Register/>}/>
+                                    <Route path = "aboutus" element = {<AboutUs/>}/>
+                                    <Route element = {<PrivateRoute/>}>
+                                        <Route path = "order" element = {<Order/>}/>
+                                        <Route path = "profile" element = {<Profile/>}/>
+                                        <Route path = "customerpage" element = {<CustomerPage/>}/>
+                                    </Route>
+                                    <Route path = "verifytoken" element = {<VerifyToken/>}/>
+                                    <Route path = "password-reset" element = {<PasswordReset/>}/>
+                                    <Route path = "password-reset-done" element = {<PasswordResetDone/>}/>
+                                    <Route path = "password-change/:token" element = {<PasswordChange/>}/>
+                                    <Route path = "emailchange" element = {<EmailChange/>}/>
+                                    <Route path = "emailchange_sent" element = {<EmailChangeSent/>}/>
+                                    <Route path = "emailchange/:token" element = {<EmailChangeConfirm/>}/>
+                                    {/* <Route path = "emailchange_confirm" element = {<EmailChangeConfirm/>}/> */}
+                                </Routes>
+                            </div>
+                        </section>
+                        <section id='bottom-body'>
+                            <Footer/>
+                        </section>
+                    </ErrorBoundary>
                 </AlertProvider>
             </Provider>
         )

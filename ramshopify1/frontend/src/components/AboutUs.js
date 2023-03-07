@@ -21,7 +21,7 @@ class AboutUs extends Component{
     render(){
         return(
             <div className='w-100 overflow-hidden'>
-                <section className = 'position-relative' style = {{height:'30vh',backgroundColor:'rgb(240,240,240'}}>
+                <section className = 'position-relative' style = {{height:'30vh',backgroundColor:'rgb(220,220,220'}}>
                     <div className='top-50 start-50 translate-middle position-absolute'>
                         <div className='d-flex ' style={{fontSize:'180%', textShadow: '2px 2px 4px green'}}>
                             <div>Ramsgate Pharmacy</div>
