@@ -72,8 +72,8 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
     user_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
-    address = models.TextField(null=True,blank=True) #remove null address and phone
-    phone_no = models.CharField(null=True, blank=True, max_length=20)
+    address = models.TextField() #remove null address and phone
+    phone_no = models.CharField(max_length=20)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     establishment = models.CharField(max_length=7,choices=ESTABLISHMENT_CHOICES)
 
