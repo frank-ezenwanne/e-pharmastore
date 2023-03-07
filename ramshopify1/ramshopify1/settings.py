@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get('RAMSGATE_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG_VALUE",False)
 
-ALLOWED_HOSTS = ['ramsgatepharmacy.up.railway.app']
+ALLOWED_HOSTS = ['*',]
 
 
 # Application definition
