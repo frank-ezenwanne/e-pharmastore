@@ -27,3 +27,4 @@ dj-database-url==1.2.0
 numexpr==2.7.3
 numpy==1.21.2
 pandas==1.2.0
+whitenoise==6.4.0
