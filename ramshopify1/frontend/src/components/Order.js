@@ -918,7 +918,7 @@ map_stuff = (num) =>{
                     wrapperClass="tailspin-class"
                     visible={true}
                 /> : this.props.all_loaded_serials[num] === false?
-                <img className = 'svg-tick-error-class' src={Tick}/>
+                <img className = 'd-flex svg-tick-error-class' src={Tick}/>
                 :this.props.all_loaded_serials[num] === "error"? 
                 (<div className = 'svg-tick-error-class' onClick = {()=>{
                     this.props.send_orderproduct( item["product_id"],
@@ -930,7 +930,7 @@ map_stuff = (num) =>{
                     num,this.props.last_orderid)  }}>  {/* end of sendop func*/}
                                                          
                     {/* start div content */}
-                    <svg xmlns="http://www.w3.org/2000/svg"  fill="red" width="100%" height="100%" viewBox="0 0 24 24"><path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6 16.094l-4.157-4.104 4.1-4.141-1.849-1.849-4.105 4.159-4.156-4.102-1.833 1.834 4.161 4.12-4.104 4.157 1.834 1.832 4.118-4.159 4.143 4.102 1.848-1.849z"/></svg>
+                    <svg className='d-flex' xmlns="http://www.w3.org/2000/svg"  fill="red" width="100%" height="100%" viewBox="0 0 24 24"><path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6 16.094l-4.157-4.104 4.1-4.141-1.849-1.849-4.105 4.159-4.156-4.102-1.833 1.834 4.161 4.12-4.104 4.157 1.834 1.832 4.118-4.159 4.143 4.102 1.848-1.849z"/></svg>
                     {/* end */}
 
                 </div>) :null
@@ -975,7 +975,7 @@ render(){
                             <div onClick = {()=>{
                                this.setState({"modal_deleteorder":true}) }}
                                  className = 'delete-order-button btn'>
-                                <div className = 'delete-svg'>
+                                <div className = 'd-flex delete-svg'>
                                     <svg fill ='red' width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" clipRule="evenodd"><path d="M19 24h-14c-1.104 0-2-.896-2-2v-16h18v16c0 1.104-.896 2-2 2zm-7-10.414l3.293-3.293 1.414 1.414-3.293 3.293 3.293 3.293-1.414 1.414-3.293-3.293-3.293 3.293-1.414-1.414 3.293-3.293-3.293-3.293 1.414-1.414 3.293 3.293zm10-8.586h-20v-2h6v-1.5c0-.827.673-1.5 1.5-1.5h5c.825 0 1.5.671 1.5 1.5v1.5h6v2zm-8-3h-4v1h4v-1z"/></svg>
                                 </div>
                                 <div className='order-delete-text'>Order</div>

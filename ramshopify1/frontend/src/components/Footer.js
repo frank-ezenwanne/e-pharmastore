@@ -58,7 +58,7 @@ class Footer extends Component{
                     </div>
                 </section>
 
-                <section align="center" id = 'lower-footer'>
+                <section className= 'mt-2' align="center" id = 'lower-footer'>
 				    Programming and Design By <a className='text-white' id="frank-linkedin" href="https://www.linkedin.com/in/frank-ezenwanne/">Frank</a>
                 </section>
             </footer>

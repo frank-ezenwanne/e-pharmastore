@@ -3,7 +3,7 @@ import DrugStoreImg from '../../images/drug_store.png'
 import {create_order,change_created_status} from "../actions/search"
 import {connect} from 'react-redux'
 import {Link,Navigate} from 'react-router-dom'
-import { ThemeConsumer } from 'react-bootstrap/esm/ThemeProvider'
+
 
 
 class Home extends Component{
@@ -21,10 +21,7 @@ class Home extends Component{
             this.setState({order_just_created:true})
         }
 
-        if(this.props.triggerHome === true){
-            console.log(22222)
-            window.location.reload(true)
-        }
+   
     }
 
     background = {
@@ -63,6 +60,6 @@ class Home extends Component{
 const mapStateToProps=(state)=>({
     isAuthenticated : state.auth.isAuthenticated,
     order_just_created :state.search.order_just_created,
-    triggerHome:state.messages.triggerHome
+
 })
 export default connect(mapStateToProps,{create_order,change_created_status})(Home)

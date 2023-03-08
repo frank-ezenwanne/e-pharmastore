@@ -37,32 +37,32 @@ class AboutUs extends Component{
                     <h3 align='center'>Our Services</h3>
                     <div align='center' className = 'row gy-3'>
                         <div className='col-lg-4 col-md-6 col-12'>
-                            <img src={PharmCare}/>
+                            <img className= 'd-flex' src={PharmCare}/>
                             <div>Pharmaceutical care</div>
                         </div>
 
                         <div className='col-lg-4 col-md-6 col-12'>
-                            <img src= {Info}/>
+                            <img className= 'd-flex' src= {Info}/>
                             <div>Patient couselling</div>
                         </div>
 
                         <div className='col-lg-4 col-md-6 col-12'>
-                            <img src={FollowUp}/>
+                            <img className= 'd-flex' src={FollowUp}/>
                             <div>Patient follow-up</div>
                         </div>
 
                         <div className='col-lg-4 col-md-6 col-12'>
-                            <img src= {Dispensing}/>
+                            <img className= 'd-flex' src= {Dispensing}/>
                             <div>Accurate dispensing</div>
                         </div>
 
                         <div className='col-lg-4 col-md-6 col-12 '>
-                            <img src= {Distribution}/>
+                            <img className= 'd-flex' src= {Distribution}/>
                             <div>Drug distribution</div>
                         </div>
 
                         <div className='col-lg-4 col-md-6 col-12 mb-3'>
-                            <img src= {Research}/>
+                            <img className= 'd-flex'  src= {Research}/>
                             <div>Research</div>
                         </div>
                         
@@ -73,28 +73,28 @@ class AboutUs extends Component{
                     <h3 align='center'> We stock</h3>
                     <div  align='center' className='row gy-3'>
                         <div className='col-lg-4 col-md-6 col-12'>
-                            <img src={Dispensing}/>
+                            <img className= 'd-flex' src={Dispensing}/>
                             <div>Safe and Effective Medicines</div>
                         </div>
 
                         <div className='col-lg-4 col-md-6 col-12'>
-                            <img src={Medicine}/>
+                            <img className= 'd-flex' src={Medicine}/>
                             <div>Rich supplements</div>
                         </div>
 
                         <div className='col-lg-4 col-md-6 col-12'>
-                            <img src={Surgicals}/>
+                            <img className= 'd-flex' src={Surgicals}/>
                             <div>Surgicals</div>
                         </div>
 
                         <div className='col-lg-4 col-md-6 col-12 '>
-                            <img src={Devices}/>
+                            <img className= 'd-flex' src={Devices}/>
                             <div>Medical Devices</div>
                         </div>
 
 
                         <div className='col-lg-4 col-md-6 col-12 mb-3'>
-                            <img src={Provisions}/>
+                            <img className= 'd-flex' src={Provisions}/>
                             <div>Provisions</div>
                         </div>
                     </div>
