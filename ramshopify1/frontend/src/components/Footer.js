@@ -42,11 +42,11 @@ class Footer extends Component{
                             </ul>	
 
                             <ul id="contact-phone-div">
-                                <li className="contact-phone mb-1">
+                                <li className="d-flex contact-phone mb-1">
                                     <img src = {Whatsapp}/>	
                                     <span className ="text-warning d-inline-block footer-phone"> <Link style= {{color:'white',textDecoration:'none'}} to ="https://api.whatsapp.com/send/?phone=2348055065881&text&app_absent=0%22">+234-8055065881</Link></span>
                                 </li>
-                                <li className="contact-phone">
+                                <li className="d-flex contact-phone">
                                     <img src = {Phone}/>	
                                     <span className ="text-warning d-inline-block footer-phone"> <Link style= {{color:'white',textDecoration:'none'}} to ="tel:+2348055065881" >+234-8055065881</Link></span>
                                 </li>
