@@ -1249,7 +1249,7 @@ flex-direction:column;
 }
 
 .location-div-upper{
-width:50%;
+width:45%;
 margin-left:auto;
 margin-right:auto;
 background-color:#212121;
@@ -1258,10 +1258,17 @@ border-top-right-radius:5%;
 }
 
 .location-div-lower{
-	width:50%;
+	width:45%;
 	margin-left:auto;
     margin-right:auto;
+	overflow-x:scroll;
+	-ms-overflow-style: none; 
+	scrollbar-width: none;
 	
+}
+
+.location-div-lower::-webkit-scrollbar{
+	display: none;
 }
 
 #location-state{

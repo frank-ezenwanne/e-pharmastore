@@ -19,7 +19,7 @@ class Footer extends Component{
     render(){
         return(
             <footer style= {{fontSize:'80%'}}>
-                <section id ='footer-upper'>
+                <section className='mb-1' id ='footer-upper'>
                     <div id ='upper-left-footer'>
                         {this.props.isAuthenticated?
                             <span className = ""><Link style = {{textDecoration:'none',color:'white'}} to ='/customerpage'>View Orders</Link></span>
@@ -58,7 +58,7 @@ class Footer extends Component{
                     </div>
                 </section>
 
-                <section className= 'mt-2' align="center" id = 'lower-footer'>
+                <section  align="center" id = 'lower-footer'>
 				    Programming and Design By <a className='text-white' id="frank-linkedin" href="https://www.linkedin.com/in/frank-ezenwanne/">Frank</a>
                 </section>
             </footer>

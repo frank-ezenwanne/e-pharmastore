@@ -39,42 +39,42 @@ class AboutUs extends Component{
 
                         <div  align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12'>
                             <div className= 'd-flex' >
-                                <img src={PharmCare}/>
+                                <img className= 'w-100 h-100' src={PharmCare}/>
                             </div>
                             <div>Pharmaceutical care</div>
                         </div>
 
                         <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12'>
                             <div className= 'd-flex' >
-                                <img src= {Info}/>
+                                <img className= 'w-100 h-100' src= {Info}/>
                             </div>
                             <div>Patient couselling</div>
                         </div>
 
                         <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12'>
                             <div className= 'd-flex' >
-                                <img src={FollowUp}/>
+                                <img className= 'w-100 h-100' src={FollowUp}/>
                             </div>
                             <div>Patient follow-up</div>
                         </div>
 
                         <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12'>
                            <div className= 'd-flex' >
-                                <img src= {Dispensing}/>
+                                <img className= 'w-100 h-100' src= {Dispensing}/>
                             </div>
                             <div>Accurate dispensing</div>
                         </div>
 
                         <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12 '>
                             <div className= 'd-flex' >
-                                <img src= {Distribution}/>
+                                <img className= 'w-100 h-100' src= {Distribution}/>
                             </div>
                             <div>Drug distribution</div>
                         </div>
 
                         <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12 mb-3'>
                             <div className= 'd-flex' >
-                                <img className= 'd-flex'  src= {Research}/>
+                                <img className= 'w-100 h-100'  src= {Research}/>
                             </div>
                             <div>Research</div>
                         </div>
@@ -88,28 +88,28 @@ class AboutUs extends Component{
 
                         <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12'>
                             <div className= 'd-flex' >
-                                <img src={Dispensing}/>
+                                <img className='w-100 h-100' src={Dispensing}/>
                             </div>
                             <div>Safe and Effective Medicines</div>
                         </div>
 
                         <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12'>
                             <div className= 'd-flex' >
-                                <img className= 'd-flex' src={Medicine}/>
+                                <img className= 'w-100 h-100 d-flex' src={Medicine}/>
                             </div>
                             <div>Rich supplements</div>
                         </div>
 
                         <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12'>
                             <div className= 'd-flex' >
-                                <img className= 'd-flex' src={Surgicals}/>
+                                <img className= 'w-100 h-100 d-flex' src={Surgicals}/>
                             </div>
                             <div>Surgicals</div>
                         </div>
 
                         <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12 '>
                             <div className= 'd-flex' >
-                                <img className= 'd-flex' src={Devices}/>
+                                <img className= 'w-100 h-100 d-flex' src={Devices}/>
                             </div>
                             <div>Medical Devices</div>
                         </div>
@@ -117,7 +117,7 @@ class AboutUs extends Component{
 
                         <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12 mb-3'>
                             <div className= 'd-flex' >
-                                <img className= 'd-flex' src={Provisions}/>
+                                <img className= 'w-100 h-100 d-flex' src={Provisions}/>
                             </div>
                             <div>Provisions</div>
                         </div>
