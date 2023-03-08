@@ -36,33 +36,46 @@ class AboutUs extends Component{
                 <section style = {{backgroundColor:'white'}}>
                     <h3 align='center'>Our Services</h3>
                     <div align='center' className = 'row gy-3'>
-                        <div className='col-lg-4 col-md-6 col-12'>
-                            <img className= 'd-flex' src={PharmCare}/>
+
+                        <div  align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12'>
+                            <div className= 'd-flex' >
+                                <img src={PharmCare}/>
+                            </div>
                             <div>Pharmaceutical care</div>
                         </div>
 
-                        <div className='col-lg-4 col-md-6 col-12'>
-                            <img className= 'd-flex' src= {Info}/>
+                        <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12'>
+                            <div className= 'd-flex' >
+                                <img src= {Info}/>
+                            </div>
                             <div>Patient couselling</div>
                         </div>
 
-                        <div className='col-lg-4 col-md-6 col-12'>
-                            <img className= 'd-flex' src={FollowUp}/>
+                        <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12'>
+                            <div className= 'd-flex' >
+                                <img src={FollowUp}/>
+                            </div>
                             <div>Patient follow-up</div>
                         </div>
 
-                        <div className='col-lg-4 col-md-6 col-12'>
-                            <img className= 'd-flex' src= {Dispensing}/>
+                        <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12'>
+                           <div className= 'd-flex' >
+                                <img src= {Dispensing}/>
+                            </div>
                             <div>Accurate dispensing</div>
                         </div>
 
-                        <div className='col-lg-4 col-md-6 col-12 '>
-                            <img className= 'd-flex' src= {Distribution}/>
+                        <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12 '>
+                            <div className= 'd-flex' >
+                                <img src= {Distribution}/>
+                            </div>
                             <div>Drug distribution</div>
                         </div>
 
-                        <div className='col-lg-4 col-md-6 col-12 mb-3'>
-                            <img className= 'd-flex'  src= {Research}/>
+                        <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12 mb-3'>
+                            <div className= 'd-flex' >
+                                <img className= 'd-flex'  src= {Research}/>
+                            </div>
                             <div>Research</div>
                         </div>
                         
@@ -71,30 +84,41 @@ class AboutUs extends Component{
 
                 <section style = {{backgroundColor:'rgb(240,240,240'}}>
                     <h3 align='center'> We stock</h3>
-                    <div  align='center' className='row gy-3'>
-                        <div className='col-lg-4 col-md-6 col-12'>
-                            <img className= 'd-flex' src={Dispensing}/>
+                    <div align='center' className='row gy-3'>
+
+                        <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12'>
+                            <div className= 'd-flex' >
+                                <img src={Dispensing}/>
+                            </div>
                             <div>Safe and Effective Medicines</div>
                         </div>
 
-                        <div className='col-lg-4 col-md-6 col-12'>
-                            <img className= 'd-flex' src={Medicine}/>
+                        <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12'>
+                            <div className= 'd-flex' >
+                                <img className= 'd-flex' src={Medicine}/>
+                            </div>
                             <div>Rich supplements</div>
                         </div>
 
-                        <div className='col-lg-4 col-md-6 col-12'>
-                            <img className= 'd-flex' src={Surgicals}/>
+                        <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12'>
+                            <div className= 'd-flex' >
+                                <img className= 'd-flex' src={Surgicals}/>
+                            </div>
                             <div>Surgicals</div>
                         </div>
 
-                        <div className='col-lg-4 col-md-6 col-12 '>
-                            <img className= 'd-flex' src={Devices}/>
+                        <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12 '>
+                            <div className= 'd-flex' >
+                                <img className= 'd-flex' src={Devices}/>
+                            </div>
                             <div>Medical Devices</div>
                         </div>
 
 
-                        <div className='col-lg-4 col-md-6 col-12 mb-3'>
-                            <img className= 'd-flex' src={Provisions}/>
+                        <div align='center' className='align-items-center d-flex flex-column col-lg-4 col-md-6 col-12 mb-3'>
+                            <div className= 'd-flex' >
+                                <img className= 'd-flex' src={Provisions}/>
+                            </div>
                             <div>Provisions</div>
                         </div>
                     </div>
