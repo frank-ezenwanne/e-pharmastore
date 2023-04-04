@@ -1,5 +1,5 @@
 import React,{Component,Fragment} from 'react'
-import DrugStoreImg from '../../images/drug_store.png'
+import DrugStoreImg from '../../images/drug_store-min.png'
 import {create_order,change_created_status} from "../actions/search"
 import {connect} from 'react-redux'
 import {Link,Navigate} from 'react-router-dom'

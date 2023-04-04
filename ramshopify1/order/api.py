@@ -384,7 +384,7 @@ class SendCSVEmail(APIView):
                 order_fields = sorted(order_fields,key=lambda x:x[0]) #sort with serial number
                 for row in order_fields:
                     writer.writerow(row)
-                writer.writerow(['','','','','','',overall_cost])
+                writer.writerow(['','','','','','','',overall_cost])
                 
                 message = EmailMessage(
                     "New Order Alert", f"An Order from {order.buyer.company_name} to Ramsgate", 'zedwebdeveloper@gmail.com', ['ramsgatepharm@gmail.com',order.buyer.email])
