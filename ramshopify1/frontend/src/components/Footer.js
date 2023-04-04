@@ -59,7 +59,7 @@ class Footer extends Component{
                 </section>
 
                 <section  align="center" id = 'lower-footer'>
-				    Programming and Design By <a className='text-white' id="frank-linkedin" href="https://www.linkedin.com/in/frank-ezenwanne/">Frank</a>
+				    Programming and Design By <a className='text-white' id="frank-linkedin" href="https://ng.linkedin.com/in/frank-ezenwanne">Frank</a>
                 </section>
             </footer>
         )

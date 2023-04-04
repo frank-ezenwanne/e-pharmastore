@@ -42,7 +42,7 @@ function Nav(props){
      
 
     const guestlinks = (<span className= "nav-bar-others" ><Link to = "/login">Sign In</Link></span>)
-    const authlinks = <div className= "nav-bar-other-group"><img src={Building}/><span className= ""> Hi {props.company_name}</span>
+    const authlinks = <div className= "d-flex nav-bar-other-group"><img src={Building}/><span className= ""> Hi {props.company_name}</span>
 						</div>
 
     const lines = ["line1","line2","line3"]
