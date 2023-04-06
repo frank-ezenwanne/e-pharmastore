@@ -145,12 +145,7 @@ animation-timing-function: ease-in-out;
 
 
 
-#table-grid-main{
-	display:grid;
-	grid-template-columns:repeat(6,1fr);
-	position:relative;
-	width:inherit
-}
+
 
 #table-grid-generic{
 	display:grid;
@@ -493,11 +488,7 @@ margin-right:-2rem;
 
 
 
-.form-class1{
-	width:53vw;
-	margin-top:8rem;
-	font-family:Helvetica, sans-serif;
-}
+
 
 .form-class1-generic{
 	width:45vw;
@@ -534,6 +525,21 @@ margin-right:-2rem;
 	padding-right:10rem;
 	background-color: white;
 	scrollbar-width:'none'
+}
+
+
+.form-class1{
+	width:58rem;	
+	margin-top:8rem;
+	font-family:Helvetica, sans-serif;
+}
+
+#table-grid-main{
+	display:grid;
+	max-width:80vw;
+	grid-template-columns:repeat(6,1fr);
+	position:relative;
+
 }
 
 .radio-delete-div{

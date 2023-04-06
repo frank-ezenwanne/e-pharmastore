@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {BRANDS_RETRIEVED} from './types'
-import {ORDER_CREATED,CHANGE_CREATED_FALSE,LAST_ORDER_FETCHED,
+import {ORDER_CREATED,CHANGE_CREATED_FALSE,LAST_ORDER_FETCHED,LOADING,LOADED,
     ORDER_PRODUCT_CREATED,ORDER_PRODUCT_CREATING,ORDER_PRODUCT_NOT_CREATED,TOKEN_VERIFIED,
     GENERIC_PRODUCTS_RETRIEVED,CLEAR_GENERIC_PRODUCTS,ORDERS_RETRIEVED,
     ORDER_MADE_LAST,CLEAR_LAST_ORDER_AND_ID,CLEAR_BRAND_DESC,ORDER_PRODUCTS_DELETED,ORDER_PRODUCTS_NOT_DELETED,ORDER_DELETED,
@@ -96,6 +96,10 @@ export const get_last_order = () => (dispatch,getState) =>{
         config.headers["Authorization"] = `Token ${token}`
     }
 
+    dispatch({
+        type:LOADING,
+    })
+
     axios
     .get("api/get_last_order",config)
     .then((res)=>{
@@ -104,7 +108,10 @@ export const get_last_order = () => (dispatch,getState) =>{
             type:LAST_ORDER_FETCHED,
             payload:res.data
         })
-        dispatch(createMessage({'msg':'Last order fetched successfully'}))
+        dispatch({
+            type:LOADED,
+        })
+        // dispatch(createMessage({'msg':'Last order fetched successfully'}))
         
     })
 
@@ -146,7 +153,7 @@ export const search_brand = (brand_description,radio_option,serial) => (dispatch
     .catch(
         (err) => {
             console.log(err.response)
-            dispatch(returnErrors(err.response.data,err.response.status))
+            dispatch(returnErrors(err.response?.data,err.response?.status))
             
         }
     )
@@ -212,7 +219,7 @@ export const get_customer_orders = (page_num = 1) => (dispatch,getState) =>{
     .catch(
         (err) => {
             console.log(err.response)
-            dispatch(returnErrors(err.response.data,err.response.status))
+            dispatch(returnErrors(err.response?.data,err.response?.status))
         }
     )
 }
@@ -245,7 +252,7 @@ export const get_selected_order = (id) => (dispatch,getState) =>{ //doesn't actu
     .catch(
         (err) => {
             console.log(err.response)
-            dispatch(returnErrors(err.response.data,err.response.status))
+            dispatch(returnErrors(err.response?.data,err.response?.status))
         }
     )
 }
@@ -309,7 +316,7 @@ export const delOrderProducts = (order_id,del_list) => (dispatch,getState) =>{
                 type:ORDER_PRODUCTS_NOT_DELETED,
                 payload:{delete_serials:del_list}
             })
-            dispatch(returnErrors(err.response.data,err.response.status))
+            dispatch(returnErrors(err.response?.data,err.response?.status))
         }
     )
 
@@ -342,7 +349,7 @@ export const delete_order = (id) => (dispatch,getState) =>{
     .catch(
         (err) => {
             console.log(err.response)
-            dispatch(returnErrors(err.response.data,err.response.status))
+            dispatch(returnErrors(err.response?.data,err.response?.status))
         }
     )
 
@@ -372,7 +379,7 @@ export const send_email = (id) => (dispatch,getState) =>{
 
     .catch(
         (err) => {
-            dispatch(email_error_handler(err.response.data,err.response.status))
+            dispatch(email_error_handler(err.response?.data,err.response?.status))
         }
     )
 
@@ -404,7 +411,7 @@ export const copy_order = (id) => (dispatch,getState) =>{
     .catch(
         (err) => {
             console.log(err)
-            dispatch(returnErrors(err.response.data,err.response.status))
+            dispatch(returnErrors(err.response?.data,err.response?.status))
         }
     )
 

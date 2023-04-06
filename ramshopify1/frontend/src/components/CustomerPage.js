@@ -38,7 +38,7 @@ class CustomerPage extends Component{
     map_orders = (order,id) =>{
         return(
             <Fragment key={id}>
-                <div style = {{fontSize:'90%'}} className=" col-12 col-sm-6 col-md-4 col-lg-3 order-svg-container">
+                <div style = {{fontSize:'90%'}} className="col-12 col-sm-6 col-md-4 col-lg-3 ">
                     <img className='img-fluid order-svg-style' src= {Cart}/>
                     <div onClick = {()=>this.props.get_selected_order(order.id)} className = "order-info">
                         <div className="order-info-item order-info-create-date mb-2">

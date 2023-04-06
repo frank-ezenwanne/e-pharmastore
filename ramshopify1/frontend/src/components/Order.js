@@ -962,7 +962,7 @@ render(){
     return (
         <Fragment>
             <div style ={{fontWeight:'bolder'}} className="card" id="form-container-main">
-                <div className='header overflow-auto ' style={{fontSize:'90%',maxWidth:'100%'}}>
+                <div className='header ' style={{fontSize:'90%',maxWidth:'100%',overflowX:'scroll'}}>
                     <div className="order_id">Order Id : {this.props.last_ordercode? this.props.last_ordercode:null}</div>
                     <div  className = 'radio-delete-div d-flex flex-column flex-md-row'>
                         <div className = 'radio-search-option-div'>
@@ -986,25 +986,36 @@ render(){
                     
                     </div>
                 </div>
- 
-                <form className="form-class1">
-                        <div id = "table-grid-main" >
-                                <div style={{marginTop:'2rem'}} className="grid-headings">Product</div>
-                                <div style={{marginTop:'2rem'}} className="grid-headings">Generic</div>
-                                <div style={{marginTop:'2rem'}} className="grid-headings">Unit</div>
-                                <div style={{marginTop:'2rem'}} className="grid-headings">Quantity</div>
-                                <div style={{marginTop:'2rem'}} className="grid-headings">Unit cost</div>
-                                <div style={{marginTop:'2rem'}} className="grid-headings">Total</div>
+              
+                    <form className="form-class1 ">
+                            <div style={{overflowX:'scroll'}}  id = "table-grid-main" >
+                                    <div style={{marginTop:'2rem'}} className="grid-headings">Product</div>
+                                    <div style={{marginTop:'2rem'}} className="grid-headings">Generic</div>
+                                    <div style={{marginTop:'2rem'}} className="grid-headings">Unit</div>
+                                    <div style={{marginTop:'2rem'}} className="grid-headings">Quantity</div>
+                                    <div style={{marginTop:'2rem'}} className="grid-headings">Unit cost</div>
+                                    <div style={{marginTop:'2rem'}} className="grid-headings">Total</div>
+                                
+                                {id_list.map(this.map_stuff)}
                             
-                            {id_list.map(this.map_stuff)}
-                        
-                        </div>
-                        
-                </form>
+                            </div>
+                            {this.props.isLoading?<TailSpin
+                                height="35"
+                                width="35"
+                                color="#4fa94d"
+                                ariaLabel="tail-spin-loading"
+                                radius="1"
+                                wrapperStyle={{}}
+                                wrapperClass="tailspin-class"
+                                visible={true}
+                         /> :null}
+                    </form>
+  
+                
+               
             </div>
-            {/* this.props.send_email(this.props.last_orderid 
-                style = {{display:!this.state.ordered? 'none':'block'}}
-            */}
+
+            
             <div className="temp-send-order-total-div">
                 {this.state.ordered?
                         <div onClick = {()=>{this.props.copy_order(this.props.last_orderid)}} title = 'Create identical order that you can edit' style = {{display:'block'}} className ='clickable template-button btn-sm btn-success'>
@@ -1139,6 +1150,7 @@ const mapStateToProps = (state) => ({
     order_gen_products:state.search.order_gen_products,
     updates:state.search.updates,
     delete_serials:state.search.delete_serials,
+    isLoading:state.auth.isLoading
 })
 
 const redux_funcs = {
