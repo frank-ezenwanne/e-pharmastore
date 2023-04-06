@@ -204,6 +204,9 @@ export const get_customer_orders = (page_num = 1) => (dispatch,getState) =>{
     }
 
     const body = JSON.stringify({page_num})
+    dispatch({
+        type:LOADING,
+    })
 
     axios
     .post("api/get_customer_orders",body,config)
@@ -214,6 +217,9 @@ export const get_customer_orders = (page_num = 1) => (dispatch,getState) =>{
             payload:res.data
         })
         dispatch(createMessage({'msg':'Orders fetched successfully'}))
+        dispatch({
+            type:LOADED,
+        })
     })
 
     .catch(

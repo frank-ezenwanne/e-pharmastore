@@ -4,6 +4,7 @@ import {Link,Navigate} from "react-router-dom"
 import {create_order,change_created_status,get_customer_orders,get_selected_order} from "../actions/search"
 import Cart from '../../svg/cart.svg'
 import Moment from 'react-moment'
+import {TailSpin} from 'react-loader-spinner'
 
 class CustomerPage extends Component{
     constructor(props){
@@ -38,9 +39,9 @@ class CustomerPage extends Component{
     map_orders = (order,id) =>{
         return(
             <Fragment key={id}>
-                <div style = {{fontSize:'90%'}} className="col-12 col-sm-6 col-md-4 col-lg-3 ">
-                    <img className='img-fluid order-svg-style' src= {Cart}/>
-                    <div onClick = {()=>this.props.get_selected_order(order.id)} className = "order-info">
+                <div style = {{fontSize:'90%'}} className="col-12 col-sm-6 col-md-4 col-lg-3 order-svg-container">
+                    <img className=' w-100 order-svg-style' src= {Cart}/>
+                    <div onClick = {()=>this.props.get_selected_order(order.id)} className = " order-info">
                         <div className="order-info-item order-info-create-date mb-2">
                             <Moment format="LLL">
                                 {order.open_date}
@@ -100,6 +101,16 @@ class CustomerPage extends Component{
                 <div className="row w-100">
                     {orders_data.length > 0? orders_data.map(this.map_orders):<div className='text-dark' align='center'>No order Yet !</div>}
                 </div>
+                {this.props.isLoading?<TailSpin
+                                height="35"
+                                width="35"
+                                color="#4fa94d"
+                                ariaLabel="tail-spin-loading"
+                                radius="1"
+                                wrapperStyle={{}}
+                                wrapperClass="tailspin-class"
+                                visible={true}
+                         /> :null}
 
                 <div className="pagination-section">
                     {has_other_pages && paginated }
@@ -114,7 +125,8 @@ const mapStateToProps = (state)=>({
     isAuthenticated : state.auth.isAuthenticated,
     order_just_created : state.search.order_just_created,
     customer_orders:state.customer_orders.customer_orders,
-    selected_order_made_last:state.search.selected_order_made_last
+    selected_order_made_last:state.search.selected_order_made_last,
+    isLoading:state.auth.isLoading
 })
 
 export default connect(mapStateToProps,{create_order,change_created_status,get_customer_orders,get_selected_order})(CustomerPage)

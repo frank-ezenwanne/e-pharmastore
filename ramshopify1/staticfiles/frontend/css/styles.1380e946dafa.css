@@ -1,6 +1,6 @@
 @font-face {
     font-family: "Montserrat Light";
-	src:url("./fonts/Montserrat-Light.ttf");
+	src:url("./fonts/Montserrat-Light.409c7f79a42e.ttf");
 }
 
 
@@ -464,7 +464,7 @@ margin-right:-2rem;
 	color:rgb(245,245,245);
 	position:absolute;
 	top:22%;
-	left:35%;
+	left:25%;
 	cursor:pointer;
 	
 }
