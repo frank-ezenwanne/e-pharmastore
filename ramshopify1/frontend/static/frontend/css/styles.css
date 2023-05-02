@@ -179,9 +179,6 @@ z-index:3;
 	font-family: Helvetica, sans-serif;
 }
 
-.add-confirm-button-div{
-
-}
 
 .brand-add-section{
 	display:flex;
@@ -746,20 +743,6 @@ footer{
 	}
 
 
-@keyframes mycolor{
-	from{background-color:rgba(0,255,0,0.3)}
-	to{background-color: transparent;}
-}
-
-
-
-.high-anime-class{
-animation-name : mycolor;
-animation-duration: 1.2s;
-animation-iteration-count: 1;
-animation-timing-function: ease-in-out;
-
-}
 
 
 
@@ -1081,28 +1064,7 @@ justify-content:space-around;
 	cursor:pointer;
 }
 
-#confirm-del-acc{
-	font-size:85%;
-	margin-left:2rem;
-	display:none;
-	text-decoration:none;
-	color:red;
-}
 
-#confirm-no-del-acc{
-	font-size:85%;
-	margin-left:1.5rem;
-	display:none;
-	cursor:pointer;
-	color:green;
-}
-
-#id_delete-account{
-	margin-left:2rem;
-	font-size:85%;
-	display:none;
-	cursor:pointer;
-}
 
 #profile-pass-reset{
 	font-size:70%;
@@ -1119,35 +1081,6 @@ justify-content:space-around;
 	color:rgb(220,220,220);
 
 	
-}
-
-.delete-yes-option{
-font-weight:bold;
-	color:white;
-	transition:border-bottom 0.3s;
-	background-color:rgb(220,0,0);
-	padding:0.1rem;
-	border:0.05rem solid transparent;
-	border-radius: 0.3rem;
-	font-size:80%;
-	display:inline-block;
-	text-decoration:none;
-	margin-bottom:1rem;
-}
-
-.delete-no-option{
-font-weight:bold;
-	
-	text-decoration:none;
-	color:white;
-	background-color:rgb(0,220,0);
-	padding:0.1rem;
-	border:0.05rem solid transparent;
-	border-radius: 0.3rem;
-	font-size:95%;
-	text-shadow: 0px 0.05rem 0px gray;
-	width:100%;
-
 }
 
 
@@ -1353,9 +1286,7 @@ font-size:75%;
 width:55%;
 }
 
-.register-div{
-	
-}
+
 
 #login-bottom-options{
 	width:30%;
