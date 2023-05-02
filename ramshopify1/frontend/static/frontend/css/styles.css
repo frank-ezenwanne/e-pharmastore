@@ -155,11 +155,11 @@ animation-timing-function: ease-in-out;
 
 .list-section{
 display: inline;
+position:sticky;
 left:0;
-position:absolute;
-background-color:rgb(240,240,240);
-max-height:20rem;
 overflow-y:scroll;
+background-color:rgb(240,240,240);
+max-height:15rem;
 min-width:25rem;
 z-index:3;
 
