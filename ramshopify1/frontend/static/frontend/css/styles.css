@@ -402,7 +402,7 @@ display:flex;
 
 .checkbox-elem{
 display:block;
-margin-left:-1rem;
+margin-left:-1.5rem;
 zoom:1.5;
 accent-color:red;
 
@@ -536,6 +536,8 @@ margin-right:-2rem;
 	max-width:80vw;
 	grid-template-columns:repeat(6,1fr);
 	position:relative;
+	padding-left:3rem;
+	padding-right:3rem
 
 }
 
