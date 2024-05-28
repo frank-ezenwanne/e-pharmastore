@@ -1,4 +1,3 @@
-from numpy import require
 from rest_framework import serializers
 from .models import Order, OrderProduct, Product
 
