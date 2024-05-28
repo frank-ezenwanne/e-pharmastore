@@ -25,6 +25,6 @@ urllib3==1.26.4
 zstandard==0.17.0
 dj-database-url==1.2.0
 numexpr==2.7.3
-numpy==1.21.2
+numpy==1.22.0
 pandas==1.2.0
 whitenoise==6.4.0
