@@ -1,0 +1,20 @@
+# This databas setting below was used in test 
+# DATABASES = {
+
+
+#     'default': {
+
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+#         'NAME': 'zendb2',
+
+#         'USER': 'postgres',
+
+#         'PASSWORD': 'sherly123',
+
+#         'HOST': 'localhost',
+
+#         'PORT': '5432',
+
+#     }
+# }
