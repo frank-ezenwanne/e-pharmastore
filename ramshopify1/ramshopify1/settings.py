@@ -89,25 +89,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-
-
-    'default': {
-
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-        'NAME': 'zendb2',
-
-        'USER': 'postgres',
-
-        'PASSWORD': 'sherly123',
-
-        'HOST': 'localhost',
-
-        'PORT': '5432',
-
-    }
-}
 
 DATABASES['default'] = dj_database_url.parse(os.environ.get('RAMSGATE_DATABASE_URL'), conn_max_age=3600)
 
@@ -163,9 +144,9 @@ AUTH_USER_MODEL = 'customers.CustomUser'
 EMAIL_BACKEND = 'django_mailjet.backends.MailjetBackend'
 MAILJET_API_KEY = os.environ.get('RAMSGATE_MAILJET_API_KEY')
 MAILJET_API_SECRET = os.environ.get('RAMSGATE_MAILJET_API_SECRET')
-DEFAULT_FROM_EMAIL = "ramsgatepharm@gmail.com" 
+DEFAULT_FROM_EMAIL = os.environ.get('ORGANIZATION_MAIL')
 EMAIL_FILE_PATH = os.path.join(BASE_DIR,'emails')
 
 
 
-DATABASE_URL = 'postgresql://$postgres:$S0zo3yBU63bU5dBsvriQ@$containers-us-west-147.railway.app:$7141/$railway'
+DATABASE_URL = os.environ.get(DATABASE_URL)
